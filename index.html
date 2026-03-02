@@ -84,13 +84,17 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .hero-scroll::after { content: ''; display: block; width: 1px; height: 40px; background: var(--mist); margin-top: 0.8rem; margin-left: auto; margin-right: auto; animation: scrollPulse 2s ease infinite; }
 
 /* ── Credibility ── */
-.credibility { padding: 3.5rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%); }
+.credibility { padding: 3rem 2.5rem; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); background: linear-gradient(180deg, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.01) 100%); }
 .credibility-inner { max-width: 1200px; margin: 0 auto; }
-.credibility-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--mist); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.8rem; }
-.credibility-logos { display: flex; gap: 3rem; align-items: center; flex-wrap: wrap; }
-.cred-item { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; color: var(--mist); letter-spacing: 0.02em; opacity: 0.6; transition: all 0.4s ease; white-space: nowrap; cursor: default; }
-.cred-item:hover { opacity: 1; color: var(--ink); }
-.cred-divider { width: 4px; height: 4px; border-radius: 50%; background: var(--warm); }
+.credibility-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--mist); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
+.credibility-logos { display: flex; gap: 0; align-items: center; flex-wrap: nowrap; justify-content: center; }
+.cred-item { display: flex; align-items: center; white-space: nowrap; cursor: default; flex-shrink: 0; padding: 0 1.8rem; border-right: 1px solid rgba(0,0,0,0.08); }
+.cred-item:last-child { border-right: none; }
+.cred-item:first-child { padding-left: 0; }
+.cred-item:last-child { padding-right: 0; }
+.cred-item span { font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 600; color: var(--ink); letter-spacing: 0.01em; opacity: 0.3; transition: opacity 0.4s ease; }
+.cred-item:hover span { opacity: 0.6; }
+.cred-divider { display: none; }
 
 /* ── Section utilities ── */
 .section-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1rem; font-weight: 500; display: flex; align-items: center; gap: 0.8rem; }
@@ -98,17 +102,26 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .section-heading { font-family: 'DM Serif Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.2; max-width: 650px; margin-bottom: 1rem; }
 .section-sub { font-size: 1.05rem; color: var(--slate); max-width: 560px; margin-bottom: 3.5rem; line-height: 1.7; }
 
-/* ── Services ── */
+/* ── Services (dark) ── */
+.services-dark { background: var(--dark-bg); position: relative; overflow: hidden; }
+.services-dark::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 70% 30%, rgba(224, 90, 79, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(42, 122, 111, 0.04) 0%, transparent 40%); }
+.services-dark::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(224, 90, 79, 0.2), rgba(42, 122, 111, 0.2), transparent); }
 .services { padding: 6rem 2.5rem 5rem; max-width: 1200px; margin: 0 auto; position: relative; }
+.services-dark .section-tag { color: var(--dark-accent); }
+.services-dark .section-tag::before { background: var(--dark-accent); }
+.services-dark .section-heading { color: var(--paper); }
+.services-dark .section-sub { color: var(--dark-text); }
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.service-card { padding: 2.2rem; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
-.service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent), var(--accent-deep)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.service-card { padding: 2.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--dark-accent), var(--accent-deep)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .service-card:hover::before { transform: scaleX(1); }
-.service-card:hover { box-shadow: 0 16px 40px rgba(0,0,0,0.06); transform: translateY(-4px); }
-.service-icon { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent); background: var(--accent-glow); display: inline-block; padding: 0.4rem 0.8rem; border-radius: 3px; margin-bottom: 1.2rem; letter-spacing: 0.05em; font-weight: 500; transition: all 0.3s ease; }
-.service-card:hover .service-icon { background: var(--accent); color: white; }
-.service-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; margin-bottom: 0.7rem; letter-spacing: -0.01em; }
-.service-card p { font-size: 0.92rem; color: var(--slate); line-height: 1.65; }
+.service-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(240, 133, 124, 0.2); box-shadow: 0 16px 40px rgba(0,0,0,0.3); transform: translateY(-4px); }
+.service-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: rgba(240, 133, 124, 0.1); border-radius: 8px; margin-bottom: 1.2rem; transition: all 0.3s ease; }
+.service-icon svg { width: 22px; height: 22px; stroke: var(--dark-accent); stroke-width: 1.5; fill: none; transition: all 0.3s ease; }
+.service-card:hover .service-icon { background: var(--accent); }
+.service-card:hover .service-icon svg { stroke: white; }
+.service-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; margin-bottom: 0.7rem; letter-spacing: -0.01em; color: var(--paper); }
+.service-card p { font-size: 0.92rem; color: var(--dark-text); line-height: 1.65; }
 
 /* ── Case Studies (split sections) ── */
 .split-section { padding: 5.5rem 2.5rem; max-width: 1200px; margin: 0 auto; position: relative; }
@@ -138,8 +151,6 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .app-frame-card .label { font-size: 0.7rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
 .video-embed { padding: 0; min-height: auto; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 20px 60px rgba(0,0,0,0.12); transition: transform 0.4s ease, box-shadow 0.4s ease; }
 .video-embed:hover { transform: translateY(-4px); box-shadow: 0 28px 70px rgba(0,0,0,0.18); }
-.founder-photo { width: 64px; height: 64px; border-radius: 50%; object-fit: cover; margin-bottom: 0.8rem; border: 3px solid rgba(224, 90, 79, 0.15); transition: all 0.3s ease; }
-.founder-photo:hover { border-color: var(--accent); transform: scale(1.05); }
 .vis-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 1rem; position: relative; }
 .dark-vis .vis-badge { color: var(--dark-accent); }
 .light-vis .vis-badge { color: var(--accent); }
@@ -161,17 +172,28 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .pill-teal { background: var(--teal-soft); color: var(--teal); }
 .pill-teal:hover { background: rgba(42, 122, 111, 0.15); }
 
-/* ── Testimonials ── */
+/* ── Testimonials (carousel) ── */
 .testimonials-wrap { background: linear-gradient(180deg, var(--paper) 0%, #f2f0ea 30%, #f2f0ea 70%, var(--paper) 100%); padding: 1px 0; }
 .testimonials { padding: 5rem 2.5rem; max-width: 1200px; margin: 0 auto; position: relative; }
 .testimonials::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(90deg, var(--accent), var(--teal)); border-radius: 2px; }
-.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 0.5rem; }
-.testimonial-card { padding: 2rem; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+.carousel-track { overflow: hidden; margin-top: 0.5rem; position: relative; }
+.carousel-track::before, .carousel-track::after { content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
+.carousel-track::before { left: 0; background: linear-gradient(90deg, #f2f0ea, transparent); }
+.carousel-track::after { right: 0; background: linear-gradient(270deg, #f2f0ea, transparent); }
+.carousel-slider { display: flex; gap: 1.5rem; animation: carouselScroll 45s linear infinite; width: max-content; }
+.carousel-slider:hover { animation-play-state: paused; }
+@keyframes carouselScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+.testimonial-card { padding: 2rem; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 340px; flex-shrink: 0; }
 .testimonial-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.06); }
-.testimonial-card blockquote { font-family: 'DM Serif Display', serif; font-size: 1.05rem; line-height: 1.55; color: var(--ink); font-style: italic; margin-bottom: 1.5rem; }
+.testimonial-card blockquote { font-family: 'DM Serif Display', serif; font-size: 1rem; line-height: 1.55; color: var(--ink); font-style: italic; margin-bottom: 1.5rem; }
 .testimonial-card blockquote::before { content: '\201C'; display: block; font-size: 2.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; font-style: normal; }
-.testimonial-attr { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+.testimonial-attr { font-size: 0.8rem; color: var(--slate); line-height: 1.5; }
 .testimonial-attr strong { color: var(--ink); font-weight: 600; display: block; }
+
+/* ── Confidentiality note ── */
+.confid-note { text-align: center; padding: 2.5rem 2.5rem 0; max-width: 1200px; margin: 0 auto; }
+.confid-note p { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--mist); letter-spacing: 0.03em; line-height: 1.7; }
+.confid-note p span { color: var(--slate); font-weight: 500; }
 
 /* ── Protocol (dark section) ── */
 .protocol { background: var(--dark-bg); padding: 5rem 2.5rem 4.5rem; position: relative; overflow: hidden; }
@@ -189,7 +211,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .pillar::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--dark-accent); transform: scaleY(0); transform-origin: top; transition: transform 0.4s ease; }
 .pillar:hover::before { transform: scaleY(1); }
 .pillar:hover { background: rgba(255,255,255,0.05); border-color: rgba(224, 90, 79, 0.2); transform: translateX(4px); }
-.pillar-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--dark-accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+.pillar-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--dark-accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
 .pillar h4 { font-family: 'DM Serif Display', serif; color: var(--paper); font-size: 1.05rem; margin-bottom: 0.4rem; }
 .pillar p { color: var(--dark-text); font-size: 0.82rem; line-height: 1.6; }
 .protocol-footnote { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.06); }
@@ -197,22 +219,43 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .protocol-footnote a { color: var(--dark-accent); text-decoration: none; transition: color 0.2s; }
 .protocol-footnote a:hover { color: var(--paper); }
 
-/* ── CTA ── */
-.cta { padding: 4.5rem 2.5rem 4rem; background: linear-gradient(180deg, white 0%, #faf8f4 40%, var(--paper) 100%); border-top: 1px solid rgba(0,0,0,0.06); position: relative; overflow: hidden; }
+/* ── CTA / Contact Form ── */
+.cta { padding: 5rem 2.5rem 4.5rem; background: linear-gradient(180deg, white 0%, #faf8f4 40%, var(--paper) 100%); border-top: 1px solid rgba(0,0,0,0.06); position: relative; overflow: hidden; }
 .cta::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 1px; background: linear-gradient(90deg, transparent, rgba(224, 90, 79, 0.2), rgba(42, 122, 111, 0.2), transparent); }
 .cta-inner { max-width: 640px; margin: 0 auto; position: relative; text-align: center; }
-.cta-founder-block { display: flex; align-items: center; gap: 1.2rem; justify-content: center; margin-bottom: 2.5rem; }
-.founder-photo { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warm); box-shadow: 0 6px 24px rgba(0,0,0,0.1); flex-shrink: 0; transition: all 0.4s ease; }
+.cta-founder-block { display: flex; align-items: center; gap: 1.2rem; justify-content: center; margin-bottom: 2rem; }
+.founder-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warm); box-shadow: 0 6px 24px rgba(0,0,0,0.1); flex-shrink: 0; transition: all 0.4s ease; }
 .founder-photo:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(224, 90, 79, 0.15); }
 .cta-founder-info { text-align: left; }
-.cta-founder-name { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--ink); letter-spacing: -0.01em; }
-.cta-founder-role { font-size: 0.82rem; color: var(--mist); margin-top: 0.15rem; line-height: 1.4; }
+.cta-founder-name { font-family: 'DM Serif Display', serif; font-size: 1.1rem; color: var(--ink); letter-spacing: -0.01em; }
+.cta-founder-role { font-size: 0.8rem; color: var(--mist); margin-top: 0.15rem; line-height: 1.4; }
 .cta-founder-role a { color: var(--accent); text-decoration: none; font-weight: 500; transition: color 0.2s; }
 .cta-founder-role a:hover { color: var(--accent-deep); }
-.cta h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.02em; }
-.cta p.cta-desc { color: var(--slate); font-size: 1rem; margin-bottom: 2rem; line-height: 1.65; }
-.cta-actions { display: flex; gap: 1rem; justify-content: center; align-items: center; }
-.cta-email { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--slate); letter-spacing: 0.02em; }
+.cta h2 { font-family: 'DM Serif Display', serif; font-size: 2rem; margin-bottom: 0.6rem; letter-spacing: -0.02em; }
+.cta p.cta-desc { color: var(--slate); font-size: 0.95rem; margin-bottom: 2.5rem; line-height: 1.65; }
+
+/* Contact form */
+.contact-form { text-align: left; }
+.form-group { margin-bottom: 1.8rem; }
+.form-label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--slate); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.8rem; font-weight: 500; }
+.pill-select { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.pill-option { display: block; }
+.pill-option input { position: absolute; opacity: 0; pointer-events: none; }
+.pill-option span { display: inline-block; padding: 0.55rem 1.1rem; border-radius: 100px; font-size: 0.82rem; font-weight: 500; color: var(--slate); background: white; border: 1.5px solid rgba(0,0,0,0.1); cursor: pointer; transition: all 0.25s ease; user-select: none; }
+.pill-option span:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-glow); }
+.pill-option input:checked + span { background: var(--ink); color: var(--paper); border-color: var(--ink); box-shadow: 0 2px 8px rgba(12, 18, 34, 0.15); }
+.form-input { width: 100%; padding: 0.85rem 1.1rem; font-family: 'DM Sans', sans-serif; font-size: 0.92rem; color: var(--ink); background: white; border: 1.5px solid rgba(0,0,0,0.1); border-radius: 6px; outline: none; transition: all 0.25s ease; }
+.form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(224, 90, 79, 0.08); }
+.form-input::placeholder { color: var(--mist); }
+textarea.form-input { resize: vertical; min-height: 100px; line-height: 1.6; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-submit { display: flex; align-items: center; gap: 1.2rem; margin-top: 0.5rem; }
+.btn-submit { display: inline-block; background: var(--ink); color: var(--paper); padding: 0.85rem 2.2rem; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500; letter-spacing: 0.03em; border: none; border-radius: 4px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.btn-submit::before { content: ''; position: absolute; inset: 0; background: var(--accent); transform: scaleX(0); transform-origin: right; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 0; }
+.btn-submit:hover::before { transform: scaleX(1); transform-origin: left; }
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(224, 90, 79, 0.2); }
+.btn-submit span { position: relative; z-index: 1; }
+.form-note { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--mist); letter-spacing: 0.02em; }
 
 /* ── Footer ── */
 footer { padding: 2.5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); max-width: 1200px; margin: 0 auto; }
@@ -258,25 +301,28 @@ footer a:hover { color: var(--accent); }
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
   .split-layout { grid-template-columns: 1fr; }
-  .testimonials-grid { grid-template-columns: 1fr; }
   .protocol-body { grid-template-columns: 1fr; }
   .nav-toggle { display: flex; }
   .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
   .nav-links.open { display: flex; }
   .nav-links a { font-size: 1.1rem; }
   .nav-links .nav-cta { margin-top: 1rem; }
-  .credibility-logos { gap: 1.5rem; }
-  .cred-divider { display: none; }
+  .credibility-logos { flex-wrap: wrap; justify-content: flex-start; gap: 0.8rem 0; }
+  .cred-item { padding: 0 1.2rem; border-right: none; }
+  .cred-item:first-child { padding-left: 0; }
   .section-tag::before { display: none; }
+  .form-row { grid-template-columns: 1fr; }
+  .testimonial-card { width: 290px; }
 }
 @media (max-width: 600px) {
   html { font-size: 15px; }
   .hero { padding: 7rem 1.5rem 3rem; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
-  .cta-actions { flex-direction: column; }
+  .form-submit { flex-direction: column; align-items: flex-start; }
   .cta-founder-block { flex-direction: column; text-align: center; }
   .cta-founder-info { text-align: center; }
   .app-frame-grid { grid-template-columns: 1fr; }
+  .testimonial-card { width: 270px; padding: 1.5rem; }
 }
 </style>
 </head>
@@ -294,7 +340,7 @@ footer a:hover { color: var(--accent); }
     <a href="#work">Work</a>
     <a href="#protocols">Protocols</a>
     <a href="#testimonials">Proof</a>
-    <a href="mailto:ariel@yescraft.ai" class="nav-cta">Get in Touch</a>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
   </div>
 </nav>
 
@@ -313,58 +359,56 @@ footer a:hover { color: var(--accent); }
   <div class="credibility-inner">
     <div class="credibility-label">Two decades shipping at scale</div>
     <div class="credibility-logos">
-      <span class="cred-item">Apple</span>
-      <span class="cred-divider"></span>
-      <span class="cred-item">Disney</span>
-      <span class="cred-divider"></span>
-      <span class="cred-item">CVS Health</span>
-      <span class="cred-divider"></span>
-      <span class="cred-item">Take-Two Interactive</span>
-      <span class="cred-divider"></span>
-      <span class="cred-item">MotiSpark</span>
-      <span class="cred-divider"></span>
-      <span class="cred-item">Techstars</span>
+      <span class="cred-item"><span>Apple</span></span>
+      <span class="cred-item"><span>Disney</span></span>
+      <span class="cred-item"><span>CVS Health</span></span>
+      <span class="cred-item"><span>Take-Two Interactive</span></span>
+      <span class="cred-item"><span>MotiSpark</span></span>
+      <span class="cred-item"><span>Techstars</span></span>
     </div>
   </div>
 </section>
 
+<div class="services-dark">
 <section class="services reveal" id="services">
   <div class="section-tag">What We Do</div>
-  <h2 class="section-heading">Product leadership for the AI transition</h2>
-  <p class="section-sub">We help teams ship AI that works for users, then feed what we learn back into the standards and infrastructure that make AI work for everyone.</p>
+  <h2 class="section-heading">Ship faster. Decide better. Build what lasts.</h2>
+  <p class="section-sub">We embed with teams to solve ambiguous, cross-functional product problems — from workflow modernization to AI-native products. Startups to enterprise, rapid prototyping through long-term systems design.</p>
   <div class="services-grid">
     <div class="service-card">
-      <div class="service-icon">01</div>
-      <h3>Fractional CPO</h3>
-      <p>Embedded product leadership for teams integrating AI into core product or operations. Roadmap, prioritization, and hands-on execution. Not a deck and a handoff.</p>
+      <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <h3>Product &amp; Platform Leadership</h3>
+      <p>Embedded leadership for teams modernizing products, platforms, and operations. We take ambiguous problems, align stakeholders, and ship clear outcomes. Not a deck and a handoff.</p>
     </div>
     <div class="service-card">
-      <div class="service-icon">02</div>
-      <h3>AI Strategy</h3>
-      <p>Where AI creates real leverage in your product or operations. Grounded in behavioral science. Measured by outcomes.</p>
+      <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+      <h3>Systems Design &amp; AI</h3>
+      <p>Twenty years of UX and product design applied to AI orchestration. We design the workflows humans actually trust — the right model for each job, shaped by deep experience in how people use software.</p>
     </div>
     <div class="service-card">
-      <div class="service-icon">03</div>
+      <div class="service-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
       <h3>Rapid Prototyping</h3>
-      <p>Concept to deployed product in days, not quarters. We validate with real users before you commit to a roadmap.</p>
+      <p>Concept to deployed product in days, not quarters. We validate with real users and real data before you commit to a roadmap.</p>
     </div>
   </div>
 </section>
+</div>
 
 <section class="split-section reveal" id="work">
   <div class="section-tag">Case Study</div>
   <h2 class="section-heading">MotiSpark</h2>
-  <p class="section-sub">Healthcare providers weren't following evidence-based guidelines. Generic reminders weren't working. We built something that did.</p>
+  <p class="section-sub">Digital health tools lose patients to shame-based tracking and clinical language. Dropout rates are high, engagement is low, and stretched-thin providers lose the data they need. We asked: what if the nudge felt like encouragement, not surveillance?</p>
   <div class="split-layout">
     <div class="split-visual video-embed">
       <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/280281360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;" title="Intro to MotiSpark"></iframe></div>
     </div>
     <div class="split-content">
       <div class="vis-badge" style="color:var(--teal);">Approach &amp; Result</div>
-      <h3>Patented behavioral nudge platform</h3>
-      <p>Healthcare providers weren't following evidence-based guidelines. Generic reminders weren't working. We built personalized video interventions timed to the point of care — context-aware, behaviorally informed, deployed across provider networks.</p>
-      <p>The result: <strong>telemedicine appointment rates increased 4x</strong>. Measurable behavior change in patient care at scale. The patent and full IP are now owned by YesCraft.</p>
-      <span class="pill">Patented Technology · Behavioral Science · 4x Appointment Rates</span>
+      <h3>Behavioral nudge platform for healthcare</h3>
+      <p>We built personalized video interventions — context-aware, behaviorally informed — that scale the power of the healthcare provider, not replace them. Deployed across provider networks and timed to the moment of decision.</p>
+      <p>The result: <strong>telemedicine appointment rates increased 4x</strong>. Measurable behavior change in patient care at scale.</p>
+      <span class="pill">Behavioral Science · Healthcare · 4x Appointment Rates</span>
+      <a href="https://patents.google.com/patent/US20170193851A1/en" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>View the patent</a>
     </div>
   </div>
 </section>
@@ -373,7 +417,7 @@ footer a:hover { color: var(--accent); }
   <div class="split-inner">
     <div class="section-tag">Case Study</div>
     <h2 class="section-heading">Vintage Wizard</h2>
-    <p class="section-sub">A client asked: "Can AI appraise vintage items from a photo?" We shipped a working product in under 12 hours.</p>
+    <p class="section-sub">After her mom's sudden passing, Ariel needed to inventory and value a lifetime of belongings. Notes got lost, research was scattered. So she built the tool herself — in hours.</p>
     <div class="split-layout">
       <div class="split-visual app-frame">
         <div class="app-frame-bar">
@@ -404,44 +448,18 @@ footer a:hover { color: var(--accent); }
         </div>
       </div>
       <div class="split-content">
-        <div class="vis-badge" style="color:var(--teal);">Why It Works</div>
-        <h3>Right tool for each job</h3>
-        <p>Most AI prototypes waste tokens sending simple math to a language model. Vintage Wizard uses vision models for identification, Python for pricing math, and an LLM only where natural language generation actually matters.</p>
-        <p>The difference between an AI demo and an AI product is knowing when <em>not</em> to use an LLM.</p>
+        <div class="vis-badge" style="color:var(--teal);">Why It Matters</div>
+        <h3>Born from real need, built with discipline</h3>
+        <p>Vision models for identification, Python for pricing math, an LLM only where language generation actually matters. No wasted tokens. Each model doing what it's best at.</p>
+        <p>Now people use Vintage Wizard for use cases we never imagined — estate sales, collectibles, resale shops. The best products come from <em>solving your own problem first.</em></p>
         <span class="pill pill-teal">Vision + Python + LLM · Concept to Live: &lt;12 hrs</span>
       </div>
     </div>
   </div>
 </section>
 
-<div class="testimonials-wrap">
-<section class="testimonials reveal" id="testimonials">
-  <div class="section-tag">What People Say</div>
-  <h2 class="section-heading">From people who've worked with us</h2>
-  <div class="testimonials-grid">
-    <div class="testimonial-card">
-      <blockquote>Phenomenal at getting things done &mdash; incredibly creative, yet extremely focused on execution.</blockquote>
-      <div class="testimonial-attr">
-        <strong>Deena Varshavskaya</strong>
-        Founder &amp; CEO, Wanelo
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <blockquote>Among the best hires I ever made in my 30+ year career.</blockquote>
-      <div class="testimonial-attr">
-        <strong>Tracy Shea</strong>
-        CDO, DirecTV Innovation
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <blockquote>Technology visionary, three steps ahead of everyone else in the room.</blockquote>
-      <div class="testimonial-attr">
-        <strong>Kathryn Campbell</strong>
-        Global UX Research Leader
-      </div>
-    </div>
-  </div>
-</section>
+<div class="confid-note reveal">
+  <p><span>Current client work not shown.</span> Active engagements in government technology, healthcare AI, and enterprise platforms are under NDA or in progress. <a href="#contact" style="color:var(--accent);text-decoration:none;">Ask us about it directly.</a></p>
 </div>
 
 <section class="protocol reveal" id="protocols">
@@ -456,29 +474,111 @@ footer a:hover { color: var(--accent); }
       </div>
       <div class="protocol-pillars">
         <div class="pillar">
-          <div class="pillar-tag">Active</div>
+          <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Active</div>
           <h4>NIST AI Agent Security</h4>
           <p>Formal response to the AI Agent Standards Initiative, framing user intent integrity as foundational to both agent identity security and efficient agent workflows.</p>
+          <a href="YesCraft_NIST_RFI_Response.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Read the full response</a>
         </div>
         <div class="pillar">
-          <div class="pillar-tag">Research</div>
+          <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Research</div>
           <h4>Preference Schema</h4>
           <p>Standardized, protocol-agnostic schema for structured user preferences. Designed for UCP, ACP, MCP, and W3C Verifiable Credentials.</p>
         </div>
         <div class="pillar">
-          <div class="pillar-tag">Thesis</div>
+          <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Thesis</div>
           <h4>Behavioral Sovereignty</h4>
-          <p>Applying patented behavioral nudge research to ensure AI systems help people flourish. Representing users faithfully, not just efficiently.</p>
+          <p>Applying behavioral nudge research to ensure AI systems help people flourish. Representing users faithfully, not just efficiently.</p>
         </div>
       </div>
-    </div>
-    <div class="protocol-footnote">
-      <p>Previously: mEgo (2007). Portable user preferences. TechCrunch40 finalist. 1M+ users. The thesis was early. The infrastructure now exists. <a href="mailto:ariel@yescraft.ai">Talk to us about what's next &#8594;</a></p>
     </div>
   </div>
 </section>
 
-<section class="cta reveal">
+<div class="testimonials-wrap">
+<section class="testimonials reveal" id="testimonials">
+  <div class="section-tag">What People Say</div>
+  <h2 class="section-heading">From people who've worked with us</h2>
+  <div class="carousel-track">
+    <div class="carousel-slider">
+      <div class="testimonial-card">
+        <blockquote>Possesses all qualities that lead to success: creativity, tenacity, professionalism, business acumen, and above all integrity.</blockquote>
+        <div class="testimonial-attr"><strong>Fotios Konstantinidis</strong>Managing Director, Stout</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Nothing short of exceptional. A unique blend of visionary thinking and creativity that consistently left me in awe.</blockquote>
+        <div class="testimonial-attr"><strong>Gail Benitez Hair</strong>Sr. Product Manager, CVS Health</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Among the best hires I ever made in my 30+ year career in the media and convergence space. Easily.</blockquote>
+        <div class="testimonial-attr"><strong>Tracy Shea</strong>CDO, DirecTV Innovation</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Excellent design and creative skills. Her ability to think outside the box and connect dots across multiple projects to create product vision is what makes her stand out.</blockquote>
+        <div class="testimonial-attr"><strong>Srinivas Loke</strong>Lead Director of Engineering, CVS Health</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Rallied teams with mock-ups, data flows, and competitor analysis until alignment was won. An incredibly improved user experience which is now live, positively affecting OKRs.</blockquote>
+        <div class="testimonial-attr"><strong>Laura Klein</strong>Technology Consulting, Digital Transformation</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>A brilliant dynamo. Her piercing intelligence and visionary creativity make her an asset to any enterprise.</blockquote>
+        <div class="testimonial-attr"><strong>Eva Eilenberg</strong>Legal IT Expert</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>A technology visionary, three steps ahead of everyone else in the room.</blockquote>
+        <div class="testimonial-attr"><strong>Kathryn Campbell</strong>Global UX Research Leader</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Phenomenal at getting things done &mdash; incredibly creative, yet extremely focused on execution.</blockquote>
+        <div class="testimonial-attr"><strong>Deena Varshavskaya</strong>Founder &amp; CEO, Wanelo</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Unequivocally stood out as one of the most inspiring, knowledgeable, and innovative individuals.</blockquote>
+        <div class="testimonial-attr"><strong>Nika Vaks</strong>Sr. UX Design Lead &amp; Researcher</div>
+      </div>
+      <!-- Duplicate set for seamless loop -->
+      <div class="testimonial-card">
+        <blockquote>Possesses all qualities that lead to success: creativity, tenacity, professionalism, business acumen, and above all integrity.</blockquote>
+        <div class="testimonial-attr"><strong>Fotios Konstantinidis</strong>Managing Director, Stout</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Nothing short of exceptional. A unique blend of visionary thinking and creativity that consistently left me in awe.</blockquote>
+        <div class="testimonial-attr"><strong>Gail Benitez Hair</strong>Sr. Product Manager, CVS Health</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Among the best hires I ever made in my 30+ year career in the media and convergence space. Easily.</blockquote>
+        <div class="testimonial-attr"><strong>Tracy Shea</strong>CDO, DirecTV Innovation</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Excellent design and creative skills. Her ability to think outside the box and connect dots across multiple projects to create product vision is what makes her stand out.</blockquote>
+        <div class="testimonial-attr"><strong>Srinivas Loke</strong>Lead Director of Engineering, CVS Health</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Rallied teams with mock-ups, data flows, and competitor analysis until alignment was won. An incredibly improved user experience which is now live, positively affecting OKRs.</blockquote>
+        <div class="testimonial-attr"><strong>Laura Klein</strong>Technology Consulting, Digital Transformation</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>A brilliant dynamo. Her piercing intelligence and visionary creativity make her an asset to any enterprise.</blockquote>
+        <div class="testimonial-attr"><strong>Eva Eilenberg</strong>Legal IT Expert</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>A technology visionary, three steps ahead of everyone else in the room.</blockquote>
+        <div class="testimonial-attr"><strong>Kathryn Campbell</strong>Global UX Research Leader</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Phenomenal at getting things done &mdash; incredibly creative, yet extremely focused on execution.</blockquote>
+        <div class="testimonial-attr"><strong>Deena Varshavskaya</strong>Founder &amp; CEO, Wanelo</div>
+      </div>
+      <div class="testimonial-card">
+        <blockquote>Unequivocally stood out as one of the most inspiring, knowledgeable, and innovative individuals.</blockquote>
+        <div class="testimonial-attr"><strong>Nika Vaks</strong>Sr. UX Design Lead &amp; Researcher</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="cta reveal" id="contact">
   <div class="cta-inner">
     <div class="cta-founder-block">
       <img src="images/headshot.jpg" alt="Ariel McNichol" class="founder-photo" loading="lazy">
@@ -488,11 +588,47 @@ footer a:hover { color: var(--accent); }
       </div>
     </div>
     <h2>Let's build something real.</h2>
-    <p class="cta-desc">Whether it's shipping an AI product for your team or shaping the infrastructure humans will depend on, we're here for the work that matters.</p>
-    <div class="cta-actions">
-      <a href="mailto:ariel@yescraft.ai" class="btn-primary"><span>Start a Conversation</span></a>
-      <span class="cta-email">ariel@yescraft.ai</span>
-    </div>
+    <p class="cta-desc">Whether it's shipping an AI product, modernizing a platform, or shaping infrastructure humans will depend on — we're here for the work that matters.</p>
+    <form name="contact" method="POST" data-netlify="true" class="contact-form">
+      <input type="hidden" name="form-name" value="contact">
+      <div class="form-group">
+        <label class="form-label">What are you looking for?</label>
+        <div class="pill-select">
+          <label class="pill-option"><input type="radio" name="interest" value="Product Leadership" checked><span>Product Leadership</span></label>
+          <label class="pill-option"><input type="radio" name="interest" value="AI Strategy"><span>AI Strategy</span></label>
+          <label class="pill-option"><input type="radio" name="interest" value="Rapid Prototype"><span>Rapid Prototype</span></label>
+          <label class="pill-option"><input type="radio" name="interest" value="Something Else"><span>Something Else</span></label>
+          <label class="pill-option"><input type="radio" name="interest" value="Dad Jokes"><span>Dad Jokes</span></label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Timeline</label>
+        <div class="pill-select">
+          <label class="pill-option"><input type="radio" name="timeline" value="Now" checked><span>Ready now</span></label>
+          <label class="pill-option"><input type="radio" name="timeline" value="Next month"><span>Next month</span></label>
+          <label class="pill-option"><input type="radio" name="timeline" value="Exploring"><span>Just exploring</span></label>
+          <label class="pill-option"><input type="radio" name="timeline" value="Timeless"><span>Timeless</span></label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Your name</label>
+          <input type="text" name="name" class="form-input" placeholder="Jane Smith" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-input" placeholder="jane@company.com" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tell us more <span style="font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <textarea name="message" class="form-input" placeholder="What problem are you trying to solve? Where are you stuck?" rows="4"></textarea>
+      </div>
+      <div class="form-submit">
+        <button type="submit" class="btn-submit"><span>Send It</span></button>
+        <span class="form-note">Usually respond within 24 hours</span>
+      </div>
+    </form>
   </div>
 </section>
 

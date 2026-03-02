@@ -589,7 +589,7 @@ footer a:hover { color: var(--accent); }
     </div>
     <h2>Let's build something real.</h2>
     <p class="cta-desc">Whether it's shipping an AI product, modernizing a platform, or shaping infrastructure humans will depend on — we're here for the work that matters.</p>
-    <form name="contact" method="POST" data-netlify="true" class="contact-form">
+    <form name="contact" method="POST" action="/thank-you" data-netlify="true" class="contact-form">
       <input type="hidden" name="form-name" value="contact">
       <div class="form-group">
         <label class="form-label">What are you looking for?</label>
@@ -629,6 +629,7 @@ footer a:hover { color: var(--accent); }
         <span class="form-note">Usually respond within 24 hours</span>
       </div>
     </form>
+    <script>document.querySelector('.contact-form').addEventListener('submit',function(){try{sessionStorage.setItem('yc_name',this.querySelector('[name="name"]').value)}catch(e){}});</script>
   </div>
 </section>
 

@@ -68,7 +68,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 /* ── Hero ── */
 .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
 .hero::before { content: ''; position: absolute; top: 5%; right: 0; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 35%, transparent 65%); pointer-events: none; }
-.hero::after { content: ''; position: absolute; bottom: 15%; right: 10%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(220, 160, 200, 0.40) 0%, rgba(180, 200, 240, 0.16) 40%, transparent 70%); pointer-events: none; }
+.hero::after { content: ''; position: absolute; bottom: 5%; right: 8%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(180, 100, 160, 0.38) 0%, rgba(160, 80, 180, 0.14) 40%, transparent 65%); pointer-events: none; }
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--slate); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; }
 .hero-tag .dot { color: var(--accent); }
 .hero h1 { font-family: 'Sora', sans-serif; font-size: clamp(3rem, 6vw, 4.8rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 600; max-width: 780px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
@@ -347,7 +347,7 @@ footer a:hover { color: var(--ink); }
 
 /* Hero blobs become organic and alive */
 .hero::before { animation: blobDrift 18s ease-in-out infinite, blobPulse 6s ease-in-out infinite; width: 450px; height: 450px; border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; filter: blur(40px); }
-.hero::after { animation: blobDrift2 22s ease-in-out infinite; width: 300px; height: 300px; border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%; filter: blur(35px); }
+.hero::after { animation: blobDrift2 22s ease-in-out infinite, blobPulse 8s ease-in-out 3s infinite; width: 420px; height: 420px; border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%; filter: blur(45px); }
 
 /* ── Spring-bounce reveal (M3 Expressive physics) ── */
 .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, transform 0.8s var(--spring-soft); }

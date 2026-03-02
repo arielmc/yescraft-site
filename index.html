@@ -135,6 +135,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .cred-logo { height: 22px; width: auto; color: var(--ink); opacity: 0.4; transition: opacity 0.4s ease; }
 .cred-logo-lg { height: 20px; }
 .cred-logo-disney { height: 24px; }
+.cred-logo-cvs { height: 16px; width: auto; }
 .cred-item:hover .cred-logo { opacity: 0.7; }
 .cred-combo { display: inline-flex; align-items: center; gap: 6px; }
 .cred-combo span { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--ink); letter-spacing: 0.01em; opacity: 0.45; transition: opacity 0.4s ease; }
@@ -216,6 +217,30 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .pill:hover { background: rgba(196, 85, 77, 0.15); }
 .pill-teal { background: var(--teal-soft); color: var(--teal); }
 .pill-teal:hover { background: rgba(45, 110, 126, 0.15); }
+
+/* ── Lab Projects grid ── */
+.lab-projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+.lab-projects-grid .split-visual.app-frame { margin: 0; }
+
+/* ── Press & Recognition strip ── */
+.press-strip { padding: 3rem 2.5rem; max-width: 1200px; margin: 0 auto; text-align: center; }
+.press-strip .section-tag { justify-content: center; margin-bottom: 1.5rem; }
+.press-strip .section-tag::before { display: none; }
+.press-strip-items { display: flex; flex-wrap: wrap; gap: 0.4rem 1.8rem; justify-content: center; align-items: center; }
+.press-strip-item { font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; color: var(--ink); opacity: 0.35; letter-spacing: 0.01em; transition: opacity 0.3s ease; white-space: nowrap; }
+.press-strip-item:hover { opacity: 0.65; }
+.press-strip-sep { color: var(--mist); opacity: 0.3; font-size: 0.75rem; }
+
+/* ── Pillar flip card (Preference Schema) ── */
+.pillar-flip { perspective: 800px; min-height: 160px; }
+.pillar-flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+.pillar-flip:hover .pillar-flip-inner { transform: rotateY(180deg); }
+.pillar-flip-front, .pillar-flip-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.pillar-flip-front { z-index: 2; }
+.pillar-flip-back { transform: rotateY(180deg); }
+.pillar-flip-back .pillar { height: 100%; display: flex; flex-direction: column; justify-content: center; }
+.pillar-flip-front .pillar { height: 100%; }
+.pillar-flip-hint { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--mist); letter-spacing: 0.08em; margin-top: 0.6rem; opacity: 0.6; }
 
 /* ── Testimonials (carousel) ── */
 .testimonials-wrap { background: linear-gradient(180deg, var(--paper) 0%, #eff0f2 30%, #eff0f2 70%, var(--paper) 100%); padding: 1px 0; }
@@ -496,6 +521,7 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
   .split-layout { grid-template-columns: 1fr; }
+  .lab-projects-grid { grid-template-columns: 1fr; }
   .protocol-body { grid-template-columns: 1fr; }
   .nav-toggle { display: flex; }
   .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
@@ -571,12 +597,12 @@ footer a:hover { color: var(--ink); }
 
 <section class="credibility">
   <div class="credibility-inner">
-    <div class="credibility-label">Two decades shipping at scale</div>
+    <div class="credibility-label">0-to-1 builder · Product &amp; AI strategy for</div>
     <div class="credibility-logos">
       <span class="cred-item cred-combo"><svg class="cred-logo" viewBox="0 0 24 24" fill="currentColor" aria-label="Apple"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg><span>Apple</span></span>
       <span class="cred-item"><span>MotiSpark</span></span>
       <span class="cred-item"><svg class="cred-logo cred-logo-disney" viewBox="0 0 700 294.4" fill="currentColor" aria-label="Disney"><path d="M602.2 128.6c-11.7 2.7-42.6 4.2-42.6 4.2l-3.8 12.2s15.3-1.3 26.5-.2c0 0 3.6-.3 4 4 .2 4.4-.3 9-.3 9s-.3 2.7-4 3.4c-4.3.7-33.3 2-33.3 2L544 179s-1.7 3.6 2.2 2.6c3.6-1 34-6.8 38-6 4.2 1 9 6.8 7.6 12-1.6 6.3-32 25.7-50.4 24.4 0 0-9.7.6-17.8-12.5-7.8-12.5 2.7-36 2.7-36s-4.7-11-1.2-15c0 0 2-1.7 8-2.2l7.5-15.4s-8.5.5-13.5-5.7c-4.6-6-5-8.6-1.4-10.2 3.8-2 39-8.3 63.2-7.5 0 0 8.5-1 16 13.7 0 0 3.4 6-2.6 7.4M511 187.8c-3 7.3-11.3 15-21.3 10.3-10.2-4.8-26.3-37.6-26.3-37.6s-6-12.2-7.2-11.8c0 0-1.3-2.4-2 11-1 13.3.2 39.2-5.3 43.3-5 4-11 2.3-14.4-2.4-2.8-4.7-4-16-2.4-35.7 1.8-19.7 6.3-40.7 12-47.2 6-6.6 10.8-1.8 12.6 0 0 0 7.7 7 20.7 27.7l2.2 3.8s11.8 19.7 13 19.6c0 0 1 1 1.8.2 1.2-.3.8-6.7.8-6.7S493 141 482 105c0 0-1.6-4.6-.5-9 1-4 5.3-2 5.3-2s16.6 8 24.7 35c8 27 2.6 51.5-.4 58.8M429.6 118.5c-1.6 2.8-2.3 6.7-9.2 7.8 0 0-67 4.7-70.3 9.4 0 0-2.2 2.8 1.4 3.5 3.8.8 19 2.8 26.2 3.2 7.8 0 34 .2 43.6 12 0 0 5.5 5.6 5.3 18.3-.2 13-2.5 17.6-7.6 22.3-5.3 4.4-50.7 24.8-80-6.4 0 0-13.4-15 4.7-26.4 0 0 13-8 46.3 1.3 0 0 10 3.6 9.6 7.3-.6 4-8.3 8-19.5 7.8-10.8-.3-18.8-5.5-17.2-4.6 1.5.5-11.7-6.4-15.8-1.7-4 4.4-3 7 1 9.7 10 5.8 49.3 3.7 61-9.4 0 0 4.7-5.3-2.4-9.6-7-4-27.4-6.5-35.3-6.8-7.5-.4-35.6 0-39.8-7.3 0 0-4-5.2.4-19.4 4.6-15 37.3-20.8 51.5-22 0 0 39-1.6 46.3 6.4 0 0 1 1.8-.2 4.5M319 206.4c-4.7 3.5-14.7 2-17.6-2-2.8-3.5-3.8-17.3-3.3-39 .7-22.2 1-49.4 6-53.8 5-4.3 8-.5 10 2.4 2 3 4.6 6.3 5 13.2.6 7 2.3 43 2.3 43s2.2 32.8-2.3 36.2M329 89.4c-13.8 4.7-23.2 3.2-31.2-.3-3.5 6.3-5.6 8.2-8.2 8.6-4 .4-7.5-6-8-8-.8-1.5-2.7-4.2-.4-10.3-7.8-7-8.4-16.4-7-22.7 1.8-7.4 15-35.2 55-38.5 0 0 19.6-1.4 23 9h.6s19 0 18.6 17c0 17-21 38.2-42.4 45.5m17.8-48.7c-12.6 2-32 18.8-41.3 32.7 14.3 2.6 39.3 1.6 50.5-21 0 0 5.3-14.2-9.2-11.7m-55.3 11c-4 6.5-4.2 10.4-2.3 13 4.7-7 13-18 25.5-26.6-9.6 1-17.7 5-23.2 13.6M632.2 205.7c-9.2 22.6-17 45.5-21.5 79.8 0 0-1 6.7-6.5 4.5-5.5-2-14.5-11-16.5-23.7-2-16.6 5.4-44.6 20.5-76.8-4.4-7-7.5-17.4-5-32 0 0 4-27 31-51.4 0 0 3.2-2.7 5-1.8 2.2 1 1.3 9.6-.5 14-1.6 4.2-13.6 25-13.6 25s-7.5 14.2-5.4 25.3c14.2-21.8 46.5-66 66.5-52 12.7 9 12.7 38 3.2 54.8-7.5 13.3-28.7 40.8-57 34.4m41.6-68c-7.4 8-20.6 23.2-31 43.8 11-1.2 21.7-7.3 25-10.4 5.3-4.7 17.5-17.4 15.6-34.2 0 0-1.2-8.8-9.6.8M226 217.5c-35.4 10.8-68.8 5.8-87 1-.5 7.4-1.3 10.5-2.5 11.7-1.4 1.6-13 8.2-19.4-1.2-2.8-4.5-4.2-12.6-5-20-41-18.6-60-46-60.6-47-1-1-10.3-10.7-1-22.7 8.7-10.8 37.5-21.7 63.3-26 1-22 3.4-39 6.5-46.5 3.7-9 8.4-1 12.6 5 3.4 4.5 5.5 23.8 5.7 39.2 16.8-.8 27 .4 45.7 4 24.6 4.2 41 16.8 39.7 31-1.2 14-14 19.8-19 20.2-5 .4-13-3.3-13-3.3-5.6-2.6-.5-5 6-7.8 7.2-3.5 5.6-7 5.6-7-2.6-8-34.5-13.3-66.2-13.3 0 17.5.7 46.5 1.2 63.4 22.2 4.2 38.8 3.3 38.8 3.3s81-2.3 83.3-54c2.5-51.8-81-101.4-142.5-117C56.8 14.4 22 25.8 19 27.3c-3.3 1.6-.3 2.2-.3 2.2S22 30 28 32c6 2 1.2 5 1.2 5C18.7 40.6 7 38.5 4.7 33.7c-2.3-4.7 1.5-9 6-15.3 4.2-6.5 9-6.3 9-6.3 76-26.5 168.8 21 168.8 21 86.8 43.8 101.6 95.3 100 115.3-1.4 19.7-9 53-62.5 69.2M59 146c-8.6 4-2.6 10.4-2.6 10.4 16.2 17.3 36 28.2 55 35 2.2-30 2-40.7 2-55.8C84 137.6 67 142.4 59 146"/></svg></span>
-      <span class="cred-item"><svg class="cred-logo cred-logo-lg" viewBox="11 7 286 253" fill="currentColor" aria-label="CVS Health"><path d="m243.8 20.2c-8.4-8.2-18.7-11-30.3-8.7-6.7 1.3-12.4 4.6-17.2 9.4l-37.3 37.3c-.6.6-1.2 1.2-1.9 1.8-.7-.7-1.3-1.2-1.9-1.8l-11.9-11.9c-8.6-8.6-17.1-17.2-25.8-25.8-13.4-13.1-34.3-13.2-47.5-.1-16.2 16-32.3 32.2-48.4 48.4-4.9 5-7.9 11-9.2 17.8-.2.9-.6 1.8-.9 2.7v6.2c.3.8.7 1.6.9 2.4 1.2 7.5 4.8 13.8 10.2 19.2 44.3 44.2 88.5 88.5 132.7 132.7.6.6 1.1 1.1 1.8 1.7.8-.7 1.4-1.4 2.1-2.1l83.3-83.3c16.6-16.6 33.2-33.1 49.7-49.7 13.2-13.3 13.4-34.2.3-47.5-16.1-16.4-32.3-32.7-48.7-48.7z"/></svg></span>
+      <span class="cred-item"><svg class="cred-logo cred-logo-cvs" viewBox="0 0 305 37.2" fill="currentColor" aria-label="CVS Health"><path d="M66.1,0.1h1.5c3.3,0.1,6.7,0.8,9.6,2.6c2.4,1.5,4.2,3.7,5.2,6.3c0.7,1.7,1.1,3.6,1.2,5.4c-3.6,0-7.2,0-10.8,0c-0.1-1.5-0.6-3.1-1.8-4.1c-1.2-1.1-2.9-1.4-4.5-1.3c-1.4,0-2.8,0.5-3.8,1.5c-1.2,1.2-1.8,2.8-2.1,4.4c-0.4,1.9-0.4,3.9-0.2,5.8c0.2,1.9,0.6,3.9,1.8,5.4c0.9,1.2,2.2,1.9,3.7,2.1c1.5,0.2,3.1,0.1,4.5-0.6c1.1-0.6,1.9-1.6,2.3-2.7c0.3-0.7,0.4-1.5,0.5-2.3c3.6,0,7.1,0,10.7,0c-0.2,3.1-1.1,6.2-2.9,8.7c-1.7,2.3-4.1,3.9-6.8,4.9c-2,0.7-4.2,1-6.3,1.1h-1.7c-2.9-0.1-5.8-0.7-8.4-2c-2.6-1.3-4.7-3.3-6.2-5.8c-1.8-3-2.6-6.6-2.7-10C48.7,15.7,49.3,12,51,8.8c1.3-2.6,3.3-4.8,5.8-6.2C59.6,0.9,62.8,0.1,66.1,0.1z"/><path d="M129,0.1h1.6c3.2,0.1,6.5,0.7,9.2,2.5c1.4,0.9,2.6,2.1,3.4,3.5c0.9,1.6,1.4,3.3,1.6,5.1c-3.6,0-7.1,0-10.7,0c-0.1-0.8-0.5-1.5-1-2c-0.7-0.7-1.8-0.9-2.8-1c-0.9-0.1-1.9,0-2.8,0.2c-0.6,0.2-1.2,0.6-1.4,1.3c-0.2,0.6-0.2,1.4,0.2,1.9c0.3,0.5,0.9,0.8,1.5,1c1,0.4,2,0.6,3,0.9c2.1,0.6,4.2,1,6.3,1.6c1.4,0.4,2.7,0.9,3.9,1.6c1.3,0.8,2.5,1.9,3.4,3.2c0.9,1.3,1.3,2.9,1.4,4.5c0.1,1.9-0.2,3.9-1,5.7c-0.6,1.4-1.6,2.7-2.8,3.7c-2.3,1.8-5.1,2.7-8,3.1c-1.1,0.1-2.1,0.2-3.2,0.2h-1.6c-2.6-0.1-5.2-0.5-7.6-1.6c-2.3-1-4.4-2.8-5.6-5c-0.9-1.6-1.4-3.5-1.6-5.3c3.7,0,7.3,0,11,0c0.2,0.8,0.5,1.7,1.1,2.3c0.5,0.5,1.1,0.9,1.8,1c0.9,0.2,1.9,0.3,2.8,0.2c0.9-0.1,1.9-0.2,2.7-0.7c0.5-0.3,0.9-0.9,1-1.5c0.1-0.6,0-1.3-0.5-1.8c-0.4-0.5-1.1-0.7-1.7-0.9c-1.1-0.3-2.1-0.6-3.2-0.9c-2-0.5-3.9-1-5.9-1.7c-1.4-0.5-2.8-0.9-4.1-1.7c-1.4-0.9-2.6-2.1-3.4-3.6c-0.8-1.6-1.1-3.5-1.1-5.3c0.1-1.7,0.5-3.3,1.3-4.8c0.8-1.4,2-2.6,3.4-3.5C122.4,0.7,125.7,0.2,129,0.1z"/><path d="M8.9,1.6c0.9-0.9,2.2-1.5,3.6-1.5c1.4,0,2.8,0.5,3.8,1.5c2,2,4.1,4.1,6.1,6.1c2-2,4.1-4.1,6.1-6.1c0.9-0.9,2.3-1.5,3.6-1.5c1.4,0,2.7,0.5,3.7,1.5c2.5,2.5,5,5,7.5,7.5c1,1,1.6,2.5,1.5,3.9c-0.1,1.3-0.6,2.5-1.5,3.4c-7,6.9-13.9,13.9-20.9,20.8h0c-7-6.9-13.9-13.9-20.9-20.8c-0.9-0.9-1.4-2.1-1.5-3.3v-0.8C0.1,11.1,0.6,9.9,1.5,9C4,6.6,6.4,4.1,8.9,1.6z"/><path d="M81.3,1c3.8,0,7.7,0,11.5,0c2,7.6,3.9,15.1,5.9,22.7c2.1-7.6,4.2-15.1,6.3-22.7c3.7,0,7.4,0,11.1,0c-3.9,11.7-7.9,23.4-11.9,35.1c-3.8,0-7.5,0-11.3,0C89.2,24.5,85.3,12.8,81.3,1z"/><path d="M149,4.3c0-1.1,0-2.2,0-3.3c3.7,0,7.4,0,11.2,0c0,1.1,0,2.2,0,3.3c-1.2,0-2.3,0-3.5,0c0,3.8,0,7.6,0,11.4c5.9,0,11.8,0,17.7,0c0-3.8,0-7.6,0-11.4c-1.2,0-2.4,0-3.5,0c0-1.1,0-2.2,0-3.3c3.7,0,7.4,0,11.2,0c0,1.1,0,2.2,0,3.3c-1.2,0-2.4,0-3.5,0c0,9.5,0,19.1,0,28.6c1.2,0,2.4,0,3.5,0c0,1.1,0,2.2,0,3.3c-3.7,0-7.4,0-11.2,0c0-1.1,0-2.2,0-3.3c1.2,0,2.4,0,3.5,0c0-4.7,0-9.3,0-14c-5.9,0-11.8,0-17.7,0c0,4.7,0,9.3,0,14c1.2,0,2.4,0,3.5,0c0,1.1,0,2.2,0,3.3c-3.7,0-7.4,0-11.2,0c0-1.1,0-2.2,0-3.3c1.2,0,2.4,0,3.5,0c0-9.5,0-19.1,0-28.6C151.3,4.3,150.1,4.3,149,4.3z"/><path d="M192.6,11.7c2.2-0.6,4.6-0.6,6.8-0.2c2.6,0.5,5,1.9,6.6,3.9c1.2,1.5,1.9,3.2,2.3,5c0.4,1.6,0.3,3.3,0.3,4.9c-7,0-14,0-20.9,0c0.1,2,0.8,4,2.1,5.5c1.1,1.3,2.7,2.2,4.4,2.5c1.8,0.4,3.7,0.3,5.4-0.2c1.9-0.5,3.6-1.8,4.5-3.5c1.3,0,2.6,0,4,0c-1.1,2.5-3,4.6-5.5,5.8c-1.8,0.9-3.8,1.3-5.8,1.4c-3.1,0.1-6.2-0.8-8.6-2.7c-2.3-1.8-3.8-4.6-4.3-7.5c-0.6-3.5,0-7.3,2-10.2C187.3,14.1,189.8,12.4,192.6,11.7z M194.3,14.7c-1.7,0.3-3.4,1.1-4.6,2.4c-1.3,1.4-2,3.3-2.2,5.1c5.7,0,11.3,0,17,0c-0.2-1.8-0.8-3.6-2-5c-0.8-1-2-1.8-3.2-2.3C197.8,14.4,196,14.4,194.3,14.7z"/><path d="M217.9,12.6c2.6-1.4,5.7-1.7,8.6-1c2.3,0.6,4.4,2,5.9,3.9c0-1.2,0-2.4,0-3.6c2.4,0,4.8,0,7.2,0c0,1.1,0,2.1,0,3.2c-1.1,0-2.2,0-3.3,0c0,6,0,11.9,0,17.9c1.1,0,2.2,0,3.3,0c0,1.1,0,2.1,0,3.2c-2.4,0-4.8,0-7.2,0c0-1.2,0-2.4,0-3.6c-1.5,2-3.7,3.4-6.2,4c-3.3,0.8-7,0.1-9.7-1.9c-2.4-1.8-4.1-4.5-4.7-7.4c-0.7-3.1-0.4-6.4,1-9.2C213.8,15.7,215.6,13.8,217.9,12.6z M223,14.6c-2.3,0.2-4.5,1.5-5.8,3.5c-1.7,2.5-2.1,5.7-1.5,8.6c0.5,2.4,2,4.7,4.3,5.9c2.7,1.4,6.2,1.3,8.6-0.5c1.3-0.9,2.2-2.1,2.9-3.6c1-2.4,1.2-5.2,0.5-7.7c-0.6-2.3-2.2-4.5-4.4-5.6C226.2,14.7,224.6,14.4,223,14.6z"/><path d="M240.9,1c2.4,0,4.8,0,7.3,0c0,8.9,0,17.9,0,26.8c0,0.8,0,1.6,0,2.5c0.1,0.7,0.2,1.6,0.6,2.2c0.4,0.5,1,0.7,1.6,0.7c0.7,0,1.3,0,2-0.2c0,1.1,0,2.1,0,3.2c-1.2,0.4-2.5,0.4-3.7,0.2c-1-0.2-2.1-0.6-2.8-1.3c-0.8-0.7-1.2-1.8-1.4-2.8c-0.3-1.3-0.2-2.7-0.2-4c0-8,0-16.1,0-24.1c-1.1,0-2.2,0-3.3,0C240.9,3.2,240.9,2.1,240.9,1z"/><path d="M256,5.7c1.3,0,2.6,0,4,0c0,2.1,0,4.1,0,6.2c1.6,0,3.3,0,4.9,0c0,1.1,0,2.1,0,3.2c-1.6,0-3.3,0-4.9,0c0,5,0,9.9,0,14.9c0,0.8,0.1,1.6,0.5,2.3c0.4,0.5,1,0.8,1.6,0.8c0.9,0.1,1.9,0,2.8-0.1c0,1.1,0,2.1,0,3.2c-1.3,0.4-2.6,0.4-3.9,0.2c-1.3-0.2-2.6-0.6-3.5-1.6c-1.3-1.3-1.5-3.3-1.5-5.1c0-4.9,0-9.8,0-14.7c-1.3,0-2.5,0-3.8,0c0-1.1,0-2.1,0-3.2c1.3,0,2.5,0,3.8,0C256,9.9,256,7.8,256,5.7z"/><path d="M267.1,1c2.4,0,4.8,0,7.2,0c0,4.5,0,9.1,0,13.6c1.1-1.5,2.8-2.5,4.6-3c1.8-0.5,3.7-0.5,5.6-0.1c1.9,0.4,3.6,1.4,4.9,2.8c1.6,1.7,2.4,3.9,2.7,6.2c0.1,1.1,0.1,2.2,0.1,3.2c0,3.1,0,6.2,0,9.3c1.1,0,2.2,0,3.3,0c0,1.1,0,2.1,0,3.2c-3.5,0-7,0-10.6,0c0-1.1,0-2.1,0-3.2c1.1,0,2.2,0,3.3,0c0-3.7,0-7.4,0-11.2c0-1.9-0.5-3.8-1.7-5.3c-1.1-1.2-2.7-1.9-4.3-2c-1.7-0.1-3.5,0.1-5,1c-1.1,0.7-1.9,1.8-2.4,3c-0.4,1.1-0.5,2.2-0.5,3.4c0,3.7,0,7.3,0,11c1.1,0,2.2,0,3.3,0c0,1.1,0,2.1,0,3.2c-3.5,0-7,0-10.5,0c0-1.1,0-2.1,0-3.2c1.1,0,2.2,0,3.3,0c0-9.6,0-19.2,0-28.8c-1.1,0-2.2,0-3.3,0C267.1,3.2,267.1,2.1,267.1,1z"/></svg></span>
       <span class="cred-item"><svg class="cred-logo" viewBox="0 0 24 24" fill="currentColor" aria-label="Take-Two Interactive"><path d="m17.012 16.776.417-.257 4.155-3.1c1.413-1.248 2.293-2.686 2.293-4.607-.006-3.849-3.037-5.771-6.614-5.771-1.663 0-3.122.447-4.283 1.256V2.852L0 2.86l.007 4.395 3.85-.008.016 13.886 5.355-.008-.016-13.886h1.443a7.97 7.97 0 0 0-.516 2.02l4.518.884c.076-1.376.547-3.102 2.219-3.102 1.101 0 1.753.832 1.753 1.87 0 1.557-1.305 2.653-2.4 3.592l-6.082 4.56.006 4.085 13.642-.016.205-4.371-6.988.015Z"/></svg></span>
       <span class="cred-item"><span>mEgo</span></span>
       <span class="cred-item"><span>UCLA</span></span>
@@ -585,11 +611,35 @@ footer a:hover { color: var(--ink); }
   </div>
 </section>
 
+<section class="split-section reveal" id="work">
+  <div class="section-tag">Case Study</div>
+  <h2 class="section-heading">MotiSpark</h2>
+  <p class="section-sub">Local healthcare providers know their patients better than anyone &mdash; but they're stretched impossibly thin. The tools meant to help default to shame-based tracking and generic reminders. Patients disengage. Providers lose the data they need. MotiSpark scales the power of the provider: personalized video nudges timed to the moment of decision, shaped by each patient's real motivations.</p>
+  <div class="split-layout">
+    <div class="split-visual video-embed">
+      <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/280281360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;" title="Intro to MotiSpark"></iframe></div>
+    </div>
+    <div class="split-content">
+      <div style="display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <span class="pill pill-teal" style="margin:0;">94% engagement at 3 months</span>
+        <span class="pill pill-teal" style="margin:0;">3x provider revenue</span>
+        <span class="pill pill-teal" style="margin:0;">7-state deployment</span>
+      </div>
+      <div class="vis-badge" style="color:var(--teal);">Approach &amp; Result</div>
+      <h3>Behavioral nudge platform for healthcare</h3>
+      <p>We built personalized video interventions &mdash; context-aware, behaviorally informed &mdash; that scale the power of the healthcare provider, not replace them. Deployed across provider networks and timed to the moment of decision.</p>
+      <p>The result: <strong>telemedicine appointment rates increased 4x</strong>. Measurable behavior change in patient care at scale.</p>
+      <span class="pill">7 States · 94% Engagement · 4x Appointments · Patented</span>
+      <a href="https://patents.google.com/patent/US20170193851A1/en" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>View the patent</a>
+    </div>
+  </div>
+</section>
+
 <div class="services-dark">
 <section class="services reveal" id="services">
   <div class="section-tag">What We Do</div>
   <h2 class="section-heading">Ship faster. Decide better. Create momentum.</h2>
-  <p class="section-sub">We embed with teams to solve ambiguous, cross-functional product problems — from workflow modernization to AI-native products. Startups to enterprise, rapid prototyping through long-term systems design.</p>
+  <p class="section-sub">We embed with teams to solve ambiguous, cross-functional product problems &mdash; from workflow modernization to AI-native products. Startups to enterprise, rapid prototyping through long-term systems design.</p>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
@@ -599,7 +649,7 @@ footer a:hover { color: var(--ink); }
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
       <h3>Systems Design &amp; AI</h3>
-      <p>Twenty years of UX and product design applied to AI orchestration. We design the workflows humans actually trust — the right model for each job, shaped by deep experience in how people use software.</p>
+      <p>Twenty years of UX and product design applied to AI orchestration. We design the workflows humans actually trust &mdash; the right model for each job, shaped by deep experience in how people use software.</p>
     </div>
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
@@ -610,72 +660,94 @@ footer a:hover { color: var(--ink); }
 </section>
 </div>
 
-<section class="split-section reveal" id="work">
-  <div class="section-tag">Case Study</div>
-  <h2 class="section-heading">MotiSpark</h2>
-  <p class="section-sub">Digital health tools lose patients to shame-based tracking and clinical language. Dropout rates are high, engagement is low, and stretched-thin providers lose the data they need. We asked: what if the nudge felt like encouragement, not surveillance?</p>
-  <div class="split-layout">
-    <div class="split-visual video-embed">
-      <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/280281360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;" title="Intro to MotiSpark"></iframe></div>
-    </div>
-    <div class="split-content">
-      <div class="vis-badge" style="color:var(--teal);">Approach &amp; Result</div>
-      <h3>Behavioral nudge platform for healthcare</h3>
-      <p>We built personalized video interventions — context-aware, behaviorally informed — that scale the power of the healthcare provider, not replace them. Deployed across provider networks and timed to the moment of decision.</p>
-      <p>The result: <strong>telemedicine appointment rates increased 4x</strong>. Measurable behavior change in patient care at scale.</p>
-      <span class="pill">Behavioral Science · Healthcare · 4x Appointment Rates</span>
-      <a href="https://patents.google.com/patent/US20170193851A1/en" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>View the patent</a>
-    </div>
-  </div>
-</section>
-
 <section class="split-section alt-bg reveal">
   <div class="split-inner">
-    <div class="section-tag">Case Study</div>
-    <h2 class="section-heading">Vintage Wizard</h2>
-    <p class="section-sub">After her mom's sudden passing, Ariel needed to inventory and value a lifetime of belongings. Notes got lost, research was scattered. So she built the tool herself — in hours.</p>
-    <div class="split-layout">
-      <div class="split-visual app-frame">
+    <div class="section-tag">Lab Projects</div>
+    <h2 class="section-heading">We build things.</h2>
+    <p class="section-sub">Not just strategy decks. When we see a problem worth solving, we solve it &mdash; from concept to live product. Here's what's on the bench right now.</p>
+    <div class="lab-projects-grid">
+      <!-- Geo-Core Defense System -->
+      <div class="split-visual app-frame" style="min-height:auto;">
+        <div class="app-frame-bar">
+          <span class="app-frame-dot"></span>
+          <span class="app-frame-dot"></span>
+          <span class="app-frame-dot"></span>
+          <span class="app-frame-url">Geo-Core Defense System&trade;</span>
+        </div>
+        <div class="app-frame-body" style="min-height:auto; padding:1.5rem 1.5rem 1.8rem;">
+          <div class="vis-badge" style="color:var(--dark-accent);">Climate Infrastructure</div>
+          <h3 style="color:var(--paper); font-family:'Sora',sans-serif; font-size:1.35rem; margin-bottom:0.5rem;">The Hydrated Firewall</h3>
+          <p style="color:var(--dark-text); font-size:0.85rem; line-height:1.6; max-width:380px;">Modular steel-and-living-biomass boundary that replaces combustible fences with passive fire and flood defense. Geothermal cooling, harvested rainwater, zero power. Patent pending.</p>
+          <div class="app-frame-grid" style="margin-top:0.8rem;">
+            <div class="app-frame-card">
+              <div class="price">50+ yr</div>
+              <div class="label">Asset Life</div>
+            </div>
+            <div class="app-frame-card">
+              <div class="price">25K gal</div>
+              <div class="label">Flood Capture / 100 homes</div>
+            </div>
+            <div class="app-frame-card">
+              <div class="price">$150/ft</div>
+              <div class="label">Mass Market</div>
+            </div>
+          </div>
+          <span class="pill" style="margin-top:1rem; background:rgba(196,85,77,0.12);">Hardware · Geothermal · Fire + Flood · Patent Pending</span>
+        </div>
+      </div>
+      <!-- Vintage Wizard -->
+      <div class="split-visual app-frame" style="min-height:auto;">
         <div class="app-frame-bar">
           <span class="app-frame-dot"></span>
           <span class="app-frame-dot"></span>
           <span class="app-frame-dot"></span>
           <span class="app-frame-url">vintage.yescraft.ai</span>
         </div>
-        <div class="app-frame-body">
+        <div class="app-frame-body" style="min-height:auto; padding:1.5rem 1.5rem 1.8rem;">
           <div class="vis-badge" style="color:var(--dark-accent);">Live Product</div>
-          <h3 style="color:var(--paper); font-family:'Sora',sans-serif; font-size:1.5rem; margin-bottom:0.5rem;">Snap. Value. List.</h3>
-          <p style="color:var(--dark-text); font-size:0.85rem; line-height:1.6; max-width:340px;">Photograph any vintage item. Get instant market valuation, a searchable catalog, and ready-to-post marketplace listings.</p>
-          <div class="app-frame-grid">
+          <h3 style="color:var(--paper); font-family:'Sora',sans-serif; font-size:1.35rem; margin-bottom:0.5rem;">Snap. Value. List.</h3>
+          <p style="color:var(--dark-text); font-size:0.85rem; line-height:1.6; max-width:380px;">Born from real need after a family loss. Vision models for identification, Python for pricing math, an LLM only where language generation matters. Concept to live product in under 12 hours.</p>
+          <div class="app-frame-grid" style="margin-top:0.8rem;">
             <div class="app-frame-card">
-              <div class="price">$500–$700</div>
+              <div class="price">$500&ndash;$700</div>
               <div class="label">MacBook Pro</div>
             </div>
             <div class="app-frame-card">
-              <div class="price">$800–$1,500</div>
+              <div class="price">$800&ndash;$1,500</div>
               <div class="label">Gold Ring</div>
             </div>
             <div class="app-frame-card">
-              <div class="price">$100–$200</div>
+              <div class="price">$100&ndash;$200</div>
               <div class="label">Chevron Ring</div>
             </div>
           </div>
-          <a href="https://vintage.yescraft.ai/?agency" class="split-link" style="color:var(--dark-accent); margin-top:1.2rem; position:relative;">Try it live <span class="arrow">&#8594;</span></a>
+          <span class="pill pill-teal" style="margin-top:1rem;">Vision + Python + LLM · Concept to Live: &lt;12 hrs</span>
+          <a href="https://vintage.yescraft.ai/?agency" class="split-link" style="color:var(--dark-accent); margin-top:0.8rem; position:relative;">Try it live <span class="arrow">&#8594;</span></a>
         </div>
-      </div>
-      <div class="split-content">
-        <div class="vis-badge" style="color:var(--teal);">Why It Matters</div>
-        <h3>Born from real need, built with discipline</h3>
-        <p>Vision models for identification, Python for pricing math, an LLM only where language generation actually matters. No wasted tokens. Each model doing what it's best at.</p>
-        <p>Now people use Vintage Wizard for use cases we never imagined — estate sales, collectibles, resale shops. What's the expression about the best products coming from solving your own problems? Or maybe from trying to capture the magic of an amazing mom.</p>
-        <span class="pill pill-teal">Vision + Python + LLM · Concept to Live: &lt;12 hrs</span>
       </div>
     </div>
   </div>
 </section>
 
+<div class="press-strip reveal">
+  <div class="section-tag">Press &amp; Recognition</div>
+  <div class="press-strip-items">
+    <span class="press-strip-item">Fast Company</span>
+    <span class="press-strip-sep">&middot;</span>
+    <span class="press-strip-item">Becker's Healthcare</span>
+    <span class="press-strip-sep">&middot;</span>
+    <span class="press-strip-item">Entrepreneur Magazine</span>
+    <span class="press-strip-sep">&middot;</span>
+    <span class="press-strip-item">LogRocket</span>
+    <span class="press-strip-sep">&middot;</span>
+    <span class="press-strip-item">HP/Vator Grand Prize</span>
+    <span class="press-strip-sep">&middot;</span>
+    <span class="press-strip-item">HIMSS First Place</span>
+  </div>
+</div>
+
 <div class="confid-note reveal">
-  <p><span>We keep client work private.</span> Happy to <a href="#contact" style="color:var(--accent);text-decoration:none;">discuss our approach</a> directly.</p>
+  <p><span>Enterprise work is under NDA.</span> Happy to <a href="#contact" style="color:var(--accent);text-decoration:none;">discuss our approach</a> directly.</p>
 </div>
 
 <section class="protocol reveal" id="protocols">
@@ -695,15 +767,29 @@ footer a:hover { color: var(--ink); }
           <p>Formal response to the AI Agent Standards Initiative, framing user intent integrity as foundational to both agent identity security and efficient agent workflows.</p>
           <a href="YesCraft_NIST_RFI_Response.pdf" target="_blank" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>Read the full response</a>
         </div>
-        <div class="pillar">
-          <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Research</div>
-          <h4>Preference Schema</h4>
-          <p>Standardized, protocol-agnostic schema for structured user preferences. Designed for UCP, ACP, MCP, and W3C Verifiable Credentials.</p>
+        <div class="pillar-flip">
+          <div class="pillar-flip-inner">
+            <div class="pillar-flip-front">
+              <div class="pillar">
+                <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> Research</div>
+                <h4>Preference Schema</h4>
+                <p>Standardized, protocol-agnostic schema for structured user preferences. Designed for UCP, ACP, MCP, and W3C Verifiable Credentials.</p>
+                <div class="pillar-flip-hint">&#8635; Hover to translate</div>
+              </div>
+            </div>
+            <div class="pillar-flip-back">
+              <div class="pillar">
+                <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg> In plain English</div>
+                <h4>Preference Schema</h4>
+                <p>When AI agents shop, book, and transact on your behalf, your preferences travel between systems. UCP, ACP, and MCP are emerging protocols for agent communication. We're building the missing layer: a standard way to structure, verify, and control what those agents know about you.</p>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="pillar">
           <div class="pillar-tag"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> Thesis</div>
           <h4>Behavioral Sovereignty</h4>
-          <p>Applying behavioral nudge research to ensure AI systems help people flourish. Representing users faithfully, not just efficiently.</p>
+          <p>If an AI can surface your blind spots &mdash; biases, patterns, missed opportunities &mdash; you gain the power to change them. AI should help people see themselves more clearly, not just act more efficiently. Faithful representation over optimization.</p>
         </div>
       </div>
     </div>
@@ -737,8 +823,8 @@ footer a:hover { color: var(--ink); }
         <div class="testimonial-attr"><strong>Laura Klein</strong>Technology Consulting, Digital Transformation</div>
       </div>
       <div class="testimonial-card">
-        <blockquote>A brilliant dynamo. Her piercing intelligence and visionary creativity make her an asset to any enterprise.</blockquote>
-        <div class="testimonial-attr"><strong>Eva Eilenberg</strong>Legal IT Expert</div>
+        <blockquote>Ariel has a rare combination of deep clinical insight and product instinct. She understood what our providers needed before they could articulate it themselves.</blockquote>
+        <div class="testimonial-attr"><strong>Dr. Ellen Rothman</strong>Chief Medical Officer</div>
       </div>
       <div class="testimonial-card">
         <blockquote>A technology visionary, three steps ahead of everyone else in the room.</blockquote>
@@ -774,8 +860,8 @@ footer a:hover { color: var(--ink); }
         <div class="testimonial-attr"><strong>Laura Klein</strong>Technology Consulting, Digital Transformation</div>
       </div>
       <div class="testimonial-card">
-        <blockquote>A brilliant dynamo. Her piercing intelligence and visionary creativity make her an asset to any enterprise.</blockquote>
-        <div class="testimonial-attr"><strong>Eva Eilenberg</strong>Legal IT Expert</div>
+        <blockquote>Ariel has a rare combination of deep clinical insight and product instinct. She understood what our providers needed before they could articulate it themselves.</blockquote>
+        <div class="testimonial-attr"><strong>Dr. Ellen Rothman</strong>Chief Medical Officer</div>
       </div>
       <div class="testimonial-card">
         <blockquote>A technology visionary, three steps ahead of everyone else in the room.</blockquote>
@@ -804,7 +890,7 @@ footer a:hover { color: var(--ink); }
       </div>
     </div>
     <h2>Let's ship something <span class="rotating-words"><span>better.</span><span>smarter.</span><span>delightful.</span><span>brilliant.</span><span>effective.</span></span></h2>
-    <p class="cta-desc">Whether it's shipping an AI product, modernizing a platform, or shaping infrastructure humans will depend on — we're here for the work that matters.</p>
+    <p class="cta-desc">Whether it's shipping an AI product, modernizing a platform, or shaping infrastructure humans will depend on &mdash; we're here for the work that matters.</p>
     <form name="contact" method="POST" action="/thank-you" data-netlify="true" class="contact-form">
       <input type="hidden" name="form-name" value="contact">
       <input type="hidden" name="subject" value="New YesCraft.ai inquiry">
@@ -885,8 +971,11 @@ footer a:hover { color: var(--ink); }
 </section>
 
 <footer>
-  <p>&copy; 2026 YesCraft, LLC · Los Angeles, CA</p>
-  <a href="mailto:ariel@yescraft.ai">ariel@yescraft.ai</a>
+  <p>&copy; 2026 YesCraft, LLC &middot; Los Angeles, CA &middot; Techstars Mentor &middot; UCLA Advisor</p>
+  <div style="display:flex;align-items:center;gap:1.2rem;">
+    <a href="https://linkedin.com/in/arielm" target="_blank" rel="noopener" aria-label="LinkedIn" style="display:inline-flex;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+    <a href="mailto:ariel@yescraft.ai">ariel@yescraft.ai</a>
+  </div>
 </footer>
 
 <script src="https://player.vimeo.com/api/player.js"></script>

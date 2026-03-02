@@ -66,7 +66,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 /* ── Hero ── */
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
+.hero { display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
 .hero::before { content: ''; position: absolute; top: 5%; right: 0; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 35%, transparent 65%); pointer-events: none; }
 .hero::after { content: ''; position: absolute; bottom: 5%; right: 8%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(160, 170, 190, 0.45) 0%, rgba(140, 155, 180, 0.18) 40%, transparent 65%); pointer-events: none; }
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; display: flex; align-items: center; gap: 0.8rem; }
@@ -586,7 +586,6 @@ footer a:hover { color: var(--ink); }
       <span class="hero-chip">Iterate</span>
     </a>
   </div>
-  <div class="hero-scroll"><span class="hero-scroll-label">Scroll</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
 </section>
 
 <section class="credibility">
@@ -634,23 +633,21 @@ footer a:hover { color: var(--ink); }
 <section class="split-section reveal" id="work">
   <div class="section-tag">Case Study</div>
   <h2 class="section-heading">MotiSpark</h2>
-  <p class="section-sub">Local healthcare providers know their patients better than anyone, but they're stretched impossibly thin. The tools meant to help default to shame-based tracking and generic reminders. Patients disengage. Providers lose the data they need. MotiSpark scales the power of the provider: personalized video nudges timed to the moment of decision, shaped by each patient's real motivations.</p>
-  <div class="split-layout">
+  <div class="split-layout" style="grid-template-columns: 1.2fr 1fr;">
     <div class="split-visual video-embed">
       <div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/280281360?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:8px;" title="Intro to MotiSpark"></iframe></div>
     </div>
     <div class="split-content">
-      <div style="display:flex;gap:1.5rem;margin-bottom:1.2rem;flex-wrap:wrap;">
-        <span class="pill pill-teal" style="margin:0;">94% engagement at 3 months</span>
-        <span class="pill pill-teal" style="margin:0;">3x provider revenue</span>
-        <span class="pill pill-teal" style="margin:0;">7-state deployment</span>
-      </div>
-      <div class="vis-badge" style="color:var(--teal);">Approach &amp; Result</div>
-      <h3>Behavioral nudge platform for healthcare</h3>
-      <p>We built personalized video interventions, context-aware, behaviorally informed, that scale the power of the healthcare provider, not replace them. Deployed across provider networks and timed to the moment of decision.</p>
-      <p>The result: <strong>telemedicine appointment rates increased 4x</strong>. Measurable behavior change in patient care at scale.</p>
-      <a href="https://patents.google.com/patent/US20170193851A1/en" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.6rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>View the patent</a>
+      <p>Local clinicians know their patients better than anyone, but they're stretched impossibly thin. Digital solutions have failed to help, be it for triggering shame or being culturally irrelevant.</p>
+      <p>MotiSpark scales the power of local provider by sending timely personalized videos to patients when and where they need them along with delightful personalized content.</p>
+      <p style="font-weight:600;color:var(--ink);margin-top:0.5rem;">The result: <strong style="color:var(--accent);">telemedicine appointments increased 4x</strong>.</p>
+      <a href="https://patents.google.com/patent/US20170193851A1/en" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.4rem;font-size:0.82rem;font-weight:600;color:var(--accent);text-decoration:none;margin-top:0.4rem;letter-spacing:0.02em;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>View the patent</a>
     </div>
+  </div>
+  <div style="display:flex;gap:2rem;margin-top:2.5rem;flex-wrap:wrap;justify-content:center;">
+    <span class="pill pill-teal" style="margin:0;">94% engagement at 3 months</span>
+    <span class="pill pill-teal" style="margin:0;">3x provider revenue</span>
+    <span class="pill pill-teal" style="margin:0;">7-state deployment</span>
   </div>
 </section>
 
@@ -658,7 +655,7 @@ footer a:hover { color: var(--ink); }
   <div class="split-inner">
     <div class="section-tag">Lab Projects</div>
     <h2 class="section-heading">Problem solving obsessed.</h2>
-    <p class="section-sub">Our client work lives under strict NDA. These are side projects we built to solve our own real-world problems. Concept to live product, on our own time.</p>
+    <p class="section-sub">Our client work lives under strict NDA. These are side projects we built to solve our own real-world problems. Happy to share our solutions.</p>
     <div class="lab-projects-grid">
       <!-- Geo-Core Defense System -->
       <div class="split-visual app-frame" style="min-height:auto;">
@@ -686,7 +683,8 @@ footer a:hover { color: var(--ink); }
               <div class="label">Mass Market</div>
             </div>
           </div>
-          <span class="pill" style="margin-top:1rem; background:rgba(196,85,77,0.12);">Hardware · Geothermal · Fire + Flood · Patent Pending</span>
+          <span class="pill pill-teal" style="margin-top:1rem;">Hardware · Geothermal · Fire + Flood · Patent Pending</span>
+          <a href="Geo-Core_Defense_System.pdf" target="_blank" rel="noopener" class="split-link" style="color:var(--dark-accent); margin-top:0.8rem; position:relative;">View deck <span class="arrow">&#8594;</span></a>
         </div>
       </div>
       <!-- Vintage Wizard -->
@@ -704,7 +702,7 @@ footer a:hover { color: var(--ink); }
           <div class="app-frame-grid" style="margin-top:0.8rem;">
             <div class="app-frame-card">
               <div class="price">$500&ndash;$700</div>
-              <div class="label">MacBook Pro</div>
+              <div class="label">First edition: Art of Cooking</div>
             </div>
             <div class="app-frame-card">
               <div class="price">$800&ndash;$1,500</div>
@@ -712,11 +710,11 @@ footer a:hover { color: var(--ink); }
             </div>
             <div class="app-frame-card">
               <div class="price">$100&ndash;$200</div>
-              <div class="label">Chevron Ring</div>
+              <div class="label">mid-century vase</div>
             </div>
           </div>
           <span class="pill pill-teal" style="margin-top:1rem;">Vision + Python + LLM · Concept to Live: &lt;12 hrs</span>
-          <a href="https://vintage.yescraft.ai/?agency" class="split-link" style="color:var(--dark-accent); margin-top:0.8rem; position:relative;">Try it live <span class="arrow">&#8594;</span></a>
+          <a href="https://vintage.yescraft.ai" target="_blank" rel="noopener" class="split-link" style="color:var(--dark-accent); margin-top:0.8rem; position:relative;">Try it live <span class="arrow">&#8594;</span></a>
         </div>
       </div>
     </div>

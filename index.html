@@ -63,9 +63,9 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 /* ── Hero ── */
-.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
-.hero::before { content: ''; position: absolute; top: 10%; right: -5%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(224, 90, 79, 0.04) 0%, transparent 70%); pointer-events: none; }
-.hero::after { content: ''; position: absolute; bottom: 20%; right: 15%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(42, 122, 111, 0.03) 0%, transparent 70%); pointer-events: none; }
+.hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; overflow: hidden; }
+.hero::before { content: none; }
+.hero::after { content: none; }
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; }
 .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem, 5.5vw, 4.2rem); line-height: 1.12; letter-spacing: -0.025em; max-width: 780px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
 .hero h1 em { font-style: italic; color: var(--accent); position: relative; }
@@ -80,16 +80,22 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .btn-ghost:hover { color: var(--accent); }
 .btn-ghost .arrow { display: inline-block; transition: transform 0.3s ease; }
 .btn-ghost:hover .arrow { transform: translateX(4px); }
-.hero-protocols { display: flex; gap: 3rem; margin-top: 3.5rem; }
-.hp-item { display: flex; align-items: flex-start; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink); line-height: 1.6; max-width: 220px; opacity: 0; letter-spacing: 0.03em; transition: opacity 0.5s ease; animation: hpFloat 1s ease forwards; }
-.hp-item:nth-child(1) { animation-delay: 1.2s; }
-.hp-item:nth-child(2) { animation-delay: 1.6s; }
-.hp-item:nth-child(3) { animation-delay: 2s; }
-.hp-item:hover { opacity: 0.45 !important; }
-.hp-icon { flex-shrink: 0; margin-top: 0.15rem; opacity: 0.5; }
-.hp-icon svg { width: 13px; height: 13px; stroke: var(--ink); stroke-width: 1.5; fill: none; }
-.hp-label { display: block; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; opacity: 0.7; }
-@keyframes hpFloat { 0% { opacity: 0; transform: translateX(-12px); } 100% { opacity: 0.18; transform: translateX(0); } }
+/* Hero heatmap haze */
+.hero-haze { position: absolute; top: 0; right: 0; width: 55%; height: 100%; pointer-events: none; overflow: hidden; }
+.haze-blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0; animation: hazeIn 3s ease forwards; }
+.haze-blob-1 { width: 420px; height: 420px; top: 8%; right: -5%; background: radial-gradient(circle, rgba(224, 90, 79, 0.07) 0%, rgba(224, 90, 79, 0.02) 50%, transparent 70%); animation: hazeIn 3s ease 0.5s forwards, hazeDrift 12s ease-in-out 3.5s infinite; }
+.haze-blob-2 { width: 300px; height: 300px; top: 30%; right: 12%; background: radial-gradient(circle, rgba(42, 122, 111, 0.06) 0%, rgba(42, 122, 111, 0.015) 50%, transparent 70%); animation-delay: 0.9s; }
+.haze-blob-3 { width: 200px; height: 200px; top: 15%; right: 22%; background: radial-gradient(circle, rgba(224, 90, 79, 0.04) 0%, transparent 60%); animation-delay: 1.3s; }
+.haze-contour { position: absolute; top: 18%; right: 8%; width: 280px; height: 280px; border-radius: 50%; border: 1px solid rgba(224, 90, 79, 0.045); opacity: 0; animation: contourIn 2.5s ease 1.6s forwards; }
+.haze-contour::after { content: ''; position: absolute; top: 15%; left: 15%; width: 70%; height: 70%; border-radius: 50%; border: 1px solid rgba(42, 122, 111, 0.03); }
+.haze-keyword { position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); opacity: 0; pointer-events: none; animation: keywordIn 2s ease forwards; white-space: nowrap; }
+.haze-keyword:nth-child(5) { top: 22%; right: 18%; animation-delay: 2s; }
+.haze-keyword:nth-child(6) { top: 48%; right: 8%; animation-delay: 2.4s; }
+.haze-keyword:nth-child(7) { top: 62%; right: 25%; animation-delay: 2.8s; }
+@keyframes hazeIn { 0% { opacity: 0; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes contourIn { 0% { opacity: 0; transform: scale(0.9) rotate(-5deg); } 100% { opacity: 1; transform: scale(1) rotate(0deg); } }
+@keyframes keywordIn { 0% { opacity: 0; transform: translateX(12px); } 100% { opacity: 0.12; transform: translateX(0); } }
+@keyframes hazeDrift { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-8px, 6px) scale(1.03); } }
 .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: var(--mist); opacity: 0; animation: fadeIn 0.6s ease 0.8s forwards; }
 .hero-scroll svg { animation: scrollPulse 2s ease infinite; }
 
@@ -190,7 +196,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .carousel-track::before, .carousel-track::after { content: ''; position: absolute; top: 0; bottom: 0; width: 60px; z-index: 2; pointer-events: none; }
 .carousel-track::before { left: 0; background: linear-gradient(90deg, #f2f0ea, transparent); }
 .carousel-track::after { right: 0; background: linear-gradient(270deg, #f2f0ea, transparent); }
-.carousel-slider { display: flex; gap: 1.5rem; animation: carouselScroll 45s linear infinite; width: max-content; }
+.carousel-slider { display: flex; gap: 1.5rem; animation: carouselScroll 75s linear infinite; width: max-content; }
 .carousel-slider:hover { animation-play-state: paused; }
 @keyframes carouselScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 .testimonial-card { padding: 2rem; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); width: 340px; flex-shrink: 0; }
@@ -243,8 +249,8 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 /* ── CTA / Contact Form ── */
 .cta { padding: 5rem 2.5rem 4.5rem; background: linear-gradient(180deg, white 0%, #faf8f4 40%, var(--paper) 100%); border-top: 1px solid rgba(0,0,0,0.06); position: relative; overflow: hidden; }
 .cta::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 1px; background: linear-gradient(90deg, transparent, rgba(224, 90, 79, 0.2), rgba(42, 122, 111, 0.2), transparent); }
-.cta-inner { max-width: 640px; margin: 0 auto; position: relative; text-align: center; }
-.cta-founder-block { display: flex; align-items: center; gap: 1.2rem; justify-content: center; margin-bottom: 2rem; }
+.cta-inner { max-width: 640px; margin: 0 auto; position: relative; text-align: left; }
+.cta-founder-block { display: flex; align-items: center; gap: 1.2rem; justify-content: flex-start; margin-bottom: 2rem; }
 .founder-photo { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--warm); box-shadow: 0 6px 24px rgba(0,0,0,0.1); flex-shrink: 0; transition: all 0.4s ease; }
 .founder-photo:hover { border-color: var(--accent); box-shadow: 0 8px 32px rgba(224, 90, 79, 0.15); }
 .cta-founder-info { text-align: left; }
@@ -334,7 +340,7 @@ footer a:hover { color: var(--accent); }
   .section-tag::before { display: none; }
   .form-row { grid-template-columns: 1fr; }
   .testimonial-card { width: 290px; }
-  .hero-protocols { flex-direction: column; gap: 1.2rem; }
+  .hero-haze { display: none; }
 }
 @media (max-width: 600px) {
   html { font-size: 15px; }
@@ -373,10 +379,14 @@ footer a:hover { color: var(--accent); }
     <a href="mailto:ariel@yescraft.ai" class="btn-primary"><span>Discuss Your Project</span></a>
     <a href="#work" class="btn-ghost">See the work <span class="arrow">&#8594;</span></a>
   </div>
-  <div class="hero-protocols">
-    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span><span class="hp-label">Defensibility</span>Audit trail, evals, human-in-the-loop signoff</span></div>
-    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span><span class="hp-label">Speed</span>Prototype to decision in days</span></div>
-    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span><span class="hp-label">Adoption</span>Behavior design + instrumentation</span></div>
+  <div class="hero-haze">
+    <div class="haze-blob haze-blob-1"></div>
+    <div class="haze-blob haze-blob-2"></div>
+    <div class="haze-blob haze-blob-3"></div>
+    <div class="haze-contour"></div>
+    <span class="haze-keyword">defensibility</span>
+    <span class="haze-keyword">speed</span>
+    <span class="haze-keyword">adoption</span>
   </div>
   <div class="hero-scroll"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
 </section>

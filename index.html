@@ -115,6 +115,14 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 
 .pill { display: inline-block; background: var(--accent-glow); padding: 0.5rem 1rem; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); letter-spacing: 0.03em; margin-top: 0.5rem; }
 .pill-teal { background: var(--teal-soft); color: var(--teal); }
 
+.testimonials { padding: 5rem 2.5rem; max-width: 1200px; margin: 0 auto; }
+.testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 0.5rem; }
+.testimonial-card { padding: 2rem; background: white; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; }
+.testimonial-card blockquote { font-family: 'DM Serif Display', serif; font-size: 1.05rem; line-height: 1.55; color: var(--ink); font-style: italic; margin-bottom: 1.5rem; }
+.testimonial-card blockquote::before { content: '\201C'; display: block; font-size: 2.5rem; color: var(--accent); line-height: 1; margin-bottom: 0.3rem; font-style: normal; }
+.testimonial-attr { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
+.testimonial-attr strong { color: var(--ink); font-weight: 600; display: block; }
+
 .protocol { background: var(--dark-bg); padding: 6rem 2.5rem; position: relative; overflow: hidden; }
 .protocol::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: radial-gradient(ellipse at 20% 50%, rgba(224, 90, 79, 0.05) 0%, transparent 50%), radial-gradient(ellipse at 80% 20%, rgba(42, 122, 111, 0.04) 0%, transparent 40%); }
 .protocol-inner { max-width: 1200px; margin: 0 auto; position: relative; }
@@ -134,23 +142,15 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 
 .protocol-footnote a { color: var(--dark-accent); text-decoration: none; }
 .protocol-footnote a:hover { text-decoration: underline; }
 
-.founder { padding: 5rem 2.5rem; max-width: 1200px; margin: 0 auto; }
-.founder-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 3rem; align-items: start; }
-.founder-meta .section-tag { margin-bottom: 0.8rem; }
-.founder-meta h3 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 0.5rem; }
-.founder-meta .title { color: var(--slate); font-size: 0.9rem; margin-bottom: 1.5rem; }
-.founder-links { display: flex; flex-direction: column; gap: 0.5rem; }
-.founder-links a { color: var(--accent); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s; }
-.founder-links a:hover { color: var(--ink); }
-.founder-bio p { color: var(--slate); font-size: 0.95rem; line-height: 1.75; margin-bottom: 1rem; }
-.founder-bio p strong { color: var(--ink); }
-
 .cta { padding: 5rem 2.5rem; text-align: center; background: white; border-top: 1px solid rgba(0,0,0,0.06); }
 .cta-inner { max-width: 600px; margin: 0 auto; }
 .cta h2 { font-family: 'DM Serif Display', serif; font-size: 2.2rem; margin-bottom: 0.8rem; letter-spacing: -0.02em; }
 .cta p { color: var(--slate); font-size: 1rem; margin-bottom: 2rem; line-height: 1.65; }
 .cta-actions { display: flex; gap: 1rem; justify-content: center; align-items: center; }
 .cta-email { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--slate); letter-spacing: 0.02em; }
+.cta-founder { margin-top: 2rem; font-size: 0.82rem; color: var(--mist); }
+.cta-founder a { color: var(--accent); text-decoration: none; font-weight: 500; }
+.cta-founder a:hover { text-decoration: underline; }
 
 footer { padding: 2.5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); max-width: 1200px; margin: 0 auto; }
 footer p { font-size: 0.75rem; color: var(--mist); }
@@ -167,8 +167,8 @@ footer a:hover { color: var(--accent); }
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
   .split-layout { grid-template-columns: 1fr; }
+  .testimonials-grid { grid-template-columns: 1fr; }
   .protocol-body { grid-template-columns: 1fr; }
-  .founder-layout { grid-template-columns: 1fr; }
   .nav-toggle { display: flex; }
   .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
   .nav-links.open { display: flex; }
@@ -196,7 +196,7 @@ footer a:hover { color: var(--accent); }
     <a href="#services">Services</a>
     <a href="#work">Work</a>
     <a href="#protocols">Protocols</a>
-    <a href="#founder">About</a>
+    <a href="#testimonials">Proof</a>
     <a href="mailto:ariel@yescraft.ai" class="nav-cta">Get in Touch</a>
   </div>
 </nav>
@@ -255,40 +255,71 @@ footer a:hover { color: var(--accent); }
 </section>
 
 <section class="split-section reveal" id="work">
-  <div class="section-tag">Owned IP</div>
+  <div class="section-tag">Case Study</div>
   <h2 class="section-heading">MotiSpark</h2>
-  <p class="section-sub">Patented personalized video nudge platform for healthcare providers. Now part of YesCraft.</p>
+  <p class="section-sub">Healthcare providers weren't following evidence-based guidelines. Generic reminders weren't working. We built something that did.</p>
   <div class="split-layout">
     <div class="split-visual light-vis">
-      <div class="vis-badge">Patent WO2007104129A1</div>
-      <h3>Behavioral nudges at the point of decision</h3>
-      <p>Personalized video interventions for providers, delivering behaviorally-informed nudges timed to the moment they matter most. Deployed across provider networks driving measurable behavior change in patient care.</p>
+      <div class="vis-badge">Problem</div>
+      <h3>Providers ignore generic interventions</h3>
+      <p>Healthcare systems spent millions on compliance training that nobody retained. The nudge had to arrive at the exact moment of clinical decision-making, personalized to the provider and the patient in front of them.</p>
     </div>
     <div class="split-content">
-      <h3>From healthcare to AI infrastructure</h3>
-      <p>MotiSpark proved that personalized, context-aware nudges dramatically outperform generic interventions. The same behavioral science now informs how we approach user preference representation in AI: understanding what users actually want and encoding that faithfully for systems acting on their behalf.</p>
-      <span class="pill">Patented Technology · Full IP owned by YesCraft</span>
+      <div class="vis-badge" style="color:var(--teal);">Approach &amp; Result</div>
+      <h3>Patented behavioral nudge platform</h3>
+      <p>We built personalized video interventions timed to the point of care. Context-aware. Behaviorally informed. Deployed across provider networks.</p>
+      <p>The result: measurable behavior change in patient care at scale. The patent (WO2007104129A1) and full IP are now owned by YesCraft.</p>
+      <span class="pill">Patented Technology · Behavioral Science · Healthcare</span>
     </div>
   </div>
 </section>
 
 <section class="split-section alt-bg reveal">
   <div class="split-inner">
-    <div class="section-tag">Rapid Prototype</div>
+    <div class="section-tag">Case Study</div>
     <h2 class="section-heading">Vintage Wizard</h2>
-    <p class="section-sub">Concept to live deployment in under 12 hours.</p>
+    <p class="section-sub">A client asked: "Can AI appraise vintage items from a photo?" We shipped a working product in under 12 hours.</p>
     <div class="split-layout">
       <div class="split-visual dark-vis">
-        <div class="vis-badge">Live product</div>
+        <div class="vis-badge">The Product</div>
         <h3>Snap. Value. List.</h3>
-        <p>Photograph any vintage item. Instant market valuation, searchable catalog, and ready-to-post marketplace listings.</p>
+        <p>Photograph any vintage item. Get instant market valuation, a searchable catalog, and ready-to-post marketplace listings.</p>
         <a href="https://vintage.yescraft.ai/?agency" class="split-link">Try it live &#8594;</a>
       </div>
       <div class="split-content">
-        <h3>Vibe coding gives us superpowers. Knowing when not to use an LLM is what makes them work.</h3>
-        <p>Most AI prototypes waste tokens sending simple math to a language model. Vintage Wizard stitches the right tool to each job: vision models for identification, Python for pricing math, an LLM only where natural language generation actually matters.</p>
-        <p>Faster, cheaper, more accurate than throwing everything at a single model and hoping. That's the difference between an AI demo and an AI product.</p>
-        <span class="pill pill-teal">Vision + Python + LLM · Concept &#8594; Live: &lt;12 hrs</span>
+        <div class="vis-badge" style="color:var(--teal);">Why It Works</div>
+        <h3>Right tool for each job</h3>
+        <p>Most AI prototypes waste tokens sending simple math to a language model. Vintage Wizard uses vision models for identification, Python for pricing math, and an LLM only where natural language generation actually matters.</p>
+        <p>The difference between an AI demo and an AI product is knowing when <em>not</em> to use an LLM.</p>
+        <span class="pill pill-teal">Vision + Python + LLM · Concept to Live: &lt;12 hrs</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonials reveal" id="testimonials">
+  <div class="section-tag">What People Say</div>
+  <h2 class="section-heading">From people who've worked with us</h2>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <blockquote>Phenomenal at getting things done &mdash; incredibly creative, yet extremely focused on execution.</blockquote>
+      <div class="testimonial-attr">
+        <strong>Deena Varshavskaya</strong>
+        Founder &amp; CEO, Wanelo
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <blockquote>Among the best hires I ever made in my 30+ year career.</blockquote>
+      <div class="testimonial-attr">
+        <strong>Tracy Shea</strong>
+        CDO, DirecTV Innovation
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <blockquote>Technology visionary, three steps ahead of everyone else in the room.</blockquote>
+      <div class="testimonial-attr">
+        <strong>Kathryn Campbell</strong>
+        Global UX Research Leader
       </div>
     </div>
   </div>
@@ -328,25 +359,6 @@ footer a:hover { color: var(--accent); }
   </div>
 </section>
 
-<section class="founder reveal" id="founder">
-  <div class="founder-layout">
-    <div class="founder-meta">
-      <div class="section-tag">Founder</div>
-      <h3>Ariel McNichol</h3>
-      <p class="title">Principal, YesCraft LLC</p>
-      <div class="founder-links">
-        <a href="https://www.arielmcnichol.com">Portfolio &#8594;</a>
-        <a href="mailto:ariel@yescraft.ai">ariel@yescraft.ai &#8594;</a>
-        <a href="tel:+13233090337">(323) 309-0337 &#8594;</a>
-      </div>
-    </div>
-    <div class="founder-bio">
-      <p>Twenty years of product leadership across <strong>Apple, Disney, CVS Health, and Take-Two Interactive</strong>. Patient engagement rates above 90%. Cost reductions affecting millions of users.</p>
-      <p>Patent holder in behavioral nudge technology (MotiSpark). Techstars mentor. Founder of mEgo, one of the first platforms for portable user preferences (TechCrunch40, 2007). Now leading a team at the intersection of AI agent infrastructure, behavioral science, and human-centered product design.</p>
-    </div>
-  </div>
-</section>
-
 <section class="cta">
   <div class="cta-inner">
     <h2>Let's build something real.</h2>
@@ -355,6 +367,7 @@ footer a:hover { color: var(--accent); }
       <a href="mailto:ariel@yescraft.ai" class="btn-primary">Start a Conversation</a>
       <span class="cta-email">ariel@yescraft.ai</span>
     </div>
+    <p class="cta-founder">Ariel McNichol · Principal, YesCraft LLC · <a href="https://www.arielmcnichol.com">Portfolio</a></p>
   </div>
 </section>
 

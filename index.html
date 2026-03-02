@@ -80,10 +80,16 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .btn-ghost:hover { color: var(--accent); }
 .btn-ghost .arrow { display: inline-block; transition: transform 0.3s ease; }
 .btn-ghost:hover .arrow { transform: translateX(4px); }
-.hero-protocols { display: flex; gap: 3rem; margin-top: 3.5rem; opacity: 0; animation: fadeIn 1.2s ease 1s forwards; }
-.hp-item { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink); line-height: 1.6; max-width: 200px; opacity: 0.18; letter-spacing: 0.03em; transition: opacity 0.5s ease; }
-.hp-item:hover { opacity: 0.45; }
+.hero-protocols { display: flex; gap: 3rem; margin-top: 3.5rem; }
+.hp-item { display: flex; align-items: flex-start; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink); line-height: 1.6; max-width: 220px; opacity: 0; letter-spacing: 0.03em; transition: opacity 0.5s ease; animation: hpFloat 1s ease forwards; }
+.hp-item:nth-child(1) { animation-delay: 1.2s; }
+.hp-item:nth-child(2) { animation-delay: 1.6s; }
+.hp-item:nth-child(3) { animation-delay: 2s; }
+.hp-item:hover { opacity: 0.45 !important; }
+.hp-icon { flex-shrink: 0; margin-top: 0.15rem; opacity: 0.5; }
+.hp-icon svg { width: 13px; height: 13px; stroke: var(--ink); stroke-width: 1.5; fill: none; }
 .hp-label { display: block; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; opacity: 0.7; }
+@keyframes hpFloat { 0% { opacity: 0; transform: translateX(-12px); } 100% { opacity: 0.18; transform: translateX(0); } }
 .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: var(--mist); opacity: 0; animation: fadeIn 0.6s ease 0.8s forwards; }
 .hero-scroll svg { animation: scrollPulse 2s ease infinite; }
 
@@ -368,9 +374,9 @@ footer a:hover { color: var(--accent); }
     <a href="#work" class="btn-ghost">See the work <span class="arrow">&#8594;</span></a>
   </div>
   <div class="hero-protocols">
-    <div class="hp-item"><span class="hp-label">Defensibility</span> Audit trail, evals, human-in-the-loop signoff</div>
-    <div class="hp-item"><span class="hp-label">Speed</span> Prototype to decision in days</div>
-    <div class="hp-item"><span class="hp-label">Adoption</span> Behavior design + instrumentation</div>
+    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span><span class="hp-label">Defensibility</span>Audit trail, evals, human-in-the-loop signoff</span></div>
+    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span><span><span class="hp-label">Speed</span>Prototype to decision in days</span></div>
+    <div class="hp-item"><span class="hp-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span><span class="hp-label">Adoption</span>Behavior design + instrumentation</span></div>
   </div>
   <div class="hero-scroll"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
 </section>

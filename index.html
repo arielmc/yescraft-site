@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>YesCraft.ai | AI Strategy & Product Leadership</title>
+<meta name="description" content="AI strategy and product leadership studio. Fractional CPO, rapid prototyping, and behavioral design for teams shipping AI that works. Founded by Ariel McNichol.">
+<meta property="og:title" content="YesCraft.ai | AI Strategy & Product Leadership">
+<meta property="og:description" content="A product and AI strategy studio built on behavior design, obsessive execution, and twenty years shipping at scale.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.yescraft.ai">
+<meta property="og:image" content="https://www.yescraft.ai/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YesCraft.ai | AI Strategy & Product Leadership">
+<meta name="twitter:description" content="AI strategy and product leadership studio. Fractional CPO, rapid prototyping, and behavioral design.">
+<meta name="twitter:image" content="https://www.yescraft.ai/og-image.png">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230c1222'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' font-weight='bold' fill='%23e05a4f'>Y</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -38,6 +49,11 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 
 .nav-links a:hover { color: var(--accent); }
 .nav-cta { background: var(--ink) !important; color: var(--paper) !important; padding: 0.55rem 1.3rem !important; border-radius: 4px; font-size: 0.8rem !important; letter-spacing: 0.03em !important; transition: background 0.2s !important; }
 .nav-cta:hover { background: var(--accent) !important; }
+.nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; flex-direction: column; gap: 5px; z-index: 101; }
+.nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 1px; transition: all 0.3s ease; }
+.nav-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+.nav-toggle.active span:nth-child(2) { opacity: 0; }
+.nav-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
 .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; }
@@ -161,7 +177,11 @@ footer a:hover { color: var(--accent); }
   .split-layout { grid-template-columns: 1fr; }
   .protocol-body { grid-template-columns: 1fr; }
   .founder-layout { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
+  .nav-toggle { display: flex; }
+  .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
+  .nav-links.open { display: flex; }
+  .nav-links a { font-size: 1.1rem; }
+  .nav-links .nav-cta { margin-top: 1rem; }
   .credibility-logos { gap: 1.5rem; }
   .cred-divider { display: none; }
 }
@@ -178,6 +198,9 @@ footer a:hover { color: var(--accent); }
 
 <nav>
   <a href="#" class="nav-logo">YesCraft<span>.</span>ai</a>
+  <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
   <div class="nav-links">
     <a href="#services">Services</a>
     <a href="#work">Work</a>
@@ -190,7 +213,7 @@ footer a:hover { color: var(--accent); }
 <section class="hero">
   <div class="hero-tag">Fractional CPO · AI Strategy · Rapid Prototyping</div>
   <h1>AI that ships. Strategy&nbsp;that&nbsp;<em>sticks.</em></h1>
-  <p class="hero-sub">A product and AI strategy studio built on behavior design, obsessive execution, and twenty years of making things people actually want to use. We solve hard problems for clients and work to architect a future where inference is biased for the individual, so we each learn and grow from our interactions.</p>
+  <p class="hero-sub">A product and AI strategy studio built on behavior design, obsessive execution, and twenty years of making things people actually want to use.</p>
   <div class="hero-actions">
     <a href="mailto:ariel@yescraft.ai" class="btn-primary">Discuss Your Project</a>
     <a href="#work" class="btn-ghost">See the work</a>
@@ -334,7 +357,7 @@ footer a:hover { color: var(--accent); }
       <h3>Ariel McNichol</h3>
       <p class="title">Principal, YesCraft LLC</p>
       <div class="founder-links">
-        <a href="http://www.arielmcnichol.com">Portfolio &#8594;</a>
+        <a href="https://www.arielmcnichol.com">Portfolio &#8594;</a>
         <a href="mailto:ariel@yescraft.ai">ariel@yescraft.ai &#8594;</a>
         <a href="tel:+13233090337">(323) 309-0337 &#8594;</a>
       </div>
@@ -375,6 +398,22 @@ try {
 setTimeout(function() {
   document.querySelectorAll('.reveal:not(.visible)').forEach(function(el) { el.classList.add('visible'); });
 }, 800);
+var toggle = document.querySelector('.nav-toggle');
+var links = document.querySelector('.nav-links');
+if (toggle && links) {
+  toggle.addEventListener('click', function() {
+    toggle.classList.toggle('active');
+    links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', links.classList.contains('open'));
+  });
+  links.querySelectorAll('a').forEach(function(a) {
+    a.addEventListener('click', function() {
+      toggle.classList.remove('active');
+      links.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+}
 </script>
 </body>
 </html>

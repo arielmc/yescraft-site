@@ -108,14 +108,15 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .btn-ghost .arrow { display: inline-block; transition: transform 0.3s ease; color: var(--teal); }
 .btn-ghost:hover { color: var(--ink); }
 .btn-ghost:hover .arrow { transform: translateX(4px); }
-/* Hero method line */
-.hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; text-decoration: none; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; align-items: center; }
-.hero-chip { font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500; letter-spacing: 0.08em; color: var(--slate); border: 1px solid rgba(0,0,0,0.13); padding: 6px 11px; border-radius: 999px; transition: all 0.3s var(--spring); cursor: pointer; display: inline-flex; align-items: center; gap: 5px; line-height: 1; }
-.hero-chip::after { content: '›'; font-size: 0.9em; opacity: 0.35; transition: all 0.3s var(--spring); }
-.hero-chip:last-child::after { content: none; }
-.hero-chip:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.04); }
-.hero-chip:hover::after { opacity: 0.6; color: var(--accent); }
-.hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: var(--mist); opacity: 0; animation: fadeIn 0.6s ease 0.8s forwards; }
+/* Hero method chips */
+.hero-method-block { margin-top: 30px; opacity: 0; animation: fadeUp 0.6s ease 0.5s forwards; }
+.hero-method-label { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); margin-bottom: 10px; }
+.hero-chips { display: flex; flex-wrap: wrap; gap: 6px; text-decoration: none; align-items: center; }
+.hero-chip { font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500; letter-spacing: 0.08em; color: var(--ink-light); border: 1px solid rgba(0,0,0,0.13); padding: 6px 11px; border-radius: 999px; transition: all 0.3s var(--spring); cursor: pointer; display: inline-flex; align-items: center; line-height: 1; }
+.hero-chips:hover .hero-chip { border-color: var(--accent); color: var(--accent); }
+.hero-chips:hover .hero-chip:hover { transform: scale(1.04); }
+.hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: var(--mist); opacity: 0; animation: fadeIn 0.6s ease 0.8s forwards; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.hero-scroll-label { font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mist); opacity: 0.6; }
 .hero-scroll svg { animation: scrollPulse 2s ease infinite; }
 
 /* ── Credibility ── */
@@ -123,13 +124,12 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .credibility-inner { max-width: 1200px; margin: 0 auto; }
 .credibility-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--mist); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; }
 .credibility-logos { display: flex; gap: 0; align-items: center; flex-wrap: nowrap; justify-content: center; }
-.cred-item { display: flex; align-items: center; white-space: nowrap; cursor: default; flex-shrink: 0; padding: 0 1.8rem; border-right: 1px solid rgba(0,0,0,0.08); transition: transform 0.4s var(--spring); }
+.cred-item { display: flex; align-items: center; white-space: nowrap; cursor: default; flex-shrink: 0; padding: 0 1.8rem; transition: transform 0.4s var(--spring); }
 .cred-item:hover { transform: scale(1.05); }
-.cred-item:last-child { border-right: none; }
 .cred-item:first-child { padding-left: 0; }
 .cred-item:last-child { padding-right: 0; }
-.cred-item span { font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 600; color: var(--ink); letter-spacing: 0.01em; opacity: 0.3; transition: opacity 0.4s ease; }
-.cred-item:hover span { opacity: 0.6; }
+.cred-item span { font-family: 'DM Sans', sans-serif; font-size: 0.92rem; font-weight: 600; color: var(--ink); letter-spacing: 0.01em; opacity: 0.45; transition: opacity 0.4s ease; }
+.cred-item:hover span { opacity: 0.7; }
 .cred-divider { display: none; }
 
 /* ── Section utilities ── */
@@ -137,6 +137,9 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .section-tag::before { content: ''; width: 24px; height: 1.5px; background: var(--teal); display: inline-block; }
 .section-heading { font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.2; max-width: 780px; margin-bottom: 1rem; font-weight: 600; text-wrap: balance; }
 .section-sub { font-size: 1.05rem; color: var(--slate); max-width: 560px; margin-bottom: 3.5rem; line-height: 1.7; }
+
+/* ── Light-to-dark transition bridge ── */
+.section-bridge { height: 48px; background: linear-gradient(180deg, var(--paper) 0%, rgba(12, 18, 34, 0.06) 40%, rgba(12, 18, 34, 0.25) 75%, var(--dark-bg) 100%); }
 
 /* ── Services (dark) ── */
 .services-dark { background: var(--dark-bg); position: relative; overflow: hidden; }
@@ -227,6 +230,14 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .testimonial-attr strong { color: var(--ink); font-weight: 600; display: block; }
 
 /* ── Confidentiality note ── */
+/* ── Light section ambient blobs ── */
+.split-section { overflow: hidden; }
+.split-section::before { content: ''; position: absolute; top: 10%; left: -8%; width: 350px; height: 350px; background: radial-gradient(circle, rgba(180, 200, 240, 0.12) 0%, transparent 65%); border-radius: 50%; animation: blobDrift 25s ease-in-out infinite; filter: blur(50px); pointer-events: none; }
+.split-section.alt-bg { overflow: hidden; position: relative; }
+.split-section.alt-bg::before { left: auto; right: -5%; top: 20%; background: radial-gradient(circle, rgba(220, 160, 200, 0.10) 0%, transparent 65%); animation: blobDrift2 28s ease-in-out infinite; }
+.credibility { position: relative; overflow: hidden; }
+.credibility::before { content: ''; position: absolute; top: -30%; right: 15%; width: 250px; height: 250px; background: radial-gradient(circle, rgba(180, 100, 160, 0.06) 0%, transparent 65%); border-radius: 50%; animation: blobDrift2 20s ease-in-out infinite; filter: blur(40px); pointer-events: none; }
+
 .confid-note { text-align: center; padding: 3.5rem 2.5rem; max-width: 1200px; margin: 0 auto; }
 .confid-note p { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--mist); letter-spacing: 0.03em; line-height: 1.7; }
 .confid-note p span { color: var(--slate); font-weight: 500; }
@@ -481,7 +492,8 @@ footer a:hover { color: var(--ink); }
   .section-tag::before { display: none; }
   .form-row { grid-template-columns: 1fr; }
   .testimonial-card { width: 290px; }
-  .hero-chips { gap: 6px; margin-top: 14px; }
+  .hero-method-block { margin-top: 24px; }
+  .hero-chips { gap: 5px; }
   .hero-chip { font-size: 11px; padding: 5px 9px; letter-spacing: 0.06em; }
 }
 @media (max-width: 600px) {
@@ -527,14 +539,17 @@ footer a:hover { color: var(--ink); }
   <div class="hero-actions">
     <a href="mailto:ariel@yescraft.ai" class="btn-primary"><span>Discuss Your Project</span></a>
   </div>
-  <a href="#protocols" class="hero-chips">
-    <span class="hero-chip">Observe</span>
-    <span class="hero-chip">Hypothesize</span>
-    <span class="hero-chip">Prototype</span>
-    <span class="hero-chip">Instrument</span>
-    <span class="hero-chip">Iterate</span>
-  </a>
-  <div class="hero-scroll"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
+  <div class="hero-method-block">
+    <div class="hero-method-label">Method</div>
+    <a href="#protocols" class="hero-chips">
+      <span class="hero-chip">Observe</span>
+      <span class="hero-chip">Hypothesize</span>
+      <span class="hero-chip">Prototype</span>
+      <span class="hero-chip">Instrument</span>
+      <span class="hero-chip">Iterate</span>
+    </a>
+  </div>
+  <div class="hero-scroll"><span class="hero-scroll-label">Scroll</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg></div>
 </section>
 
 <section class="credibility">
@@ -551,6 +566,7 @@ footer a:hover { color: var(--ink); }
   </div>
 </section>
 
+<div class="section-bridge"></div>
 <div class="services-dark">
 <section class="services reveal" id="services">
   <div class="section-tag">What We Do</div>

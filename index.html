@@ -80,9 +80,10 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .btn-ghost:hover { color: var(--accent); }
 .btn-ghost .arrow { display: inline-block; transition: transform 0.3s ease; }
 .btn-ghost:hover .arrow { transform: translateX(4px); }
-.hero-protocols { display: flex; gap: 2.5rem; margin-top: 3rem; opacity: 0; animation: fadeIn 0.6s ease 0.6s forwards; }
-.hp-item { font-size: 0.82rem; color: var(--slate); line-height: 1.5; max-width: 220px; }
-.hp-label { display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; font-weight: 600; color: var(--ink); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem; }
+.hero-protocols { display: flex; gap: 3rem; margin-top: 3.5rem; opacity: 0; animation: fadeIn 1.2s ease 1s forwards; }
+.hp-item { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--ink); line-height: 1.6; max-width: 200px; opacity: 0.18; letter-spacing: 0.03em; transition: opacity 0.5s ease; }
+.hp-item:hover { opacity: 0.45; }
+.hp-label { display: block; font-size: 0.58rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.2rem; opacity: 0.7; }
 .hero-scroll { position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%); color: var(--mist); opacity: 0; animation: fadeIn 0.6s ease 0.8s forwards; }
 .hero-scroll svg { animation: scrollPulse 2s ease infinite; }
 
@@ -221,6 +222,17 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .protocol-footnote p { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--mist); letter-spacing: 0.02em; }
 .protocol-footnote a { color: var(--dark-accent); text-decoration: none; transition: color 0.2s; }
 .protocol-footnote a:hover { color: var(--paper); }
+
+/* ── Rotating Words ── */
+.rotating-words { display: inline-block; position: relative; }
+.rotating-words span { position: absolute; left: 0; top: 0; white-space: nowrap; opacity: 0; color: var(--accent); animation: rotateWord 10s linear infinite; }
+.rotating-words span:first-child { position: relative; }
+.rotating-words span:nth-child(1) { animation-delay: 0s; }
+.rotating-words span:nth-child(2) { animation-delay: 2s; }
+.rotating-words span:nth-child(3) { animation-delay: 4s; }
+.rotating-words span:nth-child(4) { animation-delay: 6s; }
+.rotating-words span:nth-child(5) { animation-delay: 8s; }
+@keyframes rotateWord { 0% { opacity: 0; transform: translateY(8px); } 5% { opacity: 1; transform: translateY(0); } 15% { opacity: 1; transform: translateY(0); } 20% { opacity: 0; transform: translateY(-8px); } 100% { opacity: 0; } }
 
 /* ── CTA / Contact Form ── */
 .cta { padding: 5rem 2.5rem 4.5rem; background: linear-gradient(180deg, white 0%, #faf8f4 40%, var(--paper) 100%); border-top: 1px solid rgba(0,0,0,0.06); position: relative; overflow: hidden; }
@@ -595,7 +607,7 @@ footer a:hover { color: var(--accent); }
         <div class="cta-founder-role">Principal, YesCraft LLC · <a href="https://www.arielmcnichol.com">Portfolio</a></div>
       </div>
     </div>
-    <h2>Let's build something real.</h2>
+    <h2>Let's ship something <span class="rotating-words"><span>better.</span><span>smarter.</span><span>delightful.</span><span>brilliant.</span><span>effective.</span></span></h2>
     <p class="cta-desc">Whether it's shipping an AI product, modernizing a platform, or shaping infrastructure humans will depend on — we're here for the work that matters.</p>
     <form name="contact" method="POST" action="/thank-you" data-netlify="true" class="contact-form">
       <input type="hidden" name="form-name" value="contact">

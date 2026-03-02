@@ -90,13 +90,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.2rem 
 .service-card h3 { font-family: 'DM Serif Display', serif; font-size: 1.25rem; margin-bottom: 0.7rem; letter-spacing: -0.01em; }
 .service-card p { font-size: 0.92rem; color: var(--slate); line-height: 1.65; }
 
-.track-record { padding: 5rem 2.5rem; background: white; border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
-.track-record-inner { max-width: 1200px; margin: 0 auto; }
-.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; margin-top: 3rem; }
-.stat-item { text-align: center; padding: 1.5rem; }
-.stat-number { font-family: 'DM Serif Display', serif; font-size: 2.8rem; color: var(--accent); line-height: 1; margin-bottom: 0.5rem; }
-.stat-label { font-size: 0.82rem; color: var(--slate); line-height: 1.5; }
-
 .split-section { padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto; }
 .split-section.alt-bg { max-width: 100%; background: rgba(0,0,0,0.015); border-top: 1px solid rgba(0,0,0,0.06); border-bottom: 1px solid rgba(0,0,0,0.06); }
 .split-section.alt-bg > .split-inner { max-width: 1200px; margin: 0 auto; }
@@ -173,7 +166,6 @@ footer a:hover { color: var(--accent); }
 
 @media (max-width: 900px) {
   .services-grid { grid-template-columns: 1fr; }
-  .stats-row { grid-template-columns: repeat(2, 1fr); }
   .split-layout { grid-template-columns: 1fr; }
   .protocol-body { grid-template-columns: 1fr; }
   .founder-layout { grid-template-columns: 1fr; }
@@ -188,7 +180,6 @@ footer a:hover { color: var(--accent); }
 @media (max-width: 600px) {
   html { font-size: 15px; }
   .hero { padding: 7rem 1.5rem 3rem; }
-  .stats-row { grid-template-columns: 1fr 1fr; gap: 1rem; }
   .hero-actions { flex-direction: column; align-items: flex-start; }
   .cta-actions { flex-direction: column; }
 }
@@ -259,19 +250,6 @@ footer a:hover { color: var(--accent); }
       <div class="service-icon">03</div>
       <h3>Rapid Prototyping</h3>
       <p>Concept to deployed product in days, not quarters. We validate with real users before you commit to a roadmap.</p>
-    </div>
-  </div>
-</section>
-
-<section class="track-record reveal">
-  <div class="track-record-inner">
-    <div class="section-tag" style="text-align:center;">Track Record</div>
-    <h2 class="section-heading" style="text-align:center; max-width:100%;">Outcomes, not decks</h2>
-    <div class="stats-row">
-      <div class="stat-item"><div class="stat-number">90%+</div><div class="stat-label">Patient engagement<br>at CVS Health</div></div>
-      <div class="stat-item"><div class="stat-number">1M+</div><div class="stat-label">Users on mEgo<br>platform (2007)</div></div>
-      <div class="stat-item"><div class="stat-number">20+</div><div class="stat-label">Years shipping<br>at Fortune 500 scale</div></div>
-      <div class="stat-item"><div class="stat-number">1</div><div class="stat-label">Patent in behavioral<br>nudge technology</div></div>
     </div>
   </div>
 </section>

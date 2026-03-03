@@ -1006,14 +1006,13 @@ document.documentElement.classList.remove('no-js');
       vx: (Math.random() - 0.5) * 0.15,
       vy: (Math.random() - 0.5) * 0.12,
       size: 1.5 + Math.random() * 3.5,
-      alpha: 0.10 + Math.random() * 0.15,
-      alphaBase: 0.10 + Math.random() * 0.15,
+      alpha: 0.5 + Math.random() * 0.3,
+      alphaBase: 0.5 + Math.random() * 0.3,
       phase: Math.random() * Math.PI * 2,
-      freq: 0.006 + Math.random() * 0.01,
-      glowSize: 6 + Math.random() * 10,
-      color: Math.random() < 0.6 ? 'teal' : 'ink',
-      sparkleTimer: Math.floor(Math.random() * 400),
-      sparkleInterval: 200 + Math.floor(Math.random() * 500)
+      freq: 0.008 + Math.random() * 0.012,
+      glowSize: 10 + Math.random() * 16,
+      pulsePhase: Math.random() * Math.PI * 2,
+      pulseFreq: 0.015 + Math.random() * 0.02
     });
   }
 
@@ -1026,57 +1025,40 @@ document.documentElement.classList.remove('no-js');
     for (var i = 0; i < sprites.length; i++) {
       var s = sprites[i];
       s.x += s.vx; s.y += s.vy;
-      s.alpha = s.alphaBase + Math.sin(t * s.freq + s.phase) * 0.06;
-      s.sparkleTimer++;
+      s.alpha = s.alphaBase + Math.sin(t * s.freq + s.phase) * 0.08;
+      var pulse = 0.6 + Math.sin(t * s.pulseFreq + s.pulsePhase) * 0.4;
       if (s.x < -40) s.x = W + 30;
       if (s.x > W + 40) s.x = -30;
       if (s.y < -40) s.y = H + 30;
       if (s.y > H + 40) s.y = -30;
-      var col = s.color === 'teal' ? '45, 110, 126' : '12, 18, 34';
       var a = Math.max(0, s.alpha);
+      var glowR = s.glowSize * (0.8 + pulse * 0.4);
 
-      // Outer glow
-      var grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.glowSize);
-      grd.addColorStop(0, 'rgba(' + col + ',' + (a * 0.5) + ')');
-      grd.addColorStop(0.5, 'rgba(' + col + ',' + (a * 0.15) + ')');
-      grd.addColorStop(1, 'rgba(' + col + ',0)');
+      // Royal blue outer glow (pulsing)
+      var grd = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, glowR);
+      grd.addColorStop(0, 'rgba(65, 105, 225,' + (a * 0.45 * pulse) + ')');
+      grd.addColorStop(0.35, 'rgba(65, 105, 225,' + (a * 0.2 * pulse) + ')');
+      grd.addColorStop(0.7, 'rgba(100, 140, 255,' + (a * 0.08 * pulse) + ')');
+      grd.addColorStop(1, 'rgba(100, 140, 255, 0)');
       ctx.globalAlpha = 1;
       ctx.fillStyle = grd;
       ctx.beginPath();
-      ctx.arc(s.x, s.y, s.glowSize, 0, Math.PI * 2);
+      ctx.arc(s.x, s.y, glowR, 0, Math.PI * 2);
       ctx.fill();
 
-      // Core dot
-      ctx.globalAlpha = a * 1.2;
+      // White core dot
+      ctx.globalAlpha = a * 0.95;
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(' + col + ', 0.8)';
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
       ctx.fill();
 
-      // White sparkle glint (occasional)
-      var sparkleWindow = s.sparkleTimer - s.sparkleInterval;
-      if (sparkleWindow >= 0 && sparkleWindow < 30) {
-        var sp = sparkleWindow / 30;
-        var sparkAlpha = Math.sin(sp * Math.PI) * 0.9;
-        var sparkSize = s.size * (1.5 + sp * 2);
-        ctx.globalAlpha = sparkAlpha;
-        ctx.strokeStyle = 'rgba(255,255,255,0.95)';
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(s.x - sparkSize, s.y);
-        ctx.lineTo(s.x + sparkSize, s.y);
-        ctx.moveTo(s.x, s.y - sparkSize);
-        ctx.lineTo(s.x, s.y + sparkSize);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(s.x, s.y, s.size * 0.8, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(255,255,255,' + (sparkAlpha * 0.7) + ')';
-        ctx.fill();
-        if (sparkleWindow >= 29) {
-          s.sparkleTimer = 0;
-          s.sparkleInterval = 200 + Math.floor(Math.random() * 500);
-        }
-      }
+      // Bright white center pinpoint
+      ctx.globalAlpha = a;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.size * 0.4, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
     }
     ctx.globalAlpha = 1;
     requestAnimationFrame(draw);

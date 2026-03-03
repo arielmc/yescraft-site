@@ -67,9 +67,8 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 
 /* ── Hero ── */
 .hero { display: flex; flex-direction: column; justify-content: center; padding: 8rem 2.5rem 4rem; max-width: 1200px; margin: 0 auto; position: relative; }
-.hero-watermark { position: absolute; right: -2%; top: 50%; transform: translateY(-50%); font-family: 'Sora', sans-serif; font-size: clamp(18rem, 28vw, 28rem); font-weight: 800; color: var(--ink); opacity: 0; pointer-events: none; user-select: none; line-height: 1; letter-spacing: -0.05em; animation: watermarkReveal 2s ease 0.6s forwards, watermarkBreath 8s ease-in-out 2.6s infinite; }
-@keyframes watermarkReveal { 0% { opacity: 0; transform: translateY(-50%) scale(0.96); filter: blur(8px); } 100% { opacity: 0.025; transform: translateY(-50%) scale(1); filter: blur(0px); } }
-@keyframes watermarkBreath { 0%, 100% { opacity: 0.025; transform: translateY(-50%) scale(1); } 50% { opacity: 0.035; transform: translateY(-50%) scale(1.01); } }
+.hero-sprites { position: absolute; top: 0; right: 0; width: 55%; height: 100%; pointer-events: none; opacity: 0; animation: fadeIn 3s ease 0.8s forwards; }
+.hero-sprites canvas { width: 100%; height: 100%; display: block; }
 .hero::before { content: ''; position: absolute; top: 5%; right: 0; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 35%, transparent 65%); pointer-events: none; }
 .hero::after { content: ''; position: absolute; bottom: 5%; right: 8%; width: 480px; height: 480px; background: radial-gradient(circle, rgba(160, 170, 190, 0.45) 0%, rgba(140, 155, 180, 0.18) 40%, transparent 65%); pointer-events: none; }
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; display: flex; align-items: center; gap: 0.8rem; }
@@ -500,7 +499,7 @@ footer a:hover { color: var(--ink); }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .hero-watermark { display: none; }
+  .hero-sprites { display: none; }
   .services-grid { grid-template-columns: 1fr; }
   .split-layout { grid-template-columns: 1fr; }
   .lab-projects-grid { grid-template-columns: 1fr; }
@@ -559,7 +558,7 @@ footer a:hover { color: var(--ink); }
 </nav>
 
 <section class="hero">
-  <div class="hero-watermark" aria-hidden="true">Y</div>
+  <div class="hero-sprites" aria-hidden="true"><canvas id="heroSprites"></canvas></div>
   <div class="hero-tag">Fractional CPO <span class="dot">·</span> AI Strategy <span class="dot">·</span> Rapid Prototyping</div>
   <h1>AI that ships. Strategy&nbsp;that&nbsp;<em>sticks<span class="sticky-dot"></span></em></h1>
   <p class="hero-sub">A product and AI strategy studio built on behavior design, obsessive execution, and twenty years of making things people actually want to use.</p>
@@ -597,7 +596,7 @@ footer a:hover { color: var(--ink); }
     </div>
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
-      <h3>Systems Design &amp; AI</h3>
+      <h3>System &amp; Workflow Design</h3>
       <p>Twenty years of UX and product design applied to AI orchestration. We design the workflows humans actually trust, the right model for each job, shaped by deep experience in how people use software.</p>
     </div>
     <div class="service-card">
@@ -981,6 +980,83 @@ footer a:hover { color: var(--ink); }
 <script src="https://player.vimeo.com/api/player.js"></script>
 <script>
 document.documentElement.classList.remove('no-js');
+
+// Hero sprites — soft dancing lines + sparkles
+(function() {
+  var c = document.getElementById('heroSprites');
+  if (!c) return;
+  var ctx = c.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+  var W, H;
+  function resize() {
+    var rect = c.parentElement.getBoundingClientRect();
+    W = rect.width; H = rect.height;
+    c.width = W * dpr; c.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var sprites = [];
+  var count = 18;
+  for (var i = 0; i < count; i++) {
+    var type = Math.random() < 0.45 ? 'line' : 'dot';
+    sprites.push({
+      type: type,
+      x: W * 0.15 + Math.random() * W * 0.7,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.15,
+      vy: (Math.random() - 0.5) * 0.12,
+      len: type === 'line' ? 20 + Math.random() * 50 : 0,
+      angle: Math.random() * Math.PI * 2,
+      angVel: (Math.random() - 0.5) * 0.003,
+      size: type === 'dot' ? 1 + Math.random() * 2.5 : 0,
+      alpha: 0.06 + Math.random() * 0.08,
+      alphaBase: 0.06 + Math.random() * 0.08,
+      phase: Math.random() * Math.PI * 2,
+      freq: 0.008 + Math.random() * 0.012,
+      color: Math.random() < 0.6 ? 'teal' : 'ink'
+    });
+  }
+
+  var t = 0;
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function draw() {
+    if (reduced) return;
+    ctx.clearRect(0, 0, W, H);
+    t++;
+    for (var i = 0; i < sprites.length; i++) {
+      var s = sprites[i];
+      s.x += s.vx; s.y += s.vy; s.angle += s.angVel;
+      s.alpha = s.alphaBase + Math.sin(t * s.freq + s.phase) * 0.04;
+      if (s.x < -60) s.x = W + 40;
+      if (s.x > W + 60) s.x = -40;
+      if (s.y < -60) s.y = H + 40;
+      if (s.y > H + 60) s.y = -40;
+      var col = s.color === 'teal' ? '45, 110, 126' : '12, 18, 34';
+      ctx.globalAlpha = Math.max(0, s.alpha);
+      if (s.type === 'line') {
+        var dx = Math.cos(s.angle) * s.len * 0.5;
+        var dy = Math.sin(s.angle) * s.len * 0.5;
+        ctx.beginPath();
+        ctx.moveTo(s.x - dx, s.y - dy);
+        ctx.lineTo(s.x + dx, s.y + dy);
+        ctx.strokeStyle = 'rgba(' + col + ', 0.6)';
+        ctx.lineWidth = 0.8;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+      } else {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + col + ', 0.5)';
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+})();
 
 // Flip card tap toggle (mobile)
 var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);

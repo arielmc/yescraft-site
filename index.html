@@ -894,15 +894,15 @@ footer a:hover { color: var(--ink); }
             <line x1="355" y1="120" x2="385" y2="90" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" stroke-dasharray="2 3"/>
             <line x1="355" y1="120" x2="395" y2="130" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" stroke-dasharray="2 3"/>
             <line x1="355" y1="120" x2="375" y2="155" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="2 3"/>
-            <!-- AGENTS label — orbiting/pulsing around agent dots -->
-            <text font-family="'JetBrains Mono',monospace" font-size="5.5" fill="rgba(255,255,255,0.3)" letter-spacing="0.12em" font-weight="500">
-              <animate attributeName="opacity" values="0.35;0.15;0.05;0.15;0.35" dur="8s" repeatCount="indefinite"/>
+            <!-- AGENTS label — orbiting around agent dots, bolder -->
+            <text font-family="'JetBrains Mono',monospace" font-size="7" fill="rgba(255,255,255,0.55)" letter-spacing="0.14em" font-weight="600">
+              <animate attributeName="opacity" values="0.55;0.3;0.15;0.3;0.55" dur="8s" repeatCount="indefinite"/>
               <animateMotion dur="14s" repeatCount="indefinite" path="M385,82 C405,100 400,145 375,160 C355,170 340,140 355,115 C370,90 390,78 385,82Z"/>
               AGENTS
             </text>
-            <!-- LARGE MODELS — fading in/out on right -->
-            <text x="380" y="185" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="5" fill="rgba(255,255,255,0.2)" letter-spacing="0.08em">
-              <animate attributeName="opacity" values="0;0;0;0.25;0.3;0.25;0;0;0;0;0;0;0;0" dur="18s" begin="3s" repeatCount="indefinite"/>
+            <!-- LARGE MODELS — fading in/out below agent cluster, bolder -->
+            <text x="370" y="186" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="rgba(255,255,255,0.45)" letter-spacing="0.1em" font-weight="500">
+              <animate attributeName="opacity" values="0;0;0;0.45;0.55;0.45;0;0;0;0;0;0;0;0" dur="18s" begin="3s" repeatCount="indefinite"/>
               LARGE MODELS
             </text>
 

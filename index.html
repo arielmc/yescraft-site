@@ -320,7 +320,7 @@ a.press-strip-item:hover { opacity: 0.8; color: var(--teal); }
 /* Intent Loop — animated infinity diagram */
 .intent-loop { margin-top: 2.5rem; display: flex; justify-content: center; perspective: 600px; }
 .intent-loop-svg { width: 100%; max-width: 440px; height: auto; transition: transform 0.4s ease-out; transform-style: preserve-3d; animation: loopBreathe 8s ease-in-out infinite; }
-@keyframes loopBreathe { 0%, 100% { transform: scale(1) rotateX(0deg) rotateY(0deg); } 50% { transform: scale(1.03) rotateX(1.5deg) rotateY(-0.5deg); } }
+@keyframes loopBreathe { 0%, 100% { transform: scale(0.96) rotateX(-1deg) rotateY(0.5deg); } 50% { transform: scale(1.06) rotateX(1.5deg) rotateY(-0.8deg); } }
 
 .protocol-pillars { display: flex; flex-direction: column; gap: 1.2rem; margin-top: -3rem; }
 .pillar { padding: 1.5rem; background: var(--dark-card); border: 1px solid var(--dark-border); border-radius: 6px; transition: all 0.5s var(--spring); position: relative; overflow: hidden; }
@@ -850,7 +850,7 @@ footer a:hover { color: var(--ink); }
         <p>AI agents are beginning to act on our behalf: shopping, booking, transacting. Google, Shopify, OpenAI, Stripe, Anthropic, and Mastercard have all deployed agent commerce protocols in the last year. <strong>What hasn't shipped: the user intent layer.</strong> No standard exists for how preferences are structured, verified, or controlled as they move between AI systems and the platforms they interact with.</p>
         <p>A verified agent executing corrupted preferences is a trusted system acting against the user it serves. We're contributing to the standards that will close this gap.</p>
 
-        <!-- Animated infinity loop — thesis visualization v3 (white palette) -->
+        <!-- Animated infinity loop — thesis visualization v4 -->
         <div class="intent-loop">
           <svg viewBox="0 0 440 240" class="intent-loop-svg" aria-hidden="true">
             <defs>
@@ -864,15 +864,15 @@ footer a:hover { color: var(--ink); }
             <!-- Path trace -->
             <use href="#lp-fwd" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none" stroke-dasharray="4 5"/>
 
-            <!-- ═══ YOU node (left) — white glow hub ═══ -->
-            <circle cx="45" cy="120" r="22" fill="rgba(255,255,255,0.04)" filter="url(#pgl-xl)">
-              <animate attributeName="r" values="18;26;18" dur="6s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.4;0.8;0.4" dur="6s" repeatCount="indefinite"/>
+            <!-- ═══ YOU node (left) — softer glow ═══ -->
+            <circle cx="45" cy="120" r="22" fill="rgba(255,255,255,0.025)" filter="url(#pgl-xl)">
+              <animate attributeName="r" values="18;24;18" dur="6s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.25;0.5;0.25" dur="6s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="45" cy="120" r="12" fill="rgba(255,255,255,0.08)" filter="url(#pgl-lg)">
-              <animate attributeName="opacity" values="0.3;0.7;0.3" dur="4s" repeatCount="indefinite"/>
+            <circle cx="45" cy="120" r="12" fill="rgba(255,255,255,0.05)" filter="url(#pgl-lg)">
+              <animate attributeName="opacity" values="0.2;0.45;0.2" dur="4s" repeatCount="indefinite"/>
             </circle>
-            <text x="45" y="123" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(255,255,255,0.45)" letter-spacing="0.15em" font-weight="600">YOU</text>
+            <text x="45" y="123" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="8" fill="rgba(255,255,255,0.4)" letter-spacing="0.15em" font-weight="600">YOU</text>
 
             <!-- ═══ AGENT nodes (right) — network cluster ═══ -->
             <circle cx="355" cy="120" r="16" fill="rgba(255,255,255,0.05)" filter="url(#pgl-lg)">
@@ -894,16 +894,24 @@ footer a:hover { color: var(--ink); }
             <line x1="355" y1="120" x2="385" y2="90" stroke="rgba(255,255,255,0.08)" stroke-width="0.5" stroke-dasharray="2 3"/>
             <line x1="355" y1="120" x2="395" y2="130" stroke="rgba(255,255,255,0.06)" stroke-width="0.5" stroke-dasharray="2 3"/>
             <line x1="355" y1="120" x2="375" y2="155" stroke="rgba(255,255,255,0.05)" stroke-width="0.5" stroke-dasharray="2 3"/>
-            <!-- AGENTS label — orbiting around agent dots, bolder -->
+            <!-- AGENTS label — orbiting around agent dots -->
             <text font-family="'JetBrains Mono',monospace" font-size="7" fill="rgba(255,255,255,0.55)" letter-spacing="0.14em" font-weight="600">
               <animate attributeName="opacity" values="0.55;0.3;0.15;0.3;0.55" dur="8s" repeatCount="indefinite"/>
               <animateMotion dur="14s" repeatCount="indefinite" path="M385,82 C405,100 400,145 375,160 C355,170 340,140 355,115 C370,90 390,78 385,82Z"/>
               AGENTS
             </text>
-            <!-- LARGE MODELS — fading in/out below agent cluster, bolder -->
-            <text x="370" y="186" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="6.5" fill="rgba(255,255,255,0.45)" letter-spacing="0.1em" font-weight="500">
-              <animate attributeName="opacity" values="0;0;0;0.45;0.55;0.45;0;0;0;0;0;0;0;0" dur="18s" begin="3s" repeatCount="indefinite"/>
-              LARGE MODELS
+            <!-- Company names — staggered fade on right side -->
+            <text x="418" y="88" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="5" fill="rgba(255,255,255,0.3)" letter-spacing="0.06em">
+              <animate attributeName="opacity" values="0;0;0.3;0.4;0.3;0;0;0;0;0;0;0" dur="14s" repeatCount="indefinite"/>
+              OpenAI
+            </text>
+            <text x="425" y="128" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="5" fill="rgba(255,255,255,0.3)" letter-spacing="0.06em">
+              <animate attributeName="opacity" values="0;0;0;0;0;0.3;0.4;0.3;0;0;0;0" dur="14s" begin="1.5s" repeatCount="indefinite"/>
+              Anthropic
+            </text>
+            <text x="412" y="162" text-anchor="middle" font-family="'JetBrains Mono',monospace" font-size="5" fill="rgba(255,255,255,0.3)" letter-spacing="0.06em">
+              <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0.3;0.4;0.3;0" dur="14s" begin="3s" repeatCount="indefinite"/>
+              Google
             </text>
 
             <!-- ═══ Nexus gate (center) — preference schema ═══ -->
@@ -926,73 +934,67 @@ footer a:hover { color: var(--ink); }
               <animate attributeName="r" values="3.5;5;3.5" dur="3s" repeatCount="indefinite"/>
             </circle>
 
-            <!-- ═══ Forward particles (white — preferences leaving YOU) ═══ -->
-            <circle r="4.5" fill="rgba(255,255,255,0.9)" filter="url(#pgl)">
+            <!-- ═══ Forward particles — size changes after passing through YOU (~75% of cycle) ═══ -->
+            <circle fill="rgba(255,255,255,0.9)" filter="url(#pgl)">
               <animateMotion dur="8s" repeatCount="indefinite"><mpath href="#lp-fwd"/></animateMotion>
+              <animate attributeName="r" values="4;4;4;6.5;5" keyTimes="0;0.5;0.72;0.82;1" dur="8s" repeatCount="indefinite"/>
             </circle>
-            <circle r="3" fill="rgba(255,255,255,0.7)" filter="url(#pgl)">
+            <circle fill="rgba(255,255,255,0.7)" filter="url(#pgl)">
               <animateMotion dur="11s" begin="-4s" repeatCount="indefinite"><mpath href="#lp-fwd"/></animateMotion>
+              <animate attributeName="r" values="2.5;2.5;2.5;4.5;3" keyTimes="0;0.5;0.72;0.82;1" dur="11s" begin="-4s" repeatCount="indefinite"/>
             </circle>
-            <circle r="2.5" fill="rgba(255,255,255,0.5)" filter="url(#pgl)">
+            <circle fill="rgba(255,255,255,0.5)" filter="url(#pgl)">
               <animateMotion dur="14s" begin="-8s" repeatCount="indefinite"><mpath href="#lp-fwd"/></animateMotion>
+              <animate attributeName="r" values="2;2;2;4;2.5" keyTimes="0;0.5;0.72;0.82;1" dur="14s" begin="-8s" repeatCount="indefinite"/>
             </circle>
-            <circle r="3.5" fill="rgba(255,255,255,0.95)" filter="url(#pgl)">
+            <circle fill="rgba(255,255,255,0.95)" filter="url(#pgl)">
               <animateMotion dur="4.5s" begin="-1s" repeatCount="indefinite"><mpath href="#lp-fwd"/></animateMotion>
-              <animate attributeName="r" values="2.5;4;2.5" dur="4.5s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="3;3;3;5.5;3.5" keyTimes="0;0.5;0.72;0.82;1" dur="4.5s" begin="-1s" repeatCount="indefinite"/>
             </circle>
 
-            <!-- ═══ Reverse particles (white — insights returning to YOU) ═══ -->
-            <circle r="4" fill="rgba(255,255,255,0.85)" filter="url(#pgl)">
+            <!-- ═══ Reverse particles — size changes after passing through YOU (~25% of cycle) ═══ -->
+            <circle fill="rgba(255,255,255,0.85)" filter="url(#pgl)">
               <animateMotion dur="9s" repeatCount="indefinite"><mpath href="#lp-rev"/></animateMotion>
+              <animate attributeName="r" values="3.5;3.5;6;5;4;3.5" keyTimes="0;0.2;0.3;0.5;0.8;1" dur="9s" repeatCount="indefinite"/>
             </circle>
-            <circle r="3" fill="rgba(255,255,255,0.6)" filter="url(#pgl)">
+            <circle fill="rgba(255,255,255,0.6)" filter="url(#pgl)">
               <animateMotion dur="12s" begin="-4s" repeatCount="indefinite"><mpath href="#lp-rev"/></animateMotion>
+              <animate attributeName="r" values="2.5;2.5;5;4;3;2.5" keyTimes="0;0.2;0.3;0.5;0.8;1" dur="12s" begin="-4s" repeatCount="indefinite"/>
             </circle>
-            <circle r="2.5" fill="rgba(255,255,255,0.7)" filter="url(#pgl)">
+            <circle fill="rgba(255,255,255,0.7)" filter="url(#pgl)">
               <animateMotion dur="7s" begin="-2s" repeatCount="indefinite"><mpath href="#lp-rev"/></animateMotion>
+              <animate attributeName="r" values="2;2;4.5;3.5;2.5;2" keyTimes="0;0.2;0.3;0.5;0.8;1" dur="7s" begin="-2s" repeatCount="indefinite"/>
             </circle>
 
-            <!-- ═══ Impact reactions at YOU ═══ -->
-            <circle cx="45" cy="120" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1.5">
+            <!-- ═══ Soft impact reactions at YOU ═══ -->
+            <circle cx="45" cy="120" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.2">
               <animate attributeName="r" values="5;28;35" dur="1.2s" begin="2s" repeatCount="indefinite" keyTimes="0;0.6;1"/>
-              <animate attributeName="opacity" values="0.7;0.3;0" dur="1.2s" begin="2s" repeatCount="indefinite"/>
-              <animate attributeName="stroke-width" values="2;1;0.3" dur="1.2s" begin="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.4;0.18;0" dur="1.2s" begin="2s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="45" cy="120" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.2">
+            <circle cx="45" cy="120" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="0.8">
               <animate attributeName="r" values="4;22;30" dur="1s" begin="1.5s" repeatCount="indefinite" keyTimes="0;0.5;1"/>
-              <animate attributeName="opacity" values="0.6;0.25;0" dur="1s" begin="1.5s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.35;0.15;0" dur="1s" begin="1.5s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="45" cy="120" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.8">
-              <animate attributeName="r" values="6;20;28" dur="1.4s" begin="4.2s" repeatCount="indefinite"/>
-              <animate attributeName="opacity" values="0.5;0.2;0" dur="1.4s" begin="4.2s" repeatCount="indefinite"/>
-            </circle>
-            <!-- Flash pulse on YOU core -->
-            <circle cx="45" cy="120" r="8" fill="rgba(255,255,255,0.4)" filter="url(#pgl-lg)">
-              <animate attributeName="opacity" values="0;0;0.6;0.8;0.3;0;0" dur="3.5s" repeatCount="indefinite"/>
+            <!-- Subtle flash on YOU core -->
+            <circle cx="45" cy="120" r="8" fill="rgba(255,255,255,0.2)" filter="url(#pgl-lg)">
+              <animate attributeName="opacity" values="0;0;0.3;0.45;0.15;0;0" dur="3.5s" repeatCount="indefinite"/>
               <animate attributeName="r" values="4;6;10;14;8;4" dur="3.5s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="45" cy="120" r="6" fill="rgba(255,255,255,0.3)" filter="url(#pgl)">
-              <animate attributeName="opacity" values="0;0;0;0.5;0.7;0.2;0" dur="4.5s" begin="1.8s" repeatCount="indefinite"/>
+            <circle cx="45" cy="120" r="6" fill="rgba(255,255,255,0.15)" filter="url(#pgl)">
+              <animate attributeName="opacity" values="0;0;0;0.25;0.35;0.1;0" dur="4.5s" begin="1.8s" repeatCount="indefinite"/>
               <animate attributeName="r" values="3;5;9;12;6;3" dur="4.5s" begin="1.8s" repeatCount="indefinite"/>
             </circle>
 
-            <!-- ═══ Insight sparks — aha moments near YOU ═══ -->
+            <!-- ═══ Insight sparks near YOU ═══ -->
             <g>
-              <animate attributeName="opacity" values="0;0;0;0.7;0.9;0.4;0" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
-              <line x1="22" y1="97" x2="34" y2="97" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="28" y1="91" x2="28" y2="103" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="24" y1="93" x2="32" y2="101" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
-              <line x1="32" y1="93" x2="24" y2="101" stroke="rgba(255,255,255,0.4)" stroke-width="0.8"/>
+              <animate attributeName="opacity" values="0;0;0;0.5;0.65;0.25;0" dur="3.5s" begin="0.5s" repeatCount="indefinite"/>
+              <line x1="22" y1="97" x2="34" y2="97" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" stroke-linecap="round"/>
+              <line x1="28" y1="91" x2="28" y2="103" stroke="rgba(255,255,255,0.7)" stroke-width="1.3" stroke-linecap="round"/>
             </g>
             <g>
-              <animate attributeName="opacity" values="0;0;0;0;0.6;0.8;0.2;0" dur="4.5s" begin="2.5s" repeatCount="indefinite"/>
-              <line x1="55" y1="145" x2="67" y2="145" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
-              <line x1="61" y1="139" x2="61" y2="151" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linecap="round"/>
-            </g>
-            <g>
-              <animate attributeName="opacity" values="0;0;0;0;0;0.7;0.5;0" dur="5s" begin="3.8s" repeatCount="indefinite"/>
-              <line x1="60" y1="98" x2="70" y2="98" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-linecap="round"/>
-              <line x1="65" y1="93" x2="65" y2="103" stroke="rgba(255,255,255,0.6)" stroke-width="1" stroke-linecap="round"/>
+              <animate attributeName="opacity" values="0;0;0;0;0.4;0.55;0.15;0" dur="4.5s" begin="2.5s" repeatCount="indefinite"/>
+              <line x1="55" y1="145" x2="67" y2="145" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/>
+              <line x1="61" y1="139" x2="61" y2="151" stroke="rgba(255,255,255,0.5)" stroke-width="1" stroke-linecap="round"/>
             </g>
 
             <!-- ═══ Filter dots near nexus ═══ -->

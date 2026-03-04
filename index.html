@@ -153,7 +153,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .services-dark .section-heading { color: var(--paper); }
 .services-dark .section-sub { color: var(--dark-text); }
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
-.service-card { padding: 2.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+.service-card { padding: 2.2rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; display: flex; flex-direction: column; }
 .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--dark-teal), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .service-card:hover::before { transform: scaleX(1); }
 .service-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(45, 110, 126, 0.25); box-shadow: 0 16px 40px rgba(0,0,0,0.3); transform: translateY(-4px); }
@@ -170,6 +170,17 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .service-card:hover .service-icon svg { stroke: white; }
 .service-card h3 { font-family: 'Sora', sans-serif; font-size: 1.25rem; margin-bottom: 0.7rem; letter-spacing: -0.01em; color: var(--paper); font-weight: 600; }
 .service-card p { font-size: 0.92rem; color: var(--dark-text); line-height: 1.65; }
+.service-card .service-oneliner { font-size: 0.88rem; color: var(--dark-text); line-height: 1.6; margin-bottom: 1rem; }
+.service-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.2rem; }
+.service-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--dark-teal); background: rgba(45, 110, 126, 0.1); padding: 0.25rem 0.55rem; border-radius: 3px; letter-spacing: 0.03em; white-space: nowrap; font-weight: 500; }
+.service-proof { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); }
+
+/* ── Portfolio marquee ── */
+.portfolio-marquee { position: relative; overflow: hidden; margin-bottom: 2.5rem; padding: 0.5rem 0; mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
+.portfolio-marquee-track { display: flex; gap: 1rem; width: max-content; animation: marqueeScroll 35s linear infinite; }
+.portfolio-marquee-track img { height: 110px; width: auto; border-radius: 6px; filter: grayscale(1) brightness(0.4); opacity: 0.25; transition: opacity 0.4s ease, filter 0.4s ease; flex-shrink: 0; }
+.portfolio-marquee-track img:hover { opacity: 0.5; filter: grayscale(0.5) brightness(0.6); }
+@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 /* ── Case Studies (split sections) ── */
 .split-section { padding: 5.5rem 2.5rem; max-width: 1200px; margin: 0 auto; position: relative; }
@@ -539,6 +550,7 @@ footer a:hover { color: var(--ink); }
   .cred-item[data-context]::after { opacity: 0.7; }
   .credibility-press { gap: 0.2rem 1rem; margin-top: 0.8rem; padding-top: 0.8rem; }
   .form-row { grid-template-columns: 1fr; }
+  .portfolio-marquee-track img { height: 80px; }
   .testimonial-card { width: 290px; }
   .motispark-stats { flex-wrap: wrap; }
   .motispark-stat { flex: 1 1 40%; padding: 1rem 1rem; }
@@ -627,26 +639,70 @@ footer a:hover { color: var(--ink); }
 <section class="services reveal" id="services">
   <div class="section-tag">What We Do</div>
   <h2 class="section-heading">Ship faster. Decide better. Create momentum.</h2>
-  <p class="section-sub">We embed with teams to solve ambiguous, cross-functional product problems, from workflow modernization to go-to-market strategy and implementation. Startups to enterprise, rapid prototyping through long-term systems design.</p>
+  <p class="section-sub">From workflow modernization to AI strategy. Startups to enterprise.</p>
+  <div class="portfolio-marquee">
+    <div class="portfolio-marquee-track">
+      <img src="images/marquee/clovers.jpg" alt="" loading="lazy">
+      <img src="images/marquee/mego.jpg" alt="" loading="lazy">
+      <img src="images/marquee/dressipi.jpg" alt="" loading="lazy">
+      <img src="images/marquee/motispark.jpg" alt="" loading="lazy">
+      <img src="images/marquee/gymboree.jpg" alt="" loading="lazy">
+      <img src="images/marquee/pbwc.jpg" alt="" loading="lazy">
+      <img src="images/marquee/t2.jpg" alt="" loading="lazy">
+      <img src="images/marquee/clovers-dark.jpg" alt="" loading="lazy">
+      <img src="images/marquee/clovers.jpg" alt="" loading="lazy">
+      <img src="images/marquee/mego.jpg" alt="" loading="lazy">
+      <img src="images/marquee/dressipi.jpg" alt="" loading="lazy">
+      <img src="images/marquee/motispark.jpg" alt="" loading="lazy">
+      <img src="images/marquee/gymboree.jpg" alt="" loading="lazy">
+      <img src="images/marquee/pbwc.jpg" alt="" loading="lazy">
+      <img src="images/marquee/t2.jpg" alt="" loading="lazy">
+      <img src="images/marquee/clovers-dark.jpg" alt="" loading="lazy">
+    </div>
+  </div>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
       <h3>Product &amp; Platform Leadership</h3>
-      <p>Embedded leadership for teams modernizing products, platforms, and operations. We take ambiguous problems, align stakeholders, and ship clear outcomes. Not a deck and a handoff.</p>
+      <p class="service-oneliner">Embedded leadership that turns ambiguous problems into shipped outcomes. Not a deck and a handoff.</p>
+      <div class="service-chips">
+        <span class="service-chip">Fractional CPO</span>
+        <span class="service-chip">Roadmap Strategy</span>
+        <span class="service-chip">Stakeholder Alignment</span>
+        <span class="service-chip">Cross-functional Teams</span>
+        <span class="service-chip">Go-to-Market</span>
+      </div>
+      <div class="service-proof">CVS Health · T2 · Operation Smile</div>
     </div>
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
       <h3>System &amp; Workflow Design</h3>
-      <p>Twenty years of UX and product design applied to AI orchestration. We design the workflows humans actually trust, the right model for each job, shaped by deep experience in how people use software.</p>
+      <p class="service-oneliner">Twenty years of UX applied to AI orchestration. We design the workflows humans actually trust.</p>
+      <div class="service-chips">
+        <span class="service-chip">AI Workflow Design</span>
+        <span class="service-chip">Platform Architecture</span>
+        <span class="service-chip">Integration Systems</span>
+        <span class="service-chip">Design Systems</span>
+        <span class="service-chip">Behavioral UX</span>
+      </div>
+      <div class="service-proof">Jiseki · Gymboree · PBWC</div>
     </div>
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
       <h3>Rapid Prototyping</h3>
-      <p>Concept to deployed product in days, not quarters. We validate with real users and real data before you commit to a roadmap.</p>
+      <p class="service-oneliner">Concept to deployed product in days, not quarters. Real users, real data, before you commit to a roadmap.</p>
+      <div class="service-chips">
+        <span class="service-chip">MVP in Days</span>
+        <span class="service-chip">User Validation</span>
+        <span class="service-chip">Claude Code + AI</span>
+        <span class="service-chip">Full-Stack Deploy</span>
+        <span class="service-chip">Iterative Builds</span>
+      </div>
+      <div class="service-proof">MotiSpark · Clovers.ai · Lab Projects</div>
     </div>
   </div>
-  <p style="text-align:center; font-size:0.88rem; color:var(--dark-text, rgba(255,255,255,0.55)); margin-top:2.5rem; font-weight:500;">Engagements range from focused sprints to embedded fractional leadership. We assemble the right team for your problem, not a package.</p>
-  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;"><span style="font-weight:600; color:var(--dark-text, rgba(255,255,255,0.55));">Most enterprise work is under NDA.</span> Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
+  <p style="text-align:center; font-size:0.88rem; color:var(--dark-text, rgba(255,255,255,0.55)); margin-top:2.5rem; font-weight:500;">Engagements range from focused sprints to embedded fractional leadership.</p>
+  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;"><span style="font-weight:600; color:var(--dark-text, rgba(255,255,255,0.55));">Select client work shown with permission.</span> Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
 </section>
 </div>
 

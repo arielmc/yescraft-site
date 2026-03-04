@@ -218,6 +218,15 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .geo-core-card .app-frame-card { border-color: rgba(196, 85, 77, 0.12); }
 .geo-core-card .app-frame-card:hover { border-color: rgba(196, 85, 77, 0.25); }
 
+/* ── App-frame screenshots ── */
+.app-frame-screenshot { width: 100%; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3); display: block; position: relative; }
+
+/* ── CVS Blurb ── */
+.cvs-blurb { max-width: 1200px; margin: 0 auto; padding: 2rem 2.5rem 2.5rem; }
+.cvs-blurb-inner { background: rgba(0,0,0,0.02); border-radius: 12px; padding: 2rem; border: 1px solid rgba(0,0,0,0.05); }
+.cvs-blurb-stats { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.8rem; }
+.cvs-stat { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--teal); font-weight: 600; background: rgba(45,110,126,0.08); padding: 0.3rem 0.6rem; border-radius: 4px; white-space: nowrap; }
+
 /* ── MotiSpark stat row ── */
 .motispark-stats { display: flex; gap: 0; justify-content: center; margin-top: 2.5rem; border-top: 1px solid rgba(0,0,0,0.07); padding-top: 2rem; }
 .motispark-stat { flex: 1; text-align: center; padding: 0 1.5rem; border-right: 1px solid rgba(0,0,0,0.07); }
@@ -609,7 +618,7 @@ footer a:hover { color: var(--ink); }
     </div>
   </div>
   <p style="text-align:center; font-size:0.88rem; color:var(--dark-text, rgba(255,255,255,0.55)); margin-top:2.5rem; font-weight:500;">Engagements range from focused sprints to embedded fractional leadership. We assemble the right team for your problem, not a package.</p>
-  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;"><span style="font-weight:600; color:var(--dark-text, rgba(255,255,255,0.55));">Enterprise work is under NDA.</span> Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
+  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;"><span style="font-weight:600; color:var(--dark-text, rgba(255,255,255,0.55));">Most enterprise work is under NDA.</span> Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
 </section>
 </div>
 
@@ -648,6 +657,22 @@ footer a:hover { color: var(--ink); }
   </div>
 </section>
 
+<div class="cvs-blurb reveal">
+  <div class="cvs-blurb-inner">
+    <div class="cvs-blurb-content">
+      <div class="section-tag">Enterprise</div>
+      <h3 style="font-family:'Sora',sans-serif; font-size:1.2rem; margin-bottom:0.5rem;">CVS Health: Unified Member Identity</h3>
+      <p style="font-size:0.88rem; color:var(--slate); line-height:1.6; max-width:640px;">Led product and design across Retail Pharmacy, Specialty, and Caremark to unify fragmented member identity into a single CVS Health ID. Guided 8 scrum teams across 3 lines of business, reaching 47M+ members.</p>
+      <div class="cvs-blurb-stats">
+        <span class="cvs-stat">+9% login success</span>
+        <span class="cvs-stat">3pt NPS increase</span>
+        <span class="cvs-stat">20% fewer support calls</span>
+      </div>
+      <p style="font-size:0.72rem; color:var(--mist); font-style:italic; margin-top:0.5rem;">Publicly shareable metrics only.</p>
+    </div>
+  </div>
+</div>
+
 <section class="split-section alt-bg reveal">
   <div class="split-inner">
     <div class="section-tag">Lab Projects</div>
@@ -663,6 +688,7 @@ footer a:hover { color: var(--ink); }
           <span class="app-frame-url">Geo-Core Defense System&trade;</span>
         </div>
         <div class="app-frame-body" style="min-height:auto; padding:1.5rem 1.5rem 1.8rem;">
+          <img src="images/geo-core.jpg" alt="Geo-Core Defense System — resilient community infrastructure" class="app-frame-screenshot" loading="lazy">
           <div class="vis-badge" style="color:var(--dark-accent);">Climate Infrastructure</div>
           <h3 style="color:var(--paper); font-family:'Sora',sans-serif; font-size:1.35rem; margin-bottom:0.5rem;">The Hydrated Firewall</h3>
           <p style="color:var(--dark-text); font-size:0.85rem; line-height:1.6; max-width:380px;">Modular steel-and-living-biomass boundary that replaces combustible fences with passive fire and flood defense. Geothermal cooling, harvested rainwater, zero power. Patent pending.</p>
@@ -693,6 +719,7 @@ footer a:hover { color: var(--ink); }
           <span class="app-frame-url">vintage.yescraft.ai</span>
         </div>
         <div class="app-frame-body" style="min-height:auto; padding:1.5rem 1.5rem 1.8rem;">
+          <img src="images/vintage-wizard.jpg" alt="Vintage Wizard Listing Tuner" class="app-frame-screenshot" loading="lazy">
           <div class="vis-badge" style="color:var(--dark-accent);">Live Product</div>
           <h3 style="color:var(--paper); font-family:'Sora',sans-serif; font-size:1.35rem; margin-bottom:0.5rem;">Snap. Value. List.</h3>
           <p style="color:var(--dark-text); font-size:0.85rem; line-height:1.6; max-width:380px;">Born from real need after a family loss. Vision models for identification, Python for pricing math, an LLM only where language generation matters. Concept to live product in under 12 hours.</p>

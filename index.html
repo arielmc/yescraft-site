@@ -157,12 +157,6 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .service-chip { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: var(--dark-teal); background: rgba(45, 110, 126, 0.1); padding: 0.25rem 0.55rem; border-radius: 3px; letter-spacing: 0.03em; white-space: nowrap; font-weight: 500; }
 .service-proof { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; color: rgba(255,255,255,0.3); letter-spacing: 0.04em; margin-top: auto; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.06); }
 
-/* ── Portfolio marquee ── */
-.portfolio-marquee { position: relative; overflow: hidden; margin-bottom: 2.5rem; padding: 0.5rem 0; mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent); }
-.portfolio-marquee-track { display: flex; gap: 1rem; width: max-content; animation: marqueeScroll 35s linear infinite; }
-.portfolio-marquee-track img { height: 110px; width: auto; border-radius: 6px; filter: grayscale(1) brightness(0.4); opacity: 0.25; transition: opacity 0.4s ease, filter 0.4s ease; flex-shrink: 0; }
-.portfolio-marquee-track img:hover { opacity: 0.5; filter: grayscale(0.5) brightness(0.6); }
-@keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
 /* ── Case Studies (split sections) ── */
 .split-section { padding: 5.5rem 2.5rem; max-width: 1200px; margin: 0 auto; position: relative; }
@@ -538,7 +532,6 @@ footer a:hover { color: var(--ink); }
   .nav-links .nav-cta { margin-top: 1rem; }
   .press-mentions-row { gap: 0.2rem 1rem; }
   .form-row { grid-template-columns: 1fr; }
-  .portfolio-marquee-track img { height: 80px; }
   .testimonial-card { width: 290px; }
   .motispark-stats { flex-wrap: wrap; }
   .motispark-stat { flex: 1 1 40%; padding: 1rem 1rem; }
@@ -598,26 +591,6 @@ footer a:hover { color: var(--ink); }
   <div class="section-tag">What We Do</div>
   <h2 class="section-heading">Ship faster. Decide better. Create momentum.</h2>
   <p class="section-sub">From workflow modernization to AI strategy. Startups to enterprise.</p>
-  <div class="portfolio-marquee">
-    <div class="portfolio-marquee-track">
-      <img src="images/marquee/clovers.jpg" alt="" loading="lazy">
-      <img src="images/marquee/mego.jpg" alt="" loading="lazy">
-      <img src="images/marquee/dressipi.jpg" alt="" loading="lazy">
-      <img src="images/marquee/motispark.jpg" alt="" loading="lazy">
-      <img src="images/marquee/gymboree.jpg" alt="" loading="lazy">
-      <img src="images/marquee/pbwc.jpg" alt="" loading="lazy">
-      <img src="images/marquee/t2.jpg" alt="" loading="lazy">
-      <img src="images/marquee/clovers-dark.jpg" alt="" loading="lazy">
-      <img src="images/marquee/clovers.jpg" alt="" loading="lazy">
-      <img src="images/marquee/mego.jpg" alt="" loading="lazy">
-      <img src="images/marquee/dressipi.jpg" alt="" loading="lazy">
-      <img src="images/marquee/motispark.jpg" alt="" loading="lazy">
-      <img src="images/marquee/gymboree.jpg" alt="" loading="lazy">
-      <img src="images/marquee/pbwc.jpg" alt="" loading="lazy">
-      <img src="images/marquee/t2.jpg" alt="" loading="lazy">
-      <img src="images/marquee/clovers-dark.jpg" alt="" loading="lazy">
-    </div>
-  </div>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
@@ -657,7 +630,7 @@ footer a:hover { color: var(--ink); }
     </div>
   </div>
   <p style="text-align:center; font-size:0.88rem; color:var(--dark-text, rgba(255,255,255,0.55)); margin-top:2.5rem; font-weight:500;">Engagements range from focused sprints to embedded fractional leadership.</p>
-  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;"><span style="font-weight:600; color:var(--dark-text, rgba(255,255,255,0.55));">Select client work shown with permission.</span> Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
+  <p style="text-align:center; font-size:0.82rem; color:var(--dark-text, rgba(255,255,255,0.4)); margin-top:0.6rem;">Happy to <a href="#contact" style="color:var(--dark-accent, #d4807a);text-decoration:none;">discuss our approach</a> directly.</p>
   <p class="experience-anchor">Built on twenty years of product leadership at Apple, CVS Health, Disney, Take Two, and two startups from zero to shipped.</p>
 </section>
 </div>
@@ -1163,7 +1136,6 @@ footer a:hover { color: var(--ink); }
           <label class="pill-option"><input type="radio" name="interest" value="AI Strategy"><span>AI Strategy</span></label>
           <label class="pill-option"><input type="radio" name="interest" value="Rapid Prototype"><span>Rapid Prototype</span></label>
           <label class="pill-option"><input type="radio" name="interest" value="Not sure yet"><span>Not sure yet</span></label>
-          <label class="pill-option"><input type="radio" name="interest" value="Dad Jokes"><span>Dad Jokes</span></label>
         </div>
       </div>
       <div class="form-group">

@@ -153,6 +153,13 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--dark-teal), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .service-card:hover::before { transform: scaleX(1); }
 .service-card:hover { background: rgba(255,255,255,0.09); border-color: rgba(45, 110, 126, 0.25); box-shadow: 0 16px 40px rgba(0,0,0,0.3); transform: translateY(-4px); }
+/* Atmospheric card backgrounds — subtle teal glow per service */
+.service-card::after { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.035; pointer-events: none; transition: opacity 0.4s ease; z-index: 0; }
+.service-card:hover::after { opacity: 0.06; }
+.service-card > * { position: relative; z-index: 1; }
+.service-card:nth-child(1)::after { background: radial-gradient(ellipse at 80% 85%, rgba(45,110,126,1) 0%, transparent 60%), radial-gradient(ellipse at 20% 20%, rgba(45,110,126,0.5) 0%, transparent 50%); }
+.service-card:nth-child(2)::after { background: radial-gradient(ellipse at 50% 50%, rgba(45,110,126,1) 0%, transparent 55%), radial-gradient(circle at 15% 85%, rgba(45,110,126,0.4) 0%, transparent 40%), radial-gradient(circle at 85% 15%, rgba(45,110,126,0.4) 0%, transparent 40%); }
+.service-card:nth-child(3)::after { background: radial-gradient(ellipse at 85% 25%, rgba(45,110,126,1) 0%, transparent 55%), radial-gradient(ellipse at 15% 75%, rgba(45,110,126,0.3) 0%, transparent 45%); }
 .service-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; background: rgba(45, 110, 126, 0.12); border-radius: 8px; margin-bottom: 1.2rem; transition: all 0.3s ease; }
 .service-icon svg { width: 22px; height: 22px; stroke: var(--dark-teal); stroke-width: 1.5; fill: none; transition: all 0.3s ease; }
 .service-card:hover .service-icon { background: var(--teal); }

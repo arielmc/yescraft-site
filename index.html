@@ -39,7 +39,7 @@
   --dark-teal: #70b8c8;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; font-size: 17px; }
+html { scroll-behavior: smooth; font-size: 17px; scroll-padding-top: 80px; overflow-x: hidden; }
 body { font-family: 'DM Sans', -apple-system, sans-serif; background: var(--paper); background-image: linear-gradient(175deg, rgba(195, 210, 228, 0.50) 0%, rgba(200, 215, 230, 0.20) 25vh, transparent 55vh); color: var(--ink); line-height: 1.65; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 ::selection { background: var(--teal); color: #fff; }
 
@@ -74,7 +74,7 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .hero-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--teal); text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1.5rem; font-weight: 500; opacity: 0; animation: fadeUp 0.6s ease forwards; display: flex; align-items: center; gap: 0.8rem; }
 .hero-tag .dot { color: var(--teal); opacity: 0.4; }
 .hero h1 { font-family: 'Sora', sans-serif; font-size: clamp(3rem, 6vw, 4.5rem); line-height: 1.1; letter-spacing: -0.03em; font-weight: 600; max-width: 780px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
-.hero h1 em { font-style: normal; color: var(--accent); position: relative; white-space: nowrap; }
+.hero h1 em { font-style: normal; color: var(--accent); position: relative; }
 /* Sticky bounce ball (replaces period after "sticks") */
 .sticky-dot { display: inline-block; width: 0.18em; height: 0.18em; background: var(--accent); border-radius: 50%; margin-left: 0.04em; vertical-align: baseline; position: relative; bottom: 0.01em; animation: stickyBounce 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s both, stickyIdle 2.8s ease-in-out 3.2s infinite; transform-origin: center bottom; }
 @keyframes stickyBounce {
@@ -217,8 +217,10 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .geo-core-card .app-frame-card:hover { border-color: rgba(196, 85, 77, 0.25); }
 
 /* ── Lab experiment link ── */
-.lab-experiment-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.3); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.5rem; transition: all 0.3s ease; }
-.lab-experiment-link:hover { color: var(--dark-teal); }
+.lab-experiment-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--slate); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2rem; padding: 0.5rem 0; transition: all 0.4s var(--spring); opacity: 0.55; }
+.lab-experiment-link:hover { color: var(--teal); letter-spacing: 0.12em; opacity: 1; }
+.lab-experiment-link svg { opacity: 0.5; transition: all 0.4s var(--spring); }
+.lab-experiment-link:hover svg { opacity: 1; transform: rotate(90deg); }
 .lab-experiment-link .arrow { transition: transform 0.3s var(--spring); }
 .lab-experiment-link:hover .arrow { transform: translateX(4px); }
 
@@ -263,7 +265,7 @@ a.press-strip-item:hover { opacity: 0.8; color: var(--teal); }
 .pillar-flip-hint { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--mist); letter-spacing: 0.08em; margin-top: 1.2rem; opacity: 0.6; }
 
 /* ── Testimonials (carousel) ── */
-.testimonials-wrap { background: linear-gradient(180deg, var(--paper) 0%, #eff0f2 30%, #eff0f2 70%, var(--paper) 100%); padding: 1px 0; }
+.testimonials-wrap { background: linear-gradient(180deg, var(--paper) 0%, #eff0f2 30%, #eff0f2 70%, var(--paper) 100%); padding: 1px 0; overflow: hidden; }
 .testimonials { padding: 5rem 2.5rem; max-width: 1200px; margin: 0 auto; position: relative; }
 .testimonials::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: linear-gradient(90deg, var(--teal), var(--accent)); border-radius: 2px; }
 .carousel-track { overflow: hidden; margin-top: 0.5rem; position: relative; }
@@ -417,6 +419,50 @@ footer a:hover { color: var(--ink); }
 .hero::before { animation: blobDrift 18s ease-in-out infinite, blobPulse 6s ease-in-out infinite; width: 450px; height: 450px; border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%; filter: blur(40px); }
 .hero::after { animation: blobDrift2 22s ease-in-out infinite, blobPulse 8s ease-in-out 3s infinite; width: 420px; height: 420px; border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%; filter: blur(45px); }
 
+/* ── Ambient micro-animations (continuous, subtle life) ── */
+@keyframes gentleFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes gentleFloat2 {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(-0.3deg); }
+}
+@keyframes softBreathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+@keyframes tagPulse {
+  0%, 100% { opacity: 1; letter-spacing: 0.15em; }
+  50% { opacity: 0.7; letter-spacing: 0.17em; }
+}
+@keyframes cardShimmer {
+  0%, 100% { border-color: rgba(255,255,255,0.08); }
+  50% { border-color: rgba(45, 110, 126, 0.15); }
+}
+@keyframes statPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+/* Section tags pulse softly */
+.reveal.visible .section-tag { animation: tagPulse 4s ease-in-out 1s infinite; }
+
+/* MotiSpark stat numbers pulse */
+.motispark-stat-number { animation: statPulse 3s ease-in-out infinite; }
+.motispark-stat:nth-child(2) .motispark-stat-number { animation-delay: 0.5s; }
+.motispark-stat:nth-child(3) .motispark-stat-number { animation-delay: 1s; }
+.motispark-stat:nth-child(4) .motispark-stat-number { animation-delay: 1.5s; }
+
+/* Lab project cards float */
+.app-frame { animation: gentleFloat 7s ease-in-out infinite; }
+.split-section:nth-child(even) .app-frame { animation: gentleFloat2 8s ease-in-out 1s infinite; }
+
+/* Ethos pillar flip-cards breathe */
+.pillar-flip { animation: gentleFloat 9s ease-in-out infinite; }
+.pillar-flip:nth-child(2) { animation-delay: 2s; }
+.pillar-flip:nth-child(3) { animation-delay: 4s; }
+
 /* ── Spring-bounce reveal (M3 Expressive physics) ── */
 .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.6s ease, transform 0.8s var(--spring-soft); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -441,6 +487,16 @@ footer a:hover { color: var(--ink); }
 .reveal.visible .service-card:nth-child(3),
 .reveal.visible .testimonial-card:nth-child(3),
 .reveal.visible .pillar:nth-child(3) { animation-delay: 0.3s; }
+
+/* After springUp lands, cards float gently */
+.reveal.visible .service-card { animation: springUp 0.65s var(--spring-gentle) forwards, gentleFloat 6s ease-in-out 1.5s infinite; }
+.reveal.visible .service-card:nth-child(2) { animation: springUp 0.65s var(--spring-gentle) 0.2s forwards, gentleFloat2 7s ease-in-out 2s infinite; }
+.reveal.visible .service-card:nth-child(3) { animation: springUp 0.65s var(--spring-gentle) 0.3s forwards, gentleFloat 8s ease-in-out 2.5s infinite; }
+
+/* Service cards shimmer border in dark section */
+.services-dark .service-card { border-color: rgba(255,255,255,0.08); animation: springUp 0.65s var(--spring-gentle) forwards, cardShimmer 5s ease-in-out 1.5s infinite; }
+.services-dark .service-card:nth-child(2) { animation-delay: 0.2s, 3s; }
+.services-dark .service-card:nth-child(3) { animation-delay: 0.3s, 4.5s; }
 
 /* ── Section heading bounce reveal ── */
 @keyframes headingReveal {
@@ -531,7 +587,7 @@ footer a:hover { color: var(--ink); }
   .intent-loop { margin-top: 1.5rem; margin-bottom: 0.5rem; }
   .intent-loop-svg { max-width: 340px; }
   .nav-toggle { display: flex; }
-  .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
+  .nav-links { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100dvh; background: var(--paper); flex-direction: column; align-items: center; justify-content: center; gap: 2rem; z-index: 100; }
   .nav-cta:hover { background: var(--ink-light) !important; }
   .nav-links.open { display: flex; }
   .nav-links a { font-size: 1.1rem; }
@@ -584,7 +640,7 @@ footer a:hover { color: var(--ink); }
 <section class="hero">
   <div class="hero-sprites" aria-hidden="true"><canvas id="heroSprites"></canvas></div>
   <div class="hero-tag">Fractional CPO <span class="dot">·</span> AI Strategy <span class="dot">·</span> Rapid Prototyping</div>
-  <h1>AI that ships. Strategy&nbsp;that&nbsp;<em>sticks<span class="sticky-dot"></span></em></h1>
+  <h1>AI that ships.<br>Strategy that <em>sticks<span class="sticky-dot"></span></em></h1>
   <p class="hero-sub">A product and AI strategy studio built on behavior design, obsessive execution, and twenty years of making things people actually want to use.</p>
   <div class="hero-actions">
     <a href="#contact" class="btn-primary"><span>Discuss Your Project</span></a>
@@ -1389,15 +1445,27 @@ var toggle = document.querySelector('.nav-toggle');
 var links = document.querySelector('.nav-links');
 if (toggle && links) {
   toggle.addEventListener('click', function() {
+    var opening = !links.classList.contains('open');
     toggle.classList.toggle('active');
     links.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', links.classList.contains('open'));
+    toggle.setAttribute('aria-expanded', String(opening));
+    document.body.style.overflow = opening ? 'hidden' : '';
   });
   links.querySelectorAll('a').forEach(function(a) {
-    a.addEventListener('click', function() {
-      toggle.classList.remove('active');
-      links.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
+    a.addEventListener('click', function(e) {
+      if (window.innerWidth <= 900) {
+        e.preventDefault();
+        var href = a.getAttribute('href');
+        toggle.classList.remove('active');
+        links.classList.remove('open');
+        toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        // Small delay so overlay closes before scroll starts
+        setTimeout(function() {
+          var target = document.querySelector(href);
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      }
     });
   });
 }

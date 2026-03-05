@@ -608,34 +608,45 @@ main { position: relative; z-index: 5; }
   animation: cursorBlink 1s step-end infinite;
 }
 
-/* ── Vision Pro Eyes ── */
-.artifact-eyes {
-  display: flex; gap: 18px; align-items: center;
-}
-.artifact-eyes .eye {
-  width: 48px; height: 28px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.2);
+/* ── Sensory Hand ── */
+.artifact-hand {
+  width: 80px; height: 120px;
   position: relative;
-  overflow: hidden;
-  background: rgba(0,0,0,0.3);
+  margin: 0 auto;
 }
-.artifact-eyes .iris {
-  width: 10px; height: 10px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #6a9aba, #2a4a5a);
+.artifact-hand .hand-outline {
+  width: 80px; height: 120px;
+}
+.artifact-hand .tactile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
   position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(calc(-50% + var(--eye-x, 0px)), calc(-50% + var(--eye-y, 0px)));
-  transition: transform 0.15s ease;
-}
-.artifact-eyes .iris::after {
-  content: '';
-  width: 4px; height: 4px;
-  border-radius: 50%;
-  background: #000;
-  position: absolute; top: 50%; left: 50%;
+  top: 52%; left: 50%;
   transform: translate(-50%, -50%);
+  width: 40px;
+}
+.tactile-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--river-glow);
+  animation: tactilePulse 2s ease-in-out infinite;
+}
+.tactile-dot:nth-child(1) { animation-delay: 0s; }
+.tactile-dot:nth-child(2) { animation-delay: 0.15s; }
+.tactile-dot:nth-child(3) { animation-delay: 0.3s; }
+.tactile-dot:nth-child(4) { animation-delay: 0.45s; }
+.tactile-dot:nth-child(5) { animation-delay: 0.6s; }
+.tactile-dot:nth-child(6) { animation-delay: 0.75s; }
+.tactile-dot:nth-child(7) { animation-delay: 0.9s; }
+.tactile-dot:nth-child(8) { animation-delay: 1.05s; }
+.tactile-dot:nth-child(9) { animation-delay: 1.2s; }
+.tactile-dot:nth-child(10) { animation-delay: 1.35s; }
+.tactile-dot:nth-child(11) { animation-delay: 1.5s; }
+.tactile-dot:nth-child(12) { animation-delay: 1.65s; }
+@keyframes tactilePulse {
+  0%, 100% { opacity: 0.15; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 /* ── Neuralink Brain ── */
@@ -658,15 +669,135 @@ main { position: relative; z-index: 5; }
   margin-top: 0.2rem;
 }
 
+/* ── Upstream Threads ── */
+.node-threads {
+  margin: 1rem 0 0.5rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgba(255,255,255,0.06);
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.8s ease 0.6s, transform 0.8s var(--ease-out) 0.6s;
+}
+.timeline-node.visible .node-threads {
+  opacity: 1;
+  transform: translateX(0);
+}
+.thread-label {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--text-dim);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  margin-bottom: 0.4rem;
+}
+.thread-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  padding: 0.2rem 0.5rem;
+  margin: 0.15rem 0.3rem 0.15rem 0;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-radius: 3px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  opacity: 0.6;
+}
+.thread-link:hover {
+  opacity: 1;
+  color: var(--text-bright);
+  background: rgba(255,255,255,0.04);
+}
+.thread-year { color: var(--river-glow); font-weight: 600; }
+.thread-desc { font-style: italic; opacity: 0.7; }
+.paradigm-terminal .thread-year { color: #70c898; }
+.paradigm-gui .thread-year { color: #a0b4c8; }
+.paradigm-web .thread-year { color: #6a9ad8; }
+.paradigm-mobile .thread-year { color: #b87ad8; }
+.paradigm-social .thread-year { color: #d87a8a; }
+.paradigm-merge .thread-year { background: linear-gradient(135deg, #d87a8a, #6a9ad8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.timeline-node.thread-target { animation: threadPulse 1.5s ease; }
+@keyframes threadPulse {
+  0% { box-shadow: 0 0 0 0 rgba(42,106,138,0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(42,106,138,0.2); }
+  100% { box-shadow: 0 0 0 0 rgba(42,106,138,0); }
+}
+
+/* ── River Navigator ── */
+.river-nav {
+  position: fixed;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 55;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.river-nav.visible { opacity: 1; pointer-events: auto; }
+.river-nav-surface {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  margin-bottom: 8px;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.river-nav-surface:hover { opacity: 1; color: var(--text-bright); }
+.river-nav-era {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 4px 0;
+}
+.river-nav-era + .river-nav-era { margin-top: 2px; }
+.river-nav-era-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.45rem;
+  color: var(--text-dim);
+  opacity: 0.3;
+  letter-spacing: 0.05em;
+}
+.river-nav-dot {
+  display: block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.river-nav-dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.5); }
+.river-nav-dot.active { background: var(--river-glow); box-shadow: 0 0 6px var(--river-glow); }
+.river-nav-era[data-era="foundations"] .river-nav-dot.active { background: var(--era-foundations); box-shadow: 0 0 6px var(--era-foundations); }
+.river-nav-era[data-era="interface"] .river-nav-dot.active { background: var(--era-interface); box-shadow: 0 0 6px var(--era-interface); }
+.river-nav-era[data-era="network"] .river-nav-dot.active { background: var(--era-network); box-shadow: 0 0 6px var(--era-network); }
+.river-nav-era[data-era="pocket"] .river-nav-dot.active { background: var(--era-pocket); box-shadow: 0 0 6px var(--era-pocket); }
+.river-nav-era[data-era="merge"] .river-nav-dot.active { background: var(--era-merge); box-shadow: 0 0 6px var(--era-merge); }
+@media (max-width: 768px) { .river-nav { display: none; } }
+
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   .timeline-node { opacity: 1; transform: none; }
   .node-artifact { opacity: 1; transform: none; }
+  .node-threads { opacity: 1; transform: none; }
   .artifact-radar::before { animation: none; transform: rotate(45deg); }
   .artifact-ring circle.ring-fill { animation: none; stroke-dashoffset: 44; }
   .artifact-tiktok .tiktok-frames { animation: none; }
   .artifact-thumbs span { opacity: 1; animation: none; }
+  .tactile-dot { opacity: 0.6; animation: none; }
+  .timeline-node.thread-target { animation: none; }
+  .river-nav-dot { transition: none; }
 }
 </style>
 </head>
@@ -788,6 +919,46 @@ main { position: relative; z-index: 5; }
   <button class="lens-btn" data-lens="power"><span class="lens-tooltip">Winners &amp; Losers</span></button>
 </nav>
 
+<!-- River Navigator -->
+<nav id="riverNav" class="river-nav" aria-label="Timeline navigation">
+  <a href="#" class="river-nav-surface" title="Back to surface">↑</a>
+  <div class="river-nav-era" data-era="foundations">
+    <span class="river-nav-era-label">I</span>
+    <a href="#node-1919" class="river-nav-dot" data-node="1919" title="1919 · Bauhaus"></a>
+    <a href="#node-1945a" class="river-nav-dot" data-node="1945a" title="1945 · Memex"></a>
+    <a href="#node-1945b" class="river-nav-dot" data-node="1945b" title="1945 · ENIAC"></a>
+    <a href="#node-1950" class="river-nav-dot" data-node="1950" title="1950s · SAGE"></a>
+    <a href="#node-1960" class="river-nav-dot" data-node="1960" title="1960 · Licklider"></a>
+  </div>
+  <div class="river-nav-era" data-era="interface">
+    <span class="river-nav-era-label">II</span>
+    <a href="#node-1963" class="river-nav-dot" data-node="1963" title="1963 · Sketchpad"></a>
+    <a href="#node-1968" class="river-nav-dot" data-node="1968" title="1968 · Engelbart"></a>
+    <a href="#node-1973" class="river-nav-dot" data-node="1973" title="1973 · Xerox Alto"></a>
+    <a href="#node-1984" class="river-nav-dot" data-node="1984" title="1984 · Macintosh"></a>
+  </div>
+  <div class="river-nav-era" data-era="network">
+    <span class="river-nav-era-label">III</span>
+    <a href="#node-1990" class="river-nav-dot" data-node="1990" title="1990 · WWW"></a>
+    <a href="#node-1995" class="river-nav-dot" data-node="1995" title="1995 · Amazon"></a>
+    <a href="#node-2004" class="river-nav-dot" data-node="2004" title="2004 · Facebook"></a>
+  </div>
+  <div class="river-nav-era" data-era="pocket">
+    <span class="river-nav-era-label">IV</span>
+    <a href="#node-2007" class="river-nav-dot" data-node="2007" title="2007 · iPhone"></a>
+    <a href="#node-2016" class="river-nav-dot" data-node="2016" title="2016 · Stories"></a>
+    <a href="#node-2018" class="river-nav-dot" data-node="2018" title="2018 · TikTok"></a>
+  </div>
+  <div class="river-nav-era" data-era="merge">
+    <span class="river-nav-era-label">V</span>
+    <a href="#node-2020" class="river-nav-dot" data-node="2020" title="2020 · Pandemic"></a>
+    <a href="#node-2022" class="river-nav-dot" data-node="2022" title="2022 · ChatGPT"></a>
+    <a href="#node-2023" class="river-nav-dot" data-node="2023" title="2023 · Sensory"></a>
+    <a href="#node-2024" class="river-nav-dot" data-node="2024" title="2024 · Neuralink"></a>
+    <a href="#node-2025" class="river-nav-dot" data-node="2025" title="Now · Datacenter"></a>
+  </div>
+</nav>
+
 <!-- ════════════════════════════════════════ -->
 <!-- MAIN TIMELINE CONTENT                   -->
 <!-- ════════════════════════════════════════ -->
@@ -815,7 +986,7 @@ main { position: relative; z-index: 5; }
       <div class="era-years">1919 &ndash; 1960</div>
     </div>
 
-    <div class="timeline-node" data-year="1919">
+    <div class="timeline-node" data-year="1919" id="node-1919">
       <div class="node-year">1919</div>
       <h3 class="node-title">Bauhaus Founded</h3>
       <p class="node-hook">Walter Gropius opens a school in Weimar. Form follows function. Grid systems replace ornament. A rational visual grammar is born that will shape every screen you have ever touched.</p>
@@ -835,7 +1006,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1945a">
+    <div class="timeline-node" data-year="1945a" id="node-1945a">
       <div class="node-year">1945</div>
       <h3 class="node-title">Vannevar Bush's Memex</h3>
       <p class="node-hook">"As We May Think" published in The Atlantic. Bush imagines a desk-sized device that lets scholars follow associative trails through stored knowledge. Hypertext conceived 45 years before the web.</p>
@@ -843,6 +1014,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <img src="images/memex.jpg" alt="Vannevar Bush's Memex concept illustration, 1945" loading="lazy" width="480" height="399">
         <span class="artifact-caption">"He designed your browser in 1945."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1919"><span class="thread-year">1919</span> <span class="thread-desc">information as visual space</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>The mind modeled as a web, not a line. Reading becomes browsing. Attention becomes nonlinear.</div>
@@ -852,7 +1027,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1945b">
+    <div class="timeline-node" data-year="1945b" id="node-1945b">
       <div class="node-year">1945</div>
       <h3 class="node-title">ENIAC</h3>
       <p class="node-hook">30 tons of vacuum tubes in a Philadelphia basement. The first general-purpose electronic computer shifts calculation from human "computers" (mostly women) to machines. A new kind of labor disappears overnight.</p>
@@ -870,7 +1045,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1950">
+    <div class="timeline-node" data-year="1950" id="node-1950">
       <div class="node-year">1950s</div>
       <h3 class="node-title">Cybernetics &amp; SAGE</h3>
       <p class="node-hook">Humans integrated into digital control loops. Light guns, real-time displays, feedback systems. The air defense network that cost more than the Manhattan Project birthed interactive computing as a side effect.</p>
@@ -878,6 +1053,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-radar"></div>
         <span class="artifact-caption">"The first touchscreen was a weapon."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1945b"><span class="thread-year">1945</span> <span class="thread-desc">military computation scales</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>The "cyborg" metaphor emerges. Humans modeled as information processors in feedback loops.</div>
@@ -888,7 +1067,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1960">
+    <div class="timeline-node" data-year="1960" id="node-1960">
       <div class="node-year">1960</div>
       <h3 class="node-title">Man-Computer Symbiosis</h3>
       <p class="node-hook">J.C.R. Licklider publishes the paper that seeds everything. Not replacement, not tool use, but symbiosis. The human and the computer thinking together, each doing what the other cannot.</p>
@@ -896,6 +1075,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-symbiosis"><span>S</span><span>Y</span><span>M</span><span>B</span><span>I</span><span>O</span><span>S</span><span>I</span><span>S</span></div>
         <span class="artifact-caption">"One paper. Everything after."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1945a"><span class="thread-year">1945</span> <span class="thread-desc">the next prophetic paper</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Interactive computing replaces batch processing. The conversation between human and machine begins.</div>
@@ -918,7 +1101,7 @@ main { position: relative; z-index: 5; }
       <div class="era-years">1963 &ndash; 1984</div>
     </div>
 
-    <div class="timeline-node" data-year="1963">
+    <div class="timeline-node" data-year="1963" id="node-1963">
       <div class="node-year">1963</div>
       <h3 class="node-title">Sutherland's Sketchpad</h3>
       <p class="node-hook">A PhD thesis that invented the future. Draw on a screen with a light pen and the computer understands geometry. The first WYSIWYG. The first direct manipulation. Computing begins to feel like thinking.</p>
@@ -926,6 +1109,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <img src="images/sketchpad.jpg" alt="Ivan Sutherland using Sketchpad on the TX-2 computer, 1963" loading="lazy" width="480" height="385">
         <span class="artifact-caption">"A man touching a screen for the first time."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1960"><span class="thread-year">1960</span> <span class="thread-desc">symbiosis made visible</span></a>
+        <a class="thread-link" href="#node-1919"><span class="thread-year">1919</span> <span class="thread-desc">form meets function</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>First WYSIWYG interaction. What you see is what you get. The gap between intention and result collapses.</div>
@@ -935,7 +1123,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1968">
+    <div class="timeline-node" data-year="1968" id="node-1968">
       <div class="node-year">1968</div>
       <h3 class="node-title">The Mother of All Demos</h3>
       <p class="node-hook">Douglas Engelbart demonstrates the mouse, hypertext, video conferencing, collaborative editing, and windowed interfaces to a stunned audience in San Francisco. Every interaction you perform today was shown in this 90-minute demo.</p>
@@ -943,6 +1131,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <img src="images/engelbart-mouse.jpg" alt="Douglas Engelbart's first computer mouse prototype, 1964" loading="lazy" width="480" height="321">
         <span class="artifact-caption">"Carved from wood. Used by billions."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1960"><span class="thread-year">1960</span> <span class="thread-desc">fulfilling the prophecy</span></a>
+        <a class="thread-link" href="#node-1963"><span class="thread-year">1963</span> <span class="thread-desc">extending the hand</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Pointing replaces typing. The hand gains a digital extension. Spatial navigation becomes intuitive.</div>
@@ -952,7 +1145,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1973">
+    <div class="timeline-node" data-year="1973" id="node-1973">
       <div class="node-year">1973</div>
       <h3 class="node-title">Xerox Alto &amp; Star</h3>
       <p class="node-hook">Desktops. Trash cans. Folders. Visual metaphors replace memorized commands. The office migrates onto the screen. Xerox invents the future and then famously fumbles it.</p>
@@ -965,6 +1158,11 @@ main { position: relative; z-index: 5; }
         </div>
         <span class="artifact-caption">"They invented the future and gave it away."</span>
       </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1968"><span class="thread-year">1968</span> <span class="thread-desc">democratizing the demo</span></a>
+        <a class="thread-link" href="#node-1963"><span class="thread-year">1963</span> <span class="thread-desc">GUI lineage</span></a>
+      </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Recognition replaces recall. You see a folder, you know what it does. The metaphor does the teaching.</div>
         <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Recognition Rather Than Recall (H6). Consistency and Standards (H4). The GUI heuristic canon begins.</div>
@@ -974,7 +1172,7 @@ main { position: relative; z-index: 5; }
     </div>
 
     <!-- ★ PARADIGM SHIFT: Terminal → GUI ★ -->
-    <div class="timeline-node paradigm-shift-node" data-year="1984" data-shift="gui">
+    <div class="timeline-node paradigm-shift-node" data-year="1984" data-shift="gui" id="node-1984">
       <div class="node-year">1984</div>
       <h3 class="node-title">Apple Macintosh</h3>
       <p class="node-hook">Point and click becomes the norm. Computing enters homes, schools, kitchens. The command line retreats. For the first time, a computer is friendly. The relief is physical.</p>
@@ -982,6 +1180,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-mac"><span class="mac-hello">hello</span></div>
         <span class="artifact-caption">"The machine spoke first."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1973"><span class="thread-year">1973</span> <span class="thread-desc">stolen fire</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Point and click as default. The mouse hand becomes second nature. A generation learns to compute without commands.</div>
@@ -1005,7 +1207,7 @@ main { position: relative; z-index: 5; }
       <div class="era-years">1990 &ndash; 2006</div>
     </div>
 
-    <div class="timeline-node" data-year="1990">
+    <div class="timeline-node" data-year="1990" id="node-1990">
       <div class="node-year">1990</div>
       <h3 class="node-title">The World Wide Web</h3>
       <p class="node-hook">Tim Berners-Lee writes a proposal his boss labels "Vague but exciting." Clicking a blue underlined word takes you somewhere else. The feeling of infinite possibility. The browser as portal.</p>
@@ -1013,6 +1215,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <a class="artifact-link" onclick="document.getElementById('ending').scrollIntoView({behavior:'smooth'});return false;" href="#ending">click here</a>
         <span class="artifact-caption">"This is the invention. You're looking at it."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1945a"><span class="thread-year">1945</span> <span class="thread-desc">finally built</span></a>
+        <a class="thread-link" href="#node-1968"><span class="thread-year">1968</span> <span class="thread-desc">hypertext realized</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Clicking links replaces typing commands. Browsing becomes casual, endless, associative. Bush's Memex realized.</div>
@@ -1023,7 +1230,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="1995">
+    <div class="timeline-node" data-year="1995" id="node-1995">
       <div class="node-year">1995</div>
       <h3 class="node-title">Amazon &amp; 1-Click</h3>
       <p class="node-hook">Jeff Bezos patents removing friction from purchasing. One click and something arrives at your door. The most consequential UX decision in commerce: every barrier removed is revenue gained.</p>
@@ -1049,6 +1256,10 @@ main { position: relative; z-index: 5; }
         </div>
         <span class="artifact-caption">"Every removed step was a thought you stopped having."</span>
       </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1990"><span class="thread-year">1990</span> <span class="thread-desc">commerce layer</span></a>
+      </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Impulse buying enabled by friction removal. The gap between desire and purchase approaches zero.</div>
         <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Aesthetic and Minimalist Design (H8) applied to commerce. Fewer clicks equals more revenue.</div>
@@ -1058,7 +1269,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2004">
+    <div class="timeline-node" data-year="2004" id="node-2004">
       <div class="node-year">2004</div>
       <h3 class="node-title">Facebook</h3>
       <p class="node-hook">A Harvard dorm room product that learns to monetize human connection. The News Feed, the Like button, the algorithmic sort. Your attention becomes the product. Your identity becomes a performance.</p>
@@ -1066,6 +1277,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-thumbs"><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span><span>&#128077;</span></div>
         <span class="artifact-caption">"The simplest behavior modification device ever built."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1990"><span class="thread-year">1990</span> <span class="thread-desc">social layer</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Dopamine-driven scrolling. Variable reward mechanisms. The slot machine in your social life.</div>
@@ -1090,7 +1305,7 @@ main { position: relative; z-index: 5; }
     </div>
 
     <!-- ★ PARADIGM SHIFT: Wide → Mobile ★ -->
-    <div class="timeline-node paradigm-shift-node" data-year="2007" data-shift="mobile">
+    <div class="timeline-node paradigm-shift-node" data-year="2007" data-shift="mobile" id="node-2007">
       <div class="node-year">2007</div>
       <h3 class="node-title">iPhone</h3>
       <p class="node-hook">Steve Jobs puts a computer in your pocket and you never put it down. Pinch, swipe, tap. The interface becomes your body. Phantom vibration syndrome: your nervous system wired to a rectangle of glass.</p>
@@ -1098,6 +1313,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-phone"><div class="phone-inner"></div></div>
         <span class="artifact-caption">"Your entire life. This shape."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1984"><span class="thread-year">1984</span> <span class="thread-desc">Apple completes the arc</span></a>
+        <a class="thread-link" href="#node-1968"><span class="thread-year">1968</span> <span class="thread-desc">touch returns</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Touch-based interaction feels natural. The phone as body extension. 7 to 9 hours daily screen time for teens.</div>
@@ -1108,7 +1328,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2016">
+    <div class="timeline-node" data-year="2016" id="node-2016">
       <div class="node-year">2016</div>
       <h3 class="node-title">Stories &amp; Pokemon GO</h3>
       <p class="node-hook">Ephemeral sharing. Physical movement for digital rewards. Instagram Stories proves content doesn't need to last. Pokemon GO proves the screen doesn't need to end at the glass.</p>
@@ -1119,6 +1339,10 @@ main { position: relative; z-index: 5; }
         </div>
         <span class="artifact-caption">"Gone. What were we talking about?"</span>
       </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-2007"><span class="thread-year">2007</span> <span class="thread-desc">native to the pocket</span></a>
+      </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>FOMO amplified. Permanence anxiety reduced. Identity shifts from archive to fleeting performance.</div>
         <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Augmented reality proves commercial viability. Location-based services become billion-dollar markets.</div>
@@ -1127,7 +1351,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node paradigm-shift-node" data-year="2018" data-shift="social">
+    <div class="timeline-node paradigm-shift-node" data-year="2018" data-shift="social" id="node-2018">
       <div class="node-year">2018</div>
       <h3 class="node-title">TikTok</h3>
       <p class="node-hook">The algorithm doesn't just show you what your friends share. It learns what your eyes linger on and builds a mirror of your unconscious interests. Attention spans compressed to seconds. Identity construction outsourced to a black box.</p>
@@ -1135,6 +1359,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-tiktok"><div class="tiktok-frames"><span></span><span></span><span></span><span></span><span></span><span></span></div></div>
         <span class="artifact-caption">"You stopped choosing three seconds ago."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-2004"><span class="thread-year">2004</span> <span class="thread-desc">algorithmic feed perfected</span></a>
+        <a class="thread-link" href="#node-2016"><span class="thread-year">2016</span> <span class="thread-desc">attention compressed</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>AI-tailored "For You" feed. Content consumption becomes passive. The user stops choosing.</div>
@@ -1158,7 +1387,7 @@ main { position: relative; z-index: 5; }
       <div class="era-years">2020 &ndash; Present</div>
     </div>
 
-    <div class="timeline-node" data-year="2020">
+    <div class="timeline-node" data-year="2020" id="node-2020">
       <div class="node-year">2020</div>
       <h3 class="node-title">Pandemic</h3>
       <p class="node-hook">The world goes inside. Zoom hits 300 million daily users. Your living room becomes your office, your school, your bar, your doctor's waiting room. The screen becomes the only window. Essential labor splits along interface access: those who Zoom and those who deliver.</p>
@@ -1172,6 +1401,10 @@ main { position: relative; z-index: 5; }
         </div>
         <span class="artifact-caption">"300 million faces. How many were seen?"</span>
       </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1990"><span class="thread-year">1990</span> <span class="thread-desc">the web saves everything</span></a>
+      </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Explosive scaling of collaborative UIs. Zoom fatigue: too many faces, not enough bodies.</div>
         <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>"Alone together" paradox. The domestic sanctuary merges with the digital panopticon.</div>
@@ -1180,7 +1413,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2022">
+    <div class="timeline-node" data-year="2022" id="node-2022">
       <div class="node-year">2022</div>
       <h3 class="node-title">ChatGPT &amp; Stable Diffusion</h3>
       <p class="node-hook">The text cursor becomes the universal interface. Type what you want and it appears. Users become directors, not operators. The prompt replaces every prior paradigm. Simultaneously: democratized creativity and democratized misinformation.</p>
@@ -1188,6 +1421,11 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-cursor"><div class="blink"></div></div>
         <span class="artifact-caption">"This is every interface now."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1960"><span class="thread-year">1960</span> <span class="thread-desc">symbiosis at last</span></a>
+        <a class="thread-link" href="#node-1945a"><span class="thread-year">1945</span> <span class="thread-desc">the machine that thinks with you</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Users become creative directors. The "multiplier effect." Natural language replaces learned gestures.</div>
@@ -1198,27 +1436,44 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2023">
+    <div class="timeline-node" data-year="2023" id="node-2023">
       <div class="node-year">2023</div>
-      <h3 class="node-title">Apple Vision Pro</h3>
-      <p class="node-hook">Your eyes become the cursor. A micro-gesture of your fingers becomes the click. The physical monitor begins its obsolescence. The question: is this an empathic telepresence device or the most sophisticated isolation chamber ever built?</p>
-      <div class="node-stat">AR market projected $100B by 2030. Gaze as primary input.</div>
+      <h3 class="node-title">Sensory Interfaces</h3>
+      <p class="node-hook">Your body already speaks every language a screen can. A one-inch neck patch translates throat muscles into speech with 95% accuracy — no vocal cords needed. A tongue grid lets blind users see through vibration patterns. A wrist camera converts vision into touch on your palm. The screen was always the workaround.</p>
+      <div class="node-stat">95% speech accuracy from a 1-inch throat patch. Vision through touch at CHI 2025.</div>
       <div class="node-artifact">
-        <div class="artifact-eyes" id="eyeTracker">
-          <div class="eye"><div class="iris"></div></div>
-          <div class="eye"><div class="iris"></div></div>
+        <div class="artifact-hand">
+          <svg viewBox="0 0 80 120" fill="none" xmlns="http://www.w3.org/2000/svg" class="hand-outline">
+            <path d="M32 10 C32 4 36 2 39 2 C42 2 46 4 46 10 L46 48" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+            <path d="M46 15 C46 9 50 7 53 7 C56 7 58 9 58 15 L58 44" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+            <path d="M58 20 C58 14 62 12 65 12 C68 12 70 14 70 20 L70 44" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+            <path d="M32 18 C32 12 28 10 25 10 C22 10 20 12 20 18 L20 44" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+            <path d="M15 44 C10 44 8 50 8 56 L8 80 C8 100 20 115 40 115 C60 115 72 100 72 80 L72 44" stroke="rgba(255,255,255,0.2)" stroke-width="1.2" fill="none"/>
+            <line x1="20" y1="44" x2="15" y2="44" stroke="rgba(255,255,255,0.2)" stroke-width="1.2"/>
+          </svg>
+          <div class="tactile-grid">
+            <span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span>
+            <span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span>
+            <span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span><span class="tactile-dot"></span>
+          </div>
         </div>
-        <span class="artifact-caption">"Your gaze is the new click."</span>
+        <span class="artifact-caption">"The screen was always a workaround."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1968"><span class="thread-year">1968</span> <span class="thread-desc">extending the body, not the screen</span></a>
+        <a class="thread-link" href="#node-1960"><span class="thread-year">1960</span> <span class="thread-desc">symbiosis through skin</span></a>
       </div>
       <div class="node-lenses">
-        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Gaze and micro-gesture as primary input. The body becomes the controller. No intermediary device.</div>
-        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Isolation device AND empathic telepresence. Eye contact mediated by cameras. Presence redefined.</div>
-        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Planned obsolescence of the physical monitor. New categories of e-waste. Server farms for spatial computing.</div>
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>The body becomes input AND output. Sensory substitution: vision through touch, speech through muscle. No screen mediates.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Accessibility as innovation driver. Devices designed for disability become universal. The curb cut effect in neural interfaces.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Every Nielsen heuristic assumed a screen. When the body is the interface, feedback is haptic, errors are felt, recognition is tactile.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>A 1-inch patch vs. a 2-pound headset. The most powerful interfaces may be the smallest. Material cost approaches zero.</div>
       </div>
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2024">
+    <div class="timeline-node" data-year="2024" id="node-2024">
       <div class="node-year">2024</div>
       <h3 class="node-title">Neuralink: First Human Implant</h3>
       <p class="node-hook">A chip in Noland Arbaugh's brain lets him move a cursor by thinking. Physical inputs bypassed entirely. Thought to action with no intermediary. Licklider's 1960 symbiosis vision physically realized, 64 years later. The boundary between thought and machine action dissolves.</p>
@@ -1238,6 +1493,11 @@ main { position: relative; z-index: 5; }
         </div>
         <span class="artifact-caption">"No hands. No eyes. Just thought."</span>
       </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1960"><span class="thread-year">1960</span> <span class="thread-desc">the final symbiosis</span></a>
+        <a class="thread-link" href="#node-2023"><span class="thread-year">2023</span> <span class="thread-desc">from skin to thought</span></a>
+      </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Physical inputs bypassed entirely. The mouse, the touch screen, the gesture, the gaze: all rendered archaeological.</div>
         <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Licklider's symbiosis physically realized. Every heuristic must be reconsidered when the interface is thought itself.</div>
@@ -1246,7 +1506,7 @@ main { position: relative; z-index: 5; }
       <div class="node-divider"></div>
     </div>
 
-    <div class="timeline-node" data-year="2025">
+    <div class="timeline-node" data-year="2025" id="node-2025">
       <div class="node-year">Now</div>
       <h3 class="node-title">The Datacenter Crisis</h3>
       <p class="node-hook">Every interaction on this page required electricity. The global AI infrastructure boom demands 945 terawatt-hours by 2030, roughly 3% of all electricity on Earth. Facilities optimize their efficiency, but volume overwhelms every savings. The river we've been swimming in has a temperature.</p>
@@ -1254,6 +1514,10 @@ main { position: relative; z-index: 5; }
       <div class="node-artifact">
         <div class="artifact-counter"><span id="wattCounter">0</span> Wh<span class="counter-unit">consumed since you opened this page</span></div>
         <span class="artifact-caption">"You're adding to this number right now."</span>
+      </div>
+      <div class="node-threads">
+        <span class="thread-label">↑ upstream</span>
+        <a class="thread-link" href="#node-1945b"><span class="thread-year">1945</span> <span class="thread-desc">room-sized to planet-sized</span></a>
       </div>
       <div class="node-lenses">
         <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>PUE paradox: facilities optimize, but volume overwhelms savings. Eco-anxiety paired with total AI reliance.</div>
@@ -1439,6 +1703,7 @@ main { position: relative; z-index: 5; }
   var progressBar = document.getElementById('progressBar');
   var siteNav = document.getElementById('siteNav');
   var lensSwitcher = document.getElementById('lensSwitcher');
+  var riverNav = document.getElementById('riverNav');
   var paradigmFlash = document.getElementById('paradigmFlash');
   var lastParadigm = '';
 
@@ -1460,13 +1725,15 @@ main { position: relative; z-index: 5; }
     // Progress bar
     progressBar.style.width = (scrollProgress * 100) + '%';
 
-    // Nav and lens visibility
+    // Nav, lens, and river navigator visibility
     if (scrollTop > 200) {
       siteNav.classList.add('visible');
       lensSwitcher.classList.add('visible');
+      if (riverNav) riverNav.classList.add('visible');
     } else {
       siteNav.classList.remove('visible');
       lensSwitcher.classList.remove('visible');
+      if (riverNav) riverNav.classList.remove('visible');
     }
 
     // Digital body evolution
@@ -1524,6 +1791,22 @@ main { position: relative; z-index: 5; }
       document.body.classList.add('paradigm-' + paradigm);
       currentParadigm = paradigm;
       lastParadigm = paradigm;
+    }
+
+    // River navigator active dot
+    if (riverNav) {
+      var allNodes = document.querySelectorAll('.timeline-node');
+      var navDots = riverNav.querySelectorAll('.river-nav-dot');
+      var closestIdx = -1;
+      var closestDist = Infinity;
+      allNodes.forEach(function(nd, i) {
+        var r = nd.getBoundingClientRect();
+        var d = Math.abs(r.top + r.height * 0.3 - H * 0.4);
+        if (d < closestDist) { closestDist = d; closestIdx = i; }
+      });
+      navDots.forEach(function(dot, i) {
+        dot.classList.toggle('active', i === closestIdx);
+      });
     }
 
     // Ending
@@ -1605,27 +1888,52 @@ main { position: relative; z-index: 5; }
   }, 2000);
 
   // ════════════════════════════════════
+  // UPSTREAM THREAD NAVIGATION
+  // ════════════════════════════════════
+  document.querySelectorAll('.thread-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var targetId = this.getAttribute('href').substring(1);
+      var targetNode = document.getElementById(targetId);
+      if (targetNode) {
+        targetNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetNode.classList.add('thread-target');
+        setTimeout(function() { targetNode.classList.remove('thread-target'); }, 1500);
+      }
+    });
+  });
+
+  // ════════════════════════════════════
+  // RIVER NAVIGATOR CLICKS
+  // ════════════════════════════════════
+  if (riverNav) {
+    riverNav.querySelectorAll('.river-nav-dot').forEach(function(dot) {
+      dot.addEventListener('click', function(e) {
+        e.preventDefault();
+        var nodeId = 'node-' + this.dataset.node;
+        var target = document.getElementById(nodeId);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('thread-target');
+          setTimeout(function() { target.classList.remove('thread-target'); }, 1500);
+        }
+      });
+    });
+
+    var surfaceBtn = riverNav.querySelector('.river-nav-surface');
+    if (surfaceBtn) {
+      surfaceBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  }
+
+  // ════════════════════════════════════
   // INTERACTIVE ARTIFACTS
   // ════════════════════════════════════
 
-  // 1. Vision Pro Eye Tracking
-  var eyeTracker = document.getElementById('eyeTracker');
-  if (eyeTracker) {
-    document.addEventListener('mousemove', function(e) {
-      var rect = eyeTracker.getBoundingClientRect();
-      var cx = rect.left + rect.width / 2;
-      var cy = rect.top + rect.height / 2;
-      var dx = (e.clientX - cx) / (window.innerWidth * 0.5);
-      var dy = (e.clientY - cy) / (window.innerHeight * 0.5);
-      var maxMove = 6;
-      var ex = Math.max(-maxMove, Math.min(maxMove, dx * maxMove));
-      var ey = Math.max(-maxMove, Math.min(maxMove, dy * maxMove));
-      eyeTracker.style.setProperty('--eye-x', ex + 'px');
-      eyeTracker.style.setProperty('--eye-y', ey + 'px');
-    });
-  }
-
-  // 2. Datacenter Watt Counter
+  // 1. Datacenter Watt Counter
   var wattEl = document.getElementById('wattCounter');
   if (wattEl) {
     var pageLoadTime = Date.now();

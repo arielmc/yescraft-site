@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Shrinking Distance | YesCraft.ai</title>
+<meta name="description" content="An interactive exploration of how computing reshaped behavior, identity, economies, and the planet. From machines that filled rooms to neural interfaces.">
+<meta property="og:title" content="The Shrinking Distance | YesCraft.ai">
+<meta property="og:description" content="How the shrinking distance between humans and computers rewired everything.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.yescraft.ai/collisions/">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230c1222'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' font-weight='bold' fill='%23c4554d'>Y</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   THE SHRINKING DISTANCE
+   An interactive HCI experience by YesCraft.ai
+   ═══════════════════════════════════════════ */
+
+/* ── Design Tokens ── */
+:root {
+  --ink: #0c1222;
+  --ink-light: #1a2640;
+  --paper: #f2f3f5;
+  --warm: #e7e9ec;
+  --accent: #c4554d;
+  --accent-deep: #a8453e;
+  --accent-glow: rgba(196, 85, 77, 0.12);
+  --slate: #4d5364;
+  --mist: #8e93a1;
+  --teal: #2d6e7e;
+  --teal-soft: rgba(45, 110, 126, 0.15);
+  --gold: #b8953e;
+  --gold-glow: rgba(184, 149, 62, 0.12);
+  --macro-blue: #4a7fba;
+  --macro-glow: rgba(74, 127, 186, 0.12);
+  --canvas-bg: #080e1a;
+  --canvas-surface: #0d1528;
+  --dark-card: rgba(255,255,255,0.04);
+  --dark-border: rgba(255,255,255,0.08);
+  --dark-text: #9ba3b5;
+  --dark-heading: #e8eaf0;
+  --dark-accent: #d4807a;
+  --dark-teal: #70b8c8;
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-soft: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --spring-gentle: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ── Reset ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 17px; }
+body {
+  font-family: 'DM Sans', -apple-system, sans-serif;
+  background: var(--canvas-bg);
+  color: var(--dark-text);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+::selection { background: var(--teal); color: #fff; }
+.no-js .reveal { opacity: 1; transform: none; }
+
+/* ── Back Navigation ── */
+.back-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(8, 14, 26, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: opacity 0.4s ease;
+}
+.back-link {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--dark-text);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.back-link:hover { color: var(--dark-heading); }
+.back-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; transition: transform 0.3s var(--spring); }
+.back-link:hover svg { transform: translateX(-3px); }
+.nav-brand {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+.nav-brand span { color: var(--dark-accent); }
+
+/* ═══════════════════════════════════════════
+   MODE 1: THE CONSTELLATION
+   ═══════════════════════════════════════════ */
+.constellation-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  transition: opacity 0.6s ease;
+}
+.constellation-wrapper.dimmed { opacity: 0.15; pointer-events: none; }
+#constellation {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: default;
+}
+
+/* ── Title Overlay ── */
+.constellation-title {
+  position: fixed;
+  bottom: 8vh;
+  left: 0;
+  right: 0;
+  text-align: center;
+  z-index: 10;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.constellation-wrapper.dimmed ~ .constellation-title { opacity: 0; }
+.constellation-title h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  color: var(--dark-heading);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.3s forwards;
+}
+.constellation-title .subtitle {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(0.85rem, 2vw, 1.05rem);
+  color: var(--dark-text);
+  margin-top: 0.6rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.5s forwards;
+}
+.constellation-title .hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.25);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-top: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease 0.8s forwards;
+}
+
+/* ── Tooltip ── */
+.node-tooltip {
+  position: fixed;
+  z-index: 50;
+  background: rgba(13, 21, 40, 0.95);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  backdrop-filter: blur(12px);
+  max-width: 260px;
+}
+.node-tooltip.visible { opacity: 1; transform: translateY(0); }
+.node-tooltip .tt-label {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.82rem;
+  color: var(--dark-heading);
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.node-tooltip .tt-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--dark-teal);
+}
+.node-tooltip .tt-desc {
+  font-size: 0.75rem;
+  color: var(--dark-text);
+  line-height: 1.5;
+  margin-top: 0.3rem;
+}
+.node-tooltip .tt-soon {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0.4rem;
+}
+
+/* ═══════════════════════════════════════════
+   MODE 2: THE ESSAY PANEL
+   ═══════════════════════════════════════════ */
+.essay-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  background: var(--canvas-bg);
+  overflow-y: auto;
+  overflow-x: hidden;
+  transform: translateY(100%);
+  transition: transform 0.6s var(--spring-soft);
+  -webkit-overflow-scrolling: touch;
+}
+.essay-panel.open { transform: translateY(0); }
+.essay-panel-inner {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 6rem 2.5rem 5rem;
+}
+
+/* ── Essay Back Button ── */
+.essay-back {
+  position: fixed;
+  top: 3.5rem;
+  left: 1.5rem;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  background: rgba(8, 14, 26, 0.8);
+  backdrop-filter: blur(12px);
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: all 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+.essay-back.visible { opacity: 1; pointer-events: auto; }
+.essay-back:hover { color: var(--dark-heading); border-color: rgba(255,255,255,0.15); background: rgba(8, 14, 26, 0.95); }
+.essay-back svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; transition: transform 0.3s var(--spring); }
+.essay-back:hover svg { transform: translateX(-3px); }
+
+/* ── Essay Typography ── */
+.essay-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.essay-tag .tag-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.essay-tag.social { color: var(--accent); }
+.essay-tag.social .tag-dot { background: var(--accent); }
+.essay-tag.consumer { color: var(--gold); }
+.essay-tag.consumer .tag-dot { background: var(--gold); }
+.essay-tag.macro { color: var(--macro-blue); }
+.essay-tag.macro .tag-dot { background: var(--macro-blue); }
+.essay-tag.collision { color: var(--dark-teal); }
+.essay-tag.collision .tag-dot { background: var(--teal); }
+
+.essay-h1 {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  color: var(--dark-heading);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 0.6rem;
+}
+.essay-sub {
+  font-size: 1.1rem;
+  color: var(--dark-text);
+  line-height: 1.7;
+  max-width: 640px;
+  margin-bottom: 3rem;
+}
+.essay-h2 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.4rem;
+  color: var(--dark-heading);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 3rem 0 1.2rem;
+}
+.essay-body {
+  font-size: 0.95rem;
+  color: var(--dark-text);
+  line-height: 1.75;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Stat Cards ── */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+.stat-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  text-align: center;
+  transition: all 0.4s var(--spring);
+}
+.stat-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-3px); }
+.stat-number {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+.stat-number.social-color { color: var(--dark-accent); }
+.stat-number.consumer-color { color: var(--gold); }
+.stat-number.macro-color { color: var(--macro-blue); }
+.stat-number.teal-color { color: var(--dark-teal); }
+.stat-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--mist);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  line-height: 1.5;
+}
+
+/* ── Three Lens Cards ── */
+.lens-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 2.5rem 0;
+}
+.lens-card {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  padding: 1.8rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s var(--spring);
+}
+.lens-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+.lens-card.social-lens::before { background: var(--accent); }
+.lens-card.consumer-lens::before { background: var(--gold); }
+.lens-card.macro-lens::before { background: var(--macro-blue); }
+.lens-card:hover { border-color: rgba(255,255,255,0.12); transform: translateX(4px); }
+.lens-card h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.6rem;
+}
+.lens-card.social-lens h3 { color: var(--dark-accent); }
+.lens-card.consumer-lens h3 { color: var(--gold); }
+.lens-card.macro-lens h3 { color: var(--macro-blue); }
+.lens-card p {
+  font-size: 0.9rem;
+  color: var(--dark-text);
+  line-height: 1.7;
+}
+.lens-card .lens-events {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.lens-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  font-size: 0.85rem;
+  color: var(--dark-text);
+  line-height: 1.6;
+}
+.lens-event-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--mist);
+  flex-shrink: 0;
+  padding-top: 0.15rem;
+  min-width: 3rem;
+}
+
+/* ── Paradox Callout ── */
+.paradox-box {
+  background: rgba(184, 149, 62, 0.06);
+  border: 1px solid rgba(184, 149, 62, 0.15);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 1.8rem 2rem;
+  margin: 2.5rem 0;
+}
+.paradox-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.paradox-box p {
+  font-size: 0.95rem;
+  color: var(--dark-heading);
+  line-height: 1.75;
+}
+
+/* ── Collision: Two-Panel ── */
+.collision-panels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin: 2.5rem 0;
+}
+.collision-panel {
+  background: var(--dark-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 8px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.collision-panel.celebrated { border-top: 2px solid var(--dark-teal); }
+.collision-panel.shadow { border-top: 2px solid var(--accent); }
+.collision-panel h3 {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+.collision-panel.celebrated h3 { color: var(--dark-teal); }
+.collision-panel.shadow h3 { color: var(--dark-accent); }
+.collision-panel p {
+  font-size: 0.88rem;
+  color: var(--dark-text);
+  line-height: 1.7;
+}
+.collision-vs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+.collision-vs-badge {
+  font-family: 'Sora', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* ── Frictionless Trap: Buy Demo ── */
+.buy-demo {
+  background: var(--canvas-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+  text-align: center;
+}
+.buy-demo-stage {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  animation: fadeUp 0.4s ease forwards;
+}
+.buy-demo-stage.active { display: flex; }
+.buy-demo-product {
+  font-family: 'Sora', sans-serif;
+  font-size: 1rem;
+  color: var(--dark-heading);
+  font-weight: 600;
+}
+.buy-demo-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--dark-teal);
+}
+.buy-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--spring);
+  color: white;
+  background: var(--teal);
+}
+.buy-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45, 110, 126, 0.3); }
+.buy-btn:active { transform: translateY(1px); }
+.buy-btn.confirm-btn { background: rgba(255,255,255,0.08); color: var(--dark-text); border: 1px solid var(--dark-border); }
+.buy-btn.confirm-btn:hover { background: rgba(255,255,255,0.12); color: var(--dark-heading); }
+.buy-demo-insight {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0.5rem;
+}
+.buy-demo-counter {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: var(--mist);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+.buy-demo-reveal {
+  background: rgba(196, 85, 77, 0.06);
+  border: 1px solid rgba(196, 85, 77, 0.15);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-top: 1rem;
+  text-align: left;
+}
+.buy-demo-reveal p {
+  font-size: 0.9rem;
+  color: var(--dark-heading);
+  line-height: 1.7;
+}
+
+/* ── Hidden Cost: Counter ── */
+.energy-counter-wrapper {
+  background: var(--canvas-surface);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 3rem 2.5rem;
+  margin: 2.5rem 0;
+  text-align: center;
+}
+.energy-counter {
+  font-family: 'Sora', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 800;
+  color: var(--dark-heading);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+.energy-counter .unit {
+  font-size: 0.35em;
+  font-weight: 400;
+  color: var(--mist);
+  margin-left: 0.2em;
+}
+.energy-counter-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--mist);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+.energy-sub-stat {
+  font-family: 'Sora', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--dark-accent);
+  margin-top: 1.5rem;
+}
+.energy-sub-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  color: var(--mist);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-top: 0.3rem;
+}
+
+/* ── Page Cost Widget ── */
+.page-cost {
+  background: rgba(196, 85, 77, 0.04);
+  border: 1px solid rgba(196, 85, 77, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.page-cost-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(196, 85, 77, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.page-cost-icon svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+.page-cost-data {
+  flex: 1;
+}
+.page-cost-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  color: var(--dark-accent);
+  font-weight: 500;
+}
+.page-cost-label {
+  font-size: 0.78rem;
+  color: var(--dark-text);
+  margin-top: 0.15rem;
+}
+
+/* ── Divider ── */
+.essay-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--dark-border), transparent);
+  margin: 3rem auto;
+}
+
+/* ── Attribution ── */
+.essay-attribution {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  color: rgba(255,255,255,0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  margin-top: 3rem;
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════ */
+@media (max-width: 900px) {
+  html { font-size: 16px; }
+  .essay-panel-inner { padding: 5rem 1.5rem 4rem; }
+  .stat-row { grid-template-columns: 1fr; gap: 0.8rem; }
+  .collision-panels { grid-template-columns: 1fr; }
+  .page-cost { flex-direction: column; text-align: center; }
+  .constellation-title { bottom: 12vh; }
+}
+@media (max-width: 600px) {
+  html { font-size: 15px; }
+  .back-nav { padding: 0.8rem 1rem; }
+  .essay-panel-inner { padding: 4.5rem 1.2rem 3rem; }
+  .buy-demo { padding: 1.5rem; }
+  .energy-counter-wrapper { padding: 2rem 1.5rem; }
+  .lens-card { padding: 1.4rem 1.2rem; }
+  .constellation-title { bottom: 15vh; }
+  .constellation-title .hint { display: none; }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .constellation-title h1,
+  .constellation-title .subtitle,
+  .constellation-title .hint { opacity: 1; }
+  .essay-panel { transition: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Back Navigation ── -->
+<nav class="back-nav">
+  <a href="/" class="back-link">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    YesCraft.ai
+  </a>
+  <a href="/" class="nav-brand">Yes<span>Craft</span></a>
+</nav>
+
+<!-- ── Constellation Canvas ── -->
+<div class="constellation-wrapper" id="constellationWrapper">
+  <canvas id="constellation"></canvas>
+</div>
+
+<!-- ── Title Overlay ── -->
+<div class="constellation-title" id="constellationTitle">
+  <h1>The Shrinking Distance</h1>
+  <p class="subtitle">How the space between humans and computers collapsed, and rewired everything</p>
+  <p class="hint">Click a node to explore</p>
+</div>
+
+<!-- ── Tooltip ── -->
+<div class="node-tooltip" id="nodeTooltip">
+  <div class="tt-label"></div>
+  <div class="tt-type"></div>
+  <div class="tt-desc"></div>
+  <div class="tt-soon"></div>
+</div>
+
+<!-- ── Essay Back Button ── -->
+<button class="essay-back" id="essayBack">
+  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  Back to map
+</button>
+
+<!-- ── Essay Panel ── -->
+<div class="essay-panel" id="essayPanel">
+  <div class="essay-panel-inner" id="essayContent">
+    <!-- Content injected by JS -->
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════
+   THE SHRINKING DISTANCE — Engine
+   ═══════════════════════════════════════════ */
+(function() {
+  'use strict';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── Node Data ── */
+  const nodes = [
+    // Distance Stages (large circles)
+    { id: 'room', type: 'distance', label: 'Room', years: '1945 to 1968', x: 0.08, y: 0.35, radius: 20, color: '#70b8c8', built: false,
+      desc: 'Computers filled entire rooms. Humans traveled to the machine.' },
+    { id: 'desk', type: 'distance', label: 'Desk', years: '1973 to 1995', x: 0.22, y: 0.28, radius: 20, color: '#70b8c8', built: false,
+      desc: 'The personal computer brought computing to the desktop. Daily intimacy began.' },
+    { id: 'pocket', type: 'distance', label: 'Pocket', years: '2004 to 2007', x: 0.42, y: 0.38, radius: 22, color: '#70b8c8', built: true,
+      desc: 'Smartphones made the computer a body extension. Always on, always near.' },
+    { id: 'face', type: 'distance', label: 'Face', years: '2014 to 2023', x: 0.62, y: 0.3, radius: 20, color: '#70b8c8', built: false,
+      desc: 'Wearables and spatial computing brought interfaces to eye level.' },
+    { id: 'brain', type: 'distance', label: 'Brain', years: '2024+', x: 0.8, y: 0.35, radius: 20, color: '#70b8c8', built: false,
+      desc: 'Neural interfaces dissolve the last boundary. Zero distance.' },
+
+    // Collisions (pulsing diamonds)
+    { id: 'frictionless', type: 'collision', label: 'The Frictionless Trap', x: 0.35, y: 0.55, radius: 13, color: '#c4554d', built: true,
+      desc: 'When ease of use becomes a weapon against analytical thinking.' },
+    { id: 'empathy', type: 'collision', label: 'The Empathy Weapon', x: 0.18, y: 0.6, radius: 12, color: '#c4554d', built: false,
+      desc: 'User centered design perfected understanding users so well it could exploit them.' },
+    { id: 'minimalism', type: 'collision', label: 'Minimalism as Anchoring', x: 0.5, y: 0.62, radius: 12, color: '#c4554d', built: false,
+      desc: 'Clean interfaces that guide you exactly where the designer wants.' },
+    { id: 'personalization', type: 'collision', label: 'Personalization Bias', x: 0.68, y: 0.58, radius: 12, color: '#c4554d', built: false,
+      desc: 'Algorithms that confirm your worldview while narrowing your reality.' },
+    { id: 'undo', type: 'collision', label: 'Undo as Moral Hazard', x: 0.28, y: 0.68, radius: 12, color: '#c4554d', built: false,
+      desc: 'When reversibility erodes the weight of digital decisions.' },
+    { id: 'hidden-cost', type: 'collision', label: 'The Hidden Cost', x: 0.55, y: 0.48, radius: 13, color: '#c4554d', built: true,
+      desc: 'The planetary energy footprint behind every seamless interaction.' },
+
+    // Key Innovations (small dots)
+    { id: 'inn-bauhaus', type: 'innovation', label: 'Bauhaus', year: '1919', x: 0.05, y: 0.22, radius: 5, color: '#4d5364', built: false,
+      desc: 'Form follows function. Design as a democratic language.' },
+    { id: 'inn-eniac', type: 'innovation', label: 'ENIAC', year: '1945', x: 0.1, y: 0.18, radius: 5, color: '#4d5364', built: false,
+      desc: 'First general purpose electronic computer. 30 tons, one room.' },
+    { id: 'inn-xerox', type: 'innovation', label: 'Xerox PARC', year: '1973', x: 0.18, y: 0.15, radius: 5, color: '#4d5364', built: false,
+      desc: 'GUI, mouse, ethernet, WYSIWYG. The future built in a lab.' },
+    { id: 'inn-mac', type: 'innovation', label: 'Macintosh', year: '1984', x: 0.25, y: 0.18, radius: 5, color: '#4d5364', built: false,
+      desc: 'Computing made personal and beautiful. Design as differentiator.' },
+    { id: 'inn-www', type: 'innovation', label: 'World Wide Web', year: '1991', x: 0.3, y: 0.2, radius: 5, color: '#4d5364', built: false,
+      desc: 'Information wants to be free. And monetized.' },
+    { id: 'inn-google', type: 'innovation', label: 'Google', year: '1998', x: 0.33, y: 0.15, radius: 5, color: '#4d5364', built: false,
+      desc: 'Search as the gateway to all knowledge. Attention as currency.' },
+    { id: 'inn-facebook', type: 'innovation', label: 'Facebook', year: '2004', x: 0.38, y: 0.22, radius: 5, color: '#4d5364', built: false,
+      desc: 'Social connection industrialized. The feed that never ends.' },
+    { id: 'inn-iphone', type: 'innovation', label: 'iPhone', year: '2007', x: 0.45, y: 0.2, radius: 5, color: '#4d5364', built: false,
+      desc: 'Touch as interface. The computer disappears into the hand.' },
+    { id: 'inn-uber', type: 'innovation', label: 'Uber', year: '2009', x: 0.48, y: 0.25, radius: 5, color: '#4d5364', built: false,
+      desc: 'Location aware commerce. The gig economy begins.' },
+    { id: 'inn-alexa', type: 'innovation', label: 'Alexa', year: '2014', x: 0.58, y: 0.18, radius: 5, color: '#4d5364', built: false,
+      desc: 'Voice as interface. Ambient computing enters the home.' },
+    { id: 'inn-vision', type: 'innovation', label: 'Vision Pro', year: '2023', x: 0.65, y: 0.2, radius: 5, color: '#4d5364', built: false,
+      desc: 'Spatial computing. The screen becomes the world.' },
+    { id: 'inn-gpt', type: 'innovation', label: 'ChatGPT', year: '2022', x: 0.7, y: 0.22, radius: 5, color: '#4d5364', built: false,
+      desc: 'Natural language as interface. The computer finally speaks human.' },
+    { id: 'inn-neuralink', type: 'innovation', label: 'Neuralink', year: '2024', x: 0.82, y: 0.22, radius: 5, color: '#4d5364', built: false,
+      desc: 'Direct neural interface. Thought as input.' },
+  ];
+
+  // Connection threads (lens-colored)
+  const connections = [
+    // Social lens (accent/red) — connects identity-related nodes
+    { from: 'inn-facebook', to: 'pocket', color: 'rgba(196, 85, 77, 0.15)', lens: 'social' },
+    { from: 'pocket', to: 'frictionless', color: 'rgba(196, 85, 77, 0.12)', lens: 'social' },
+    { from: 'empathy', to: 'frictionless', color: 'rgba(196, 85, 77, 0.1)', lens: 'social' },
+    { from: 'face', to: 'personalization', color: 'rgba(196, 85, 77, 0.12)', lens: 'social' },
+
+    // Consumer lens (gold) — connects market/commerce nodes
+    { from: 'inn-iphone', to: 'pocket', color: 'rgba(184, 149, 62, 0.15)', lens: 'consumer' },
+    { from: 'inn-uber', to: 'pocket', color: 'rgba(184, 149, 62, 0.1)', lens: 'consumer' },
+    { from: 'inn-google', to: 'desk', color: 'rgba(184, 149, 62, 0.1)', lens: 'consumer' },
+    { from: 'pocket', to: 'minimalism', color: 'rgba(184, 149, 62, 0.1)', lens: 'consumer' },
+
+    // Macro lens (blue) — connects systemic/planetary nodes
+    { from: 'hidden-cost', to: 'inn-gpt', color: 'rgba(74, 127, 186, 0.15)', lens: 'macro' },
+    { from: 'hidden-cost', to: 'brain', color: 'rgba(74, 127, 186, 0.12)', lens: 'macro' },
+    { from: 'inn-neuralink', to: 'brain', color: 'rgba(74, 127, 186, 0.12)', lens: 'macro' },
+    { from: 'desk', to: 'inn-xerox', color: 'rgba(74, 127, 186, 0.08)', lens: 'macro' },
+
+    // Distance spine
+    { from: 'room', to: 'desk', color: 'rgba(112, 184, 200, 0.08)', lens: 'spine' },
+    { from: 'desk', to: 'pocket', color: 'rgba(112, 184, 200, 0.08)', lens: 'spine' },
+    { from: 'pocket', to: 'face', color: 'rgba(112, 184, 200, 0.08)', lens: 'spine' },
+    { from: 'face', to: 'brain', color: 'rgba(112, 184, 200, 0.08)', lens: 'spine' },
+  ];
+
+  /* ── Canvas Setup ── */
+  const canvas = document.getElementById('constellation');
+  const ctx = canvas.getContext('2d');
+  const wrapper = document.getElementById('constellationWrapper');
+  const titleEl = document.getElementById('constellationTitle');
+  const tooltip = document.getElementById('nodeTooltip');
+  const essayPanel = document.getElementById('essayPanel');
+  const essayContent = document.getElementById('essayContent');
+  const essayBack = document.getElementById('essayBack');
+
+  let W, H, dpr;
+  let mouseX = -1000, mouseY = -1000;
+  let hoveredNode = null;
+  let particles = [];
+  let animFrame;
+  let essayOpen = false;
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function getNodePos(node) {
+    return { x: node.x * W, y: node.y * H };
+  }
+
+  /* ── Particles ── */
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < 60; i++) {
+      particles.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        r: Math.random() * 1.5 + 0.5,
+        alpha: Math.random() * 0.3 + 0.05
+      });
+    }
+  }
+
+  function drawParticles(time) {
+    if (prefersReducedMotion) return;
+    for (let p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = W;
+      if (p.x > W) p.x = 0;
+      if (p.y < 0) p.y = H;
+      if (p.y > H) p.y = 0;
+
+      const flicker = 0.7 + 0.3 * Math.sin(time * 0.001 + p.x * 0.01);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${p.alpha * flicker})`;
+      ctx.fill();
+    }
+  }
+
+  /* ── Draw Connections ── */
+  function drawConnections() {
+    for (const conn of connections) {
+      const fromNode = nodes.find(n => n.id === conn.from);
+      const toNode = nodes.find(n => n.id === conn.to);
+      if (!fromNode || !toNode) continue;
+
+      const from = getNodePos(fromNode);
+      const to = getNodePos(toNode);
+
+      ctx.beginPath();
+      ctx.moveTo(from.x, from.y);
+
+      // Gentle curve
+      const mx = (from.x + to.x) / 2;
+      const my = (from.y + to.y) / 2 - 20;
+      ctx.quadraticCurveTo(mx, my, to.x, to.y);
+
+      ctx.strokeStyle = conn.color;
+      ctx.lineWidth = conn.lens === 'spine' ? 1.5 : 1;
+      ctx.stroke();
+    }
+  }
+
+  /* ── Draw Nodes ── */
+  function drawNodes(time) {
+    for (const node of nodes) {
+      const pos = getNodePos(node);
+      const dist = Math.hypot(mouseX - pos.x, mouseY - pos.y);
+      const isHovered = dist < node.radius * 2.5;
+      const glowIntensity = isHovered ? 1 : Math.max(0, 1 - dist / 300) * 0.4;
+
+      // Outer glow
+      if (glowIntensity > 0.05) {
+        const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, node.radius * 4);
+        grad.addColorStop(0, node.color.replace(')', `,${0.15 * glowIntensity})`).replace('rgb', 'rgba'));
+        grad.addColorStop(1, 'transparent');
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, node.radius * 4, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      if (node.type === 'collision') {
+        // Diamond shape
+        const r = node.radius + (isHovered ? 3 : 0);
+        const pulseR = prefersReducedMotion ? 0 : Math.sin(time * 0.003 + nodes.indexOf(node)) * 2;
+        const size = r + pulseR;
+
+        ctx.save();
+        ctx.translate(pos.x, pos.y);
+        ctx.rotate(Math.PI / 4);
+        ctx.beginPath();
+        ctx.rect(-size / 1.4, -size / 1.4, size * 1.42, size * 1.42);
+        ctx.fillStyle = node.built ? node.color : `rgba(196, 85, 77, ${node.built ? 1 : 0.35})`;
+        ctx.fill();
+
+        if (!node.built) {
+          ctx.globalAlpha = 0.3;
+        }
+        ctx.restore();
+
+      } else if (node.type === 'distance') {
+        // Large circle
+        const r = node.radius + (isHovered ? 4 : 0);
+        const breathe = prefersReducedMotion ? 0 : Math.sin(time * 0.002 + nodes.indexOf(node) * 0.5) * 1.5;
+
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, r + breathe, 0, Math.PI * 2);
+
+        if (node.built) {
+          ctx.fillStyle = node.color;
+        } else {
+          ctx.fillStyle = `rgba(112, 184, 200, 0.25)`;
+        }
+        ctx.fill();
+
+        // Inner ring
+        if (node.built) {
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, r * 0.6, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(8, 14, 26, 0.6)';
+          ctx.fill();
+        }
+
+      } else {
+        // Innovation: small dot
+        const r = node.radius + (isHovered ? 2 : 0);
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(155, 163, 181, ${isHovered ? 0.6 : 0.2})`;
+        ctx.fill();
+      }
+
+      // Labels
+      if (node.type !== 'innovation' || isHovered) {
+        const labelAlpha = node.type === 'innovation' ? (isHovered ? 0.9 : 0) : (node.built ? 0.85 : 0.4);
+        if (labelAlpha > 0) {
+          ctx.font = node.type === 'distance'
+            ? `600 ${isHovered ? 13 : 11}px Sora, sans-serif`
+            : `500 ${isHovered ? 12 : 10}px "DM Sans", sans-serif`;
+          ctx.fillStyle = `rgba(232, 234, 240, ${labelAlpha})`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'top';
+          ctx.fillText(node.label, pos.x, pos.y + node.radius + 8);
+
+          if (node.type === 'distance' && node.years) {
+            ctx.font = '400 9px "JetBrains Mono", monospace';
+            ctx.fillStyle = `rgba(155, 163, 181, ${labelAlpha * 0.6})`;
+            ctx.fillText(node.years, pos.x, pos.y + node.radius + 24);
+          }
+        }
+      }
+    }
+  }
+
+  /* ── Hit Detection ── */
+  function getHoveredNode(mx, my) {
+    let closest = null;
+    let closestDist = Infinity;
+    for (const node of nodes) {
+      const pos = getNodePos(node);
+      const hitRadius = node.type === 'innovation' ? node.radius * 4 : node.radius * 2.5;
+      const d = Math.hypot(mx - pos.x, my - pos.y);
+      if (d < hitRadius && d < closestDist) {
+        closest = node;
+        closestDist = d;
+      }
+    }
+    return closest;
+  }
+
+  /* ── Tooltip ── */
+  function updateTooltip(node, mx, my) {
+    if (!node) {
+      tooltip.classList.remove('visible');
+      return;
+    }
+    tooltip.querySelector('.tt-label').textContent = node.label;
+    tooltip.querySelector('.tt-type').textContent =
+      node.type === 'distance' ? 'Distance Stage' + (node.years ? ' \u00B7 ' + node.years : '') :
+      node.type === 'collision' ? 'Behavioral Collision' :
+      'Innovation' + (node.year ? ' \u00B7 ' + node.year : '');
+    tooltip.querySelector('.tt-desc').textContent = node.desc || '';
+    tooltip.querySelector('.tt-soon').textContent = node.built ? (node.type === 'innovation' ? '' : 'Click to explore') : 'Expanding soon';
+
+    // Position
+    let tx = mx + 16;
+    let ty = my - 10;
+    if (tx + 260 > W) tx = mx - 270;
+    if (ty + 120 > H) ty = my - 120;
+    tooltip.style.left = tx + 'px';
+    tooltip.style.top = ty + 'px';
+    tooltip.classList.add('visible');
+  }
+
+  /* ── Animation Loop ── */
+  function draw(time) {
+    ctx.clearRect(0, 0, W, H);
+    drawParticles(time);
+    drawConnections();
+    drawNodes(time);
+    animFrame = requestAnimationFrame(draw);
+  }
+
+  /* ── Mouse Events ── */
+  canvas.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    const node = getHoveredNode(mouseX, mouseY);
+    hoveredNode = node;
+    canvas.style.cursor = (node && node.built) ? 'pointer' : (node ? 'default' : 'default');
+    updateTooltip(node, mouseX, mouseY);
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    mouseX = -1000;
+    mouseY = -1000;
+    hoveredNode = null;
+    tooltip.classList.remove('visible');
+  });
+
+  canvas.addEventListener('click', function(e) {
+    const node = getHoveredNode(e.clientX, e.clientY);
+    if (node && node.built && node.type !== 'innovation') {
+      openEssay(node.id);
+    }
+  });
+
+  // Touch support
+  canvas.addEventListener('touchstart', function(e) {
+    const touch = e.touches[0];
+    mouseX = touch.clientX;
+    mouseY = touch.clientY;
+    const node = getHoveredNode(mouseX, mouseY);
+    if (node && node.built && node.type !== 'innovation') {
+      e.preventDefault();
+      openEssay(node.id);
+    } else if (node) {
+      updateTooltip(node, mouseX, mouseY);
+    }
+  }, { passive: false });
+
+  /* ═══════════════════════════════════════════
+     ESSAY SYSTEM
+     ═══════════════════════════════════════════ */
+  function openEssay(nodeId) {
+    const html = getEssayHTML(nodeId);
+    if (!html) return;
+
+    essayContent.innerHTML = html;
+    essayPanel.classList.add('open');
+    wrapper.classList.add('dimmed');
+    essayBack.classList.add('visible');
+    essayOpen = true;
+    essayPanel.scrollTop = 0;
+    tooltip.classList.remove('visible');
+
+    // Initialize interactive elements
+    if (nodeId === 'frictionless') initBuyDemo();
+    if (nodeId === 'hidden-cost') initCounters();
+  }
+
+  function closeEssay() {
+    essayPanel.classList.remove('open');
+    wrapper.classList.remove('dimmed');
+    essayBack.classList.remove('visible');
+    essayOpen = false;
+  }
+
+  essayBack.addEventListener('click', closeEssay);
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && essayOpen) closeEssay();
+  });
+
+  /* ── Essay Content ── */
+  function getEssayHTML(id) {
+    const essays = {
+
+      /* ───────────────────────────────────────
+         POCKET: Distance Stage (2004-2007)
+         ─────────────────────────────────────── */
+      'pocket': `
+        <div class="essay-tag collision">
+          <span class="tag-dot"></span>
+          Distance Stage
+        </div>
+        <h1 class="essay-h1">Pocket</h1>
+        <p class="essay-sub">The computer became a body extension. Always on, always within reach, always watching. Two launches, four years apart, rewired the human species.</p>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-number social-color">7 to 9 hrs</div>
+            <div class="stat-label">Average daily screen time<br>for teens (2024)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number consumer-color">$500B+</div>
+            <div class="stat-label">Annual smartphone<br>market value</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number macro-color">3.5B</div>
+            <div class="stat-label">Smartphone users<br>worldwide</div>
+          </div>
+        </div>
+
+        <h2 class="essay-h2">The Two Launches That Changed Everything</h2>
+        <p class="essay-body">In 2004, a Harvard dorm room project gave the world a new reason to check a screen every few minutes. By 2007, Apple put a full computer in every pocket. The distance between human and machine didn't just shrink. It vanished. For the first time, the computer was never more than a hand's reach away, awake when you were awake, tracking where you went, who you talked to, what you wanted.</p>
+
+        <div class="lens-grid">
+          <div class="lens-card social-lens">
+            <h3>Social / Identity</h3>
+            <p>The always available self. Identity shifted from something fixed to something performed, curated, ephemeral. Stories disappear in 24 hours. Profiles became permanent records that users treated as drafts.</p>
+            <div class="lens-events">
+              <div class="lens-event">
+                <span class="lens-event-year">2004</span>
+                <span>Facebook launched. Dopamine driven scrolling began. Social connection became a metric: likes, shares, followers. Attention was monetized across billions of users within a decade.</span>
+              </div>
+              <div class="lens-event">
+                <span class="lens-event-year">2007</span>
+                <span>iPhone launched. Touch as interface. The screen became glass you talked to with your fingers. Every moment became an opportunity to check, scroll, respond.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lens-card consumer-lens">
+            <h3>Consumer / Lifestyle</h3>
+            <p>Location awareness turned every sidewalk into a marketplace. Your phone knew where you were, and commerce followed. The gig economy was born: Uber, delivery apps, and a new class of workers whose boss was an algorithm.</p>
+            <div class="lens-events">
+              <div class="lens-event">
+                <span class="lens-event-year">2008</span>
+                <span>App Store opened. Software distribution democratized overnight. A teenager could publish to millions. A corporation could track millions.</span>
+              </div>
+              <div class="lens-event">
+                <span class="lens-event-year">2009</span>
+                <span>Uber launched. Your physical location became a data point that created a new economy. Convenience won. Worker protections lagged.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lens-card macro-lens">
+            <h3>Macro / Planetary</h3>
+            <p>Cloud migration began in earnest. Your data moved to server farms consuming megawatts of electricity in places you'd never visit. "Seamful" systems emerged: the complexity of global infrastructure hidden behind simple taps.</p>
+            <div class="lens-events">
+              <div class="lens-event">
+                <span class="lens-event-year">2006</span>
+                <span>AWS launched. Computing became a utility. Startups could scale without owning hardware. Datacenters began their quiet expansion into landscapes.</span>
+              </div>
+              <div class="lens-event">
+                <span class="lens-event-year">2007+</span>
+                <span>E-waste surged. The pocket computer had a 2 year replacement cycle. Planned obsolescence became a planetary design choice.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="paradox-box">
+          <div class="paradox-label">\u26A0 The Paradox</div>
+          <p>Teen pregnancy in the U.S. dropped 78% between 1991 and 2020. Ubiquitous information access correlated with one of the most significant public health improvements in modern history. Simultaneously, the same devices amplified echo chambers, fueled anxiety disorders, and created an epidemic of loneliness among the most connected generation ever. Four data lines moving in different directions at once. You cannot tell the simple story anymore.</p>
+        </div>
+
+        <div class="essay-divider"></div>
+
+        <p class="essay-body" style="color: rgba(255,255,255,0.35); font-style: italic; text-align: center;">Sherry Turkle observed that we began expecting more from technology and less from each other. The pocket made that permanent.</p>
+
+        <div class="essay-attribution">
+          The Shrinking Distance \u00B7 A YesCraft.ai exploration
+        </div>
+      `,
+
+      /* ───────────────────────────────────────
+         THE FRICTIONLESS TRAP: Collision
+         ─────────────────────────────────────── */
+      'frictionless': `
+        <div class="essay-tag collision">
+          <span class="tag-dot"></span>
+          Behavioral Collision
+        </div>
+        <h1 class="essay-h1">The Frictionless Trap</h1>
+        <p class="essay-sub">The holy grail of UX is eliminating cognitive load. But what happens when you design an interface so easy to use that the user stops thinking entirely?</p>
+
+        <div class="collision-panels">
+          <div class="collision-panel celebrated">
+            <h3>The Celebrated Practice</h3>
+            <p>"Reduce friction. Minimize clicks. Eliminate cognitive overhead. The best interface is one you don't notice."</p>
+            <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--mist);">Every UX textbook celebrates one click purchasing, autofill, smart defaults. These patterns win awards. They generate billions in revenue. They are the foundation of modern digital commerce.</p>
+          </div>
+          <div class="collision-panel shadow">
+            <h3>The Behavioral Shadow</h3>
+            <p>Daniel Kahneman's dual process theory: System 1 is fast, automatic, emotional. System 2 is slow, deliberate, analytical. By engineering zero cognitive load, designers route every decision through System 1.</p>
+            <p style="margin-top: 1rem; font-size: 0.82rem; color: var(--mist);">"Ease of use" is a polite way of saying "designed for mindlessness." The absence of friction is the absence of thought.</p>
+          </div>
+        </div>
+
+        <h2 class="essay-h2">Feel It Yourself</h2>
+        <p class="essay-body">Watch how each version removes a layer of deliberation. Notice when you stop reading and start clicking.</p>
+
+        <div class="buy-demo" id="buyDemo">
+          <div class="buy-demo-counter" id="buyDemoCounter">Stage 1 of 4</div>
+
+          <!-- Stage 1: Full friction -->
+          <div class="buy-demo-stage active" data-stage="1">
+            <div class="buy-demo-product">Wireless Headphones</div>
+            <div class="buy-demo-price">$79.99</div>
+            <p style="font-size: 0.82rem; color: var(--dark-text); max-width: 400px;">Please confirm: you are purchasing Wireless Headphones for $79.99. This will charge your default payment method. Shipping in 3 to 5 business days.</p>
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center;">
+              <button class="buy-btn confirm-btn" onclick="return false;">Cancel</button>
+              <button class="buy-btn" id="buyStep1">I confirm this purchase</button>
+            </div>
+            <div class="buy-demo-insight">Full information. Two options. You had to read.</div>
+          </div>
+
+          <!-- Stage 2: Less friction -->
+          <div class="buy-demo-stage" data-stage="2">
+            <div class="buy-demo-product">Wireless Headphones</div>
+            <div class="buy-demo-price">$79.99</div>
+            <div style="display: flex; gap: 0.8rem; flex-wrap: wrap; justify-content: center;">
+              <button class="buy-btn confirm-btn" onclick="return false;">Cancel</button>
+              <button class="buy-btn" id="buyStep2">Buy Now</button>
+            </div>
+            <div class="buy-demo-insight">Shorter label. Less to read. You clicked faster.</div>
+          </div>
+
+          <!-- Stage 3: Minimal friction -->
+          <div class="buy-demo-stage" data-stage="3">
+            <div class="buy-demo-product" style="font-size: 0.85rem;">Wireless Headphones \u00B7 $79.99</div>
+            <button class="buy-btn" id="buyStep3" style="min-width: 200px;">Buy</button>
+            <div class="buy-demo-insight">No cancel button. One word. You barely paused.</div>
+          </div>
+
+          <!-- Stage 4: Zero friction (auto) -->
+          <div class="buy-demo-stage" data-stage="4">
+            <div style="padding: 1.5rem 0;">
+              <div style="font-size: 0.85rem; color: var(--dark-teal); margin-bottom: 0.5rem;">\u2713 Order placed</div>
+              <div class="buy-demo-product" style="font-size: 0.85rem;">Wireless Headphones \u00B7 $79.99</div>
+              <div style="font-size: 0.75rem; color: var(--mist); margin-top: 0.4rem;">Arriving Thursday. One click undo within 30 minutes.</div>
+            </div>
+            <div class="buy-demo-insight">You didn't click anything. It was already done. Did you decide?</div>
+            <div class="buy-demo-reveal">
+              <p>Four versions of the same transaction. Each one removed a moment of thought. By Stage 4, the interface made the decision for you. This is the frictionless trap: when technology optimizes for speed, it optimizes against deliberation. The question isn't whether the headphones are worth $79.99. The question is whether you were present for the decision at all.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="paradox-box">
+          <div class="paradox-label">\u26A0 The Collision</div>
+          <p>The frictionless interface isn't broken. It's working exactly as designed. The problem is that "working" means bypassing the part of your brain that asks "do I actually want this?" Every dark pattern begins as a usability improvement. Every addictive loop started as convenience. The line between good UX and manipulation isn't blurry. It doesn't exist.</p>
+        </div>
+
+        <div class="essay-divider"></div>
+
+        <p class="essay-body" style="text-align: center; color: rgba(255,255,255,0.35); font-style: italic;">The best interface is invisible. The most dangerous one is too.</p>
+
+        <div class="essay-attribution">
+          The Shrinking Distance \u00B7 A YesCraft.ai exploration
+        </div>
+      `,
+
+      /* ───────────────────────────────────────
+         THE HIDDEN COST: Collision
+         ─────────────────────────────────────── */
+      'hidden-cost': `
+        <div class="essay-tag collision">
+          <span class="tag-dot"></span>
+          Behavioral Collision
+        </div>
+        <h1 class="essay-h1">The Hidden Cost</h1>
+        <p class="essay-sub">Every seamless digital interaction has a physical footprint. The distance between your fingertip and the screen is zero. The distance between the screen and the power plant is invisible.</p>
+
+        <div class="energy-counter-wrapper" id="energyCounterWrapper">
+          <div class="energy-counter" id="energyCounter">0<span class="unit">TWh</span></div>
+          <div class="energy-counter-label">Projected annual electricity demand<br>of AI training and inference by 2030</div>
+          <div class="energy-sub-stat" id="infraCost">$0T</div>
+          <div class="energy-sub-label">Estimated infrastructure investment required</div>
+        </div>
+
+        <p class="essay-body">That number is roughly 3% of global electricity production. For context, the entire country of France consumes about 450 TWh per year. AI alone is projected to consume more than double that by the end of this decade.</p>
+
+        <div class="stat-row">
+          <div class="stat-card">
+            <div class="stat-number teal-color">~1,000x</div>
+            <div class="stat-label">Energy cost of AI inference<br>vs traditional search</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number social-color">6.3M</div>
+            <div class="stat-label">Gallons of water per day<br>cooling one large datacenter</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number consumer-color">2 year</div>
+            <div class="stat-label">Average smartphone<br>replacement cycle</div>
+          </div>
+        </div>
+
+        <h2 class="essay-h2">The Cost of This Page</h2>
+        <p class="essay-body">Right now, this page is consuming energy. Your device, the network routing packets, the server delivering this HTML. Here is a rough, real time estimate:</p>
+
+        <div class="page-cost" id="pageCost">
+          <div class="page-cost-icon">
+            <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <div class="page-cost-data">
+            <div class="page-cost-value" id="pageCostValue">0.00 Wh</div>
+            <div class="page-cost-label">Estimated energy consumed since you opened this essay</div>
+          </div>
+        </div>
+
+        <p class="essay-body" style="font-size: 0.85rem; color: var(--mist);">Estimate based on average device power draw (~5W for mobile, ~60W for laptop), network overhead (~0.06 kWh/GB), and static hosting energy. This is a simplification, but the direction is accurate.</p>
+
+        <div class="paradox-box">
+          <div class="paradox-label">\u26A0 The Collision</div>
+          <p>You are reading an essay about the hidden energy cost of digital interactions, delivered to you by a digital interaction that is consuming energy. You likely found this interesting and want to share it with someone, which will double the energy cost. This is the cognitive dissonance of our era: extreme environmental awareness paired with total dependence on the systems causing the damage. We Google "how to reduce my carbon footprint" on a device whose supply chain spans three continents and six conflict mineral zones.</p>
+        </div>
+
+        <h2 class="essay-h2">The Invisible Architecture</h2>
+        <p class="essay-body">Every tap, swipe, and voice command travels through an invisible architecture of undersea cables, terrestrial fiber, cell towers, edge servers, and hyperscale datacenters. The design principle that made interfaces "seamless" also made their physical costs invisible. You never see the coal plant that powers your cloud storage. You never visit the lithium mine that made your battery. The distance between user and consequence is the last distance that hasn't shrunk.</p>
+
+        <div class="essay-divider"></div>
+
+        <p class="essay-body" style="text-align: center; color: rgba(255,255,255,0.35); font-style: italic;">The most seamless interfaces are the ones that make you forget they have a body.</p>
+
+        <div class="essay-attribution">
+          The Shrinking Distance \u00B7 A YesCraft.ai exploration
+        </div>
+      `
+    };
+
+    return essays[id] || null;
+  }
+
+  /* ── Frictionless Trap: Buy Demo ── */
+  function initBuyDemo() {
+    let currentStage = 1;
+    const demo = document.getElementById('buyDemo');
+    if (!demo) return;
+
+    function advanceStage() {
+      currentStage++;
+      const stages = demo.querySelectorAll('.buy-demo-stage');
+      const counter = document.getElementById('buyDemoCounter');
+      stages.forEach(s => s.classList.remove('active'));
+      const next = demo.querySelector(`[data-stage="${currentStage}"]`);
+      if (next) {
+        next.classList.add('active');
+        counter.textContent = `Stage ${currentStage} of 4`;
+      }
+
+      // Stage 4 auto-triggers
+      if (currentStage === 4) {
+        counter.textContent = 'Stage 4 of 4';
+      }
+    }
+
+    // Bind buttons
+    setTimeout(() => {
+      const s1 = document.getElementById('buyStep1');
+      const s2 = document.getElementById('buyStep2');
+      const s3 = document.getElementById('buyStep3');
+      if (s1) s1.addEventListener('click', advanceStage);
+      if (s2) s2.addEventListener('click', advanceStage);
+      if (s3) s3.addEventListener('click', function() {
+        advanceStage();
+        // Stage 4 appears automatically
+      });
+    }, 100);
+  }
+
+  /* ── Hidden Cost: Counters ── */
+  function initCounters() {
+    // Animate 0 → 945 TWh
+    const counterEl = document.getElementById('energyCounter');
+    const infraEl = document.getElementById('infraCost');
+    if (!counterEl) return;
+
+    const target = 945;
+    const infraTarget = 7;
+    const duration = prefersReducedMotion ? 0 : 2500;
+    const start = performance.now();
+
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function animate(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = easeOutExpo(progress);
+
+      const current = Math.round(target * eased);
+      const infraCurrent = (infraTarget * eased).toFixed(1);
+
+      counterEl.innerHTML = `${current}<span class="unit">TWh</span>`;
+      infraEl.textContent = `$${infraCurrent}T`;
+
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    if (duration > 0) {
+      requestAnimationFrame(animate);
+    } else {
+      counterEl.innerHTML = `${target}<span class="unit">TWh</span>`;
+      infraEl.textContent = `$${infraTarget}T`;
+    }
+
+    // Page cost timer
+    const costEl = document.getElementById('pageCostValue');
+    if (!costEl) return;
+    const costStart = performance.now();
+    // Average device: ~15W combined (device + network + server share)
+    const wattsEstimate = 15;
+
+    function updateCost() {
+      if (!essayOpen) return;
+      const seconds = (performance.now() - costStart) / 1000;
+      const wh = (wattsEstimate * seconds / 3600);
+      if (wh < 1) {
+        costEl.textContent = (wh * 1000).toFixed(2) + ' mWh';
+      } else {
+        costEl.textContent = wh.toFixed(3) + ' Wh';
+      }
+      requestAnimationFrame(updateCost);
+    }
+    requestAnimationFrame(updateCost);
+  }
+
+  /* ── Init ── */
+  function init() {
+    document.documentElement.classList.remove('no-js');
+    resize();
+    initParticles();
+    draw(0);
+  }
+
+  window.addEventListener('resize', function() {
+    resize();
+    initParticles();
+  });
+
+  init();
+
+})();
+</script>
+</body>
+</html>

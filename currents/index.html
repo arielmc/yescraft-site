@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Architecture of Interaction — YesCraft.ai</title>
+<meta name="description" content="An immersive experience tracing how humans and computers learned to think together, from Bauhaus to brain computer interfaces. 1919 to present.">
+<meta property="og:title" content="The Architecture of Interaction">
+<meta property="og:description" content="How humans and computers learned to think together. An interactive opus on a century of co evolution.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ── CSS Variables ── */
+:root {
+  --bg: #060a14;
+  --bg-surface: #0a1020;
+  --text: #c8d0e0;
+  --text-dim: #5a6578;
+  --text-bright: #e8ecf4;
+  --river-base: #1a3a5a;
+  --river-glow: #2a6a8a;
+
+  /* Lens colors */
+  --lens-behavioral: #d4a543;
+  --lens-market: #4caf50;
+  --lens-social: #c4554d;
+  --lens-planetary: #4a7fba;
+  --lens-heuristic: #8899aa;
+  --lens-power: #d0d0d0;
+
+  /* Era accent colors */
+  --era-foundations: #3a5a6a;
+  --era-interface: #4a7a5a;
+  --era-network: #5a6a9a;
+  --era-pocket: #7a5a8a;
+  --era-merge: #8a4a5a;
+
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --spring-soft: cubic-bezier(0.22, 1.2, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Paradigm state */
+  --paradigm-font: 'DM Sans', sans-serif;
+  --paradigm-heading: 'Sora', sans-serif;
+  --paradigm-bg: var(--bg);
+  --paradigm-radius: 0px;
+  --paradigm-text: var(--text);
+  --node-border: rgba(255,255,255,0.06);
+  --content-width: 680px;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; scroll-behavior: smooth; background: var(--bg); overflow-x: hidden; }
+body { font-family: var(--paradigm-font); background: var(--paradigm-bg); color: var(--paradigm-text); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+::selection { background: var(--lens-planetary); color: #fff; }
+
+/* ── River Canvas ── */
+#riverCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+/* ── Digital Body Sidebar ── */
+#digitalBody { position: fixed; left: 0; top: 0; width: 72px; height: 100vh; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0; }
+#digitalBody svg { width: 48px; height: 280px; overflow: visible; }
+#digitalBody .body-stage { transition: opacity 1.2s ease, transform 1.2s var(--ease-out); }
+#digitalBody .body-stage.hidden { opacity: 0; transform: scale(0.8); }
+#digitalBody .body-stage.visible { opacity: 1; transform: scale(1); }
+.body-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.12em; writing-mode: vertical-rl; text-orientation: mixed; position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%) rotate(180deg); transition: opacity 0.6s ease; }
+
+/* ── Lens Switcher ── */
+#lensSwitcher { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 0.6rem; padding: 0.5rem 1rem; background: rgba(6, 10, 20, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); border-radius: 40px; opacity: 0; transition: opacity 0.6s ease; }
+#lensSwitcher.visible { opacity: 1; }
+.lens-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; background: none; cursor: pointer; position: relative; transition: all 0.3s var(--spring); display: flex; align-items: center; justify-content: center; }
+.lens-btn::before { content: ''; width: 14px; height: 14px; border-radius: 50%; transition: all 0.3s ease; }
+.lens-btn[data-lens="behavioral"]::before { background: var(--lens-behavioral); }
+.lens-btn[data-lens="market"]::before { background: var(--lens-market); }
+.lens-btn[data-lens="social"]::before { background: var(--lens-social); }
+.lens-btn[data-lens="planetary"]::before { background: var(--lens-planetary); }
+.lens-btn[data-lens="heuristic"]::before { background: var(--lens-heuristic); }
+.lens-btn[data-lens="power"]::before { background: var(--lens-power); }
+.lens-btn:hover { transform: scale(1.2); }
+.lens-btn.active { border-color: currentColor; transform: scale(1.15); }
+.lens-btn.active[data-lens="behavioral"] { border-color: var(--lens-behavioral); }
+.lens-btn.active[data-lens="social"] { border-color: var(--lens-social); }
+.lens-btn.active[data-lens="planetary"] { border-color: var(--lens-planetary); }
+.lens-btn.active[data-lens="market"] { border-color: var(--lens-market); }
+.lens-btn.active[data-lens="heuristic"] { border-color: var(--lens-heuristic); }
+.lens-btn.active[data-lens="power"] { border-color: var(--lens-power); }
+.lens-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; white-space: nowrap; color: var(--text-dim); opacity: 0; transition: opacity 0.2s; pointer-events: none; padding-bottom: 6px; letter-spacing: 0.06em; }
+.lens-btn:hover .lens-tooltip { opacity: 1; }
+
+/* ── Progress Bar ── */
+#progressBar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--era-foundations), var(--era-interface), var(--era-network), var(--era-pocket), var(--era-merge)); z-index: 100; width: 0%; transition: width 0.05s linear; }
+
+/* ── Nav ── */
+.site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.4s ease; }
+.site-nav.visible { opacity: 1; }
+.site-nav a { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: color 0.3s; }
+.site-nav a:hover { color: var(--text-bright); }
+
+/* ── Main Content ── */
+main { position: relative; z-index: 5; }
+.content-col { max-width: var(--content-width); margin: 0 auto; padding: 0 2rem; padding-left: 80px; transition: max-width 0.8s var(--ease-out), padding 0.8s var(--ease-out); }
+
+/* ── Hero ── */
+.hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+.hero-section .content-col { max-width: 900px; padding-left: 100px; }
+.hero-year { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
+.hero-title { font-family: 'Sora', sans-serif; font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300; color: var(--text-bright); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+.hero-title em { font-style: normal; font-weight: 600; }
+.hero-sub { font-size: 1.05rem; color: var(--text-dim); max-width: 520px; line-height: 1.7; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards; }
+.hero-scroll { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; opacity: 0; animation: fadeUp 0.8s ease 0.9s forwards; }
+.hero-scroll .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--river-glow); animation: pulse 2s ease-in-out infinite; }
+.hero-river-hint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--river-glow) 30%, var(--river-glow) 70%, transparent); opacity: 0.15; pointer-events: none; transform: translateX(-50%); }
+
+/* ── Era Headers ── */
+.era-section { padding: 15vh 0 5vh; position: relative; }
+.era-header { margin-bottom: 4rem; }
+.era-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.8rem; }
+.era-title { font-family: var(--paradigm-heading); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 600; color: var(--text-bright); letter-spacing: -0.02em; line-height: 1.2; }
+.era-years { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); margin-top: 0.5rem; letter-spacing: 0.08em; }
+
+/* ── Timeline Nodes ── */
+.timeline-node { padding: 3rem 0; position: relative; opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.8s var(--ease-out); }
+.timeline-node.visible { opacity: 1; transform: translateY(0); }
+.node-year { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.15em; margin-bottom: 0.4rem; }
+.node-title { font-family: var(--paradigm-heading); font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 600; color: var(--text-bright); letter-spacing: -0.01em; margin-bottom: 0.5rem; line-height: 1.25; }
+.node-hook { font-size: 0.95rem; color: var(--text); margin-bottom: 1rem; line-height: 1.65; }
+.node-stat { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--lens-planetary); padding: 0.5rem 0.8rem; background: rgba(74, 127, 186, 0.08); border-left: 2px solid var(--lens-planetary); border-radius: 0 4px 4px 0; margin-bottom: 1rem; display: inline-block; letter-spacing: 0.02em; }
+.node-divider { width: 40px; height: 1px; background: rgba(255,255,255,0.06); margin: 2rem 0; }
+
+/* ── Lens Content ── */
+.node-lenses { display: none; margin-top: 1rem; }
+.node-lenses.active { display: block; }
+.lens-panel { padding: 0.8rem 1rem; border-radius: var(--paradigm-radius); margin-bottom: 0.5rem; font-size: 0.85rem; line-height: 1.6; border-left: 3px solid transparent; background: rgba(255,255,255,0.02); display: none; }
+.lens-panel.visible { display: block; animation: fadeIn 0.3s ease; }
+.lens-panel[data-lens="behavioral"] { border-left-color: var(--lens-behavioral); color: var(--lens-behavioral); }
+.lens-panel[data-lens="market"] { border-left-color: var(--lens-market); color: var(--lens-market); }
+.lens-panel[data-lens="social"] { border-left-color: var(--lens-social); color: var(--lens-social); }
+.lens-panel[data-lens="planetary"] { border-left-color: var(--lens-planetary); color: var(--lens-planetary); }
+.lens-panel[data-lens="heuristic"] { border-left-color: var(--lens-heuristic); color: var(--lens-heuristic); }
+.lens-panel[data-lens="power"] { border-left-color: var(--lens-power); color: var(--lens-power); }
+.lens-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.7; margin-bottom: 0.3rem; }
+
+/* ═══ PARADIGM SHIFTS ═══ */
+
+/* Terminal/Pre-GUI aesthetic (Era 1-2 before Mac) */
+.paradigm-terminal .content-col { font-family: 'JetBrains Mono', monospace; }
+.paradigm-terminal .node-title { font-family: 'JetBrains Mono', monospace; font-weight: 500; color: #70c898; letter-spacing: 0; }
+.paradigm-terminal .node-hook { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: #5a9a78; }
+.paradigm-terminal .era-title { font-family: 'JetBrains Mono', monospace; color: #70c898; }
+.paradigm-terminal .node-year { color: #3a6a4a; }
+.paradigm-terminal .node-stat { background: rgba(112, 200, 152, 0.06); border-left-color: #70c898; color: #70c898; }
+.paradigm-terminal .era-tag { color: #3a6a4a; }
+.paradigm-terminal .node-divider { background: rgba(112, 200, 152, 0.15); }
+.paradigm-terminal::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); pointer-events: none; z-index: 1; opacity: 0.5; }
+
+/* GUI Paradigm (post-Macintosh) */
+.paradigm-gui { --paradigm-radius: 8px; --node-border: rgba(255,255,255,0.1); }
+.paradigm-gui .timeline-node { background: rgba(255,255,255,0.02); border: 1px solid var(--node-border); border-radius: 8px; padding: 2rem; margin-bottom: 1rem; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+.paradigm-gui .node-title { color: var(--text-bright); }
+.paradigm-gui .era-title { color: var(--text-bright); }
+
+/* Network/Web Paradigm */
+.paradigm-web .node-title { text-decoration: underline; text-decoration-color: var(--lens-planetary); text-underline-offset: 4px; cursor: pointer; }
+.paradigm-web .node-hook a, .paradigm-web .node-hook { color: #6a9ad8; }
+.paradigm-web .timeline-node { border-radius: 0; border-left: 1px solid rgba(106, 154, 216, 0.2); padding-left: 1.5rem; }
+
+/* Mobile Paradigm */
+.paradigm-mobile .content-col { max-width: 420px; padding-left: 80px; }
+.paradigm-mobile .timeline-node { border-radius: 16px; background: rgba(255,255,255,0.03); padding: 1.5rem; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.06); }
+.paradigm-mobile .node-title { font-size: 1.1rem; }
+.paradigm-mobile .node-hook { font-size: 0.88rem; }
+.paradigm-mobile .node-stat { font-size: 0.65rem; }
+
+/* Social/Feed Paradigm */
+.paradigm-social .timeline-node { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 4px; padding: 1.5rem; margin-bottom: 0.5rem; }
+.paradigm-social .node-title::after { content: ' \2764'; opacity: 0.3; font-size: 0.7em; }
+
+/* AI/Merge Paradigm */
+.paradigm-merge .timeline-node { background: linear-gradient(135deg, rgba(138, 74, 90, 0.06), rgba(74, 127, 186, 0.06)); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 2rem; }
+.paradigm-merge .node-title { background: linear-gradient(90deg, var(--text-bright), var(--lens-planetary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* ── Transition Flash (paradigm shift moment) ── */
+.paradigm-flash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
+.paradigm-flash.active { opacity: 0.6; }
+
+/* ── Ending ── */
+.ending-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 2rem; }
+.ending-question { font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; color: var(--text-bright); margin-bottom: 2rem; opacity: 0; transform: translateY(20px); transition: all 1s var(--ease-out); }
+.ending-question.visible { opacity: 1; transform: translateY(0); }
+.ending-answer { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; transition: opacity 1.5s ease 1s; }
+.ending-answer.visible { opacity: 1; }
+.ending-cursor { display: inline-block; width: 8px; height: 1.2em; background: var(--river-glow); margin-left: 2px; animation: cursorBlink 1s step-end infinite; vertical-align: text-bottom; }
+
+/* ── Animations ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 1; transform: scale(1.5); } }
+@keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+@keyframes bodyPulse { 0%, 100% { filter: drop-shadow(0 0 3px rgba(42, 106, 138, 0.3)); } 50% { filter: drop-shadow(0 0 8px rgba(42, 106, 138, 0.6)); } }
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  #digitalBody { display: none; }
+  .content-col { padding-left: 2rem; }
+  .hero-section .content-col { padding-left: 2rem; }
+  .paradigm-mobile .content-col { padding-left: 1.5rem; max-width: 100%; }
+  #lensSwitcher { bottom: 1rem; }
+}
+@media (max-width: 600px) {
+  .hero-title { font-size: 1.8rem; }
+  .content-col { padding: 0 1.2rem; }
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .timeline-node { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- River Canvas -->
+<canvas id="riverCanvas"></canvas>
+
+<!-- Progress Bar -->
+<div id="progressBar"></div>
+
+<!-- Paradigm Shift Flash -->
+<div class="paradigm-flash" id="paradigmFlash"></div>
+
+<!-- Site Nav -->
+<nav class="site-nav" id="siteNav">
+  <a href="/">YesCraft.ai</a>
+  <a href="/collisions/">Collisions</a>
+</nav>
+
+<!-- Digital Body Sidebar -->
+<aside id="digitalBody">
+  <svg viewBox="0 0 48 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Stage 0: Primordial dot (pre-computer) -->
+    <g class="body-stage visible" id="bodyDot">
+      <circle cx="24" cy="140" r="4" fill="#2a6a8a" opacity="0.6">
+        <animate attributeName="r" values="4;5;4" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+
+    <!-- Stage 1: Seated figure (Desktop era) -->
+    <g class="body-stage hidden" id="bodySeated" stroke="#3a8aaa" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="24" cy="100" r="6" fill="none"/>
+      <line x1="24" y1="106" x2="24" y2="145"/>
+      <line x1="24" y1="120" x2="14" y2="135"/>
+      <line x1="24" y1="120" x2="34" y2="135"/>
+      <line x1="24" y1="145" x2="16" y2="170"/>
+      <line x1="24" y1="145" x2="32" y2="170"/>
+      <rect x="34" y="112" width="12" height="10" rx="1" stroke-width="1" opacity="0.5"/>
+      <line x1="40" y1="122" x2="40" y2="126" stroke-width="1" opacity="0.3"/>
+    </g>
+
+    <!-- Stage 2: Connected figure (Network era) -->
+    <g class="body-stage hidden" id="bodyConnected" stroke="#5a9aba" stroke-width="1" stroke-linecap="round" opacity="0.9">
+      <circle cx="24" cy="100" r="6" fill="none" stroke-width="1.5"/>
+      <line x1="24" y1="106" x2="24" y2="145" stroke-width="1.5"/>
+      <line x1="24" y1="120" x2="14" y2="135" stroke-width="1.5"/>
+      <line x1="24" y1="120" x2="34" y2="135" stroke-width="1.5"/>
+      <!-- Tendrils -->
+      <line x1="14" y1="135" x2="2" y2="128" opacity="0.4"/>
+      <line x1="14" y1="135" x2="4" y2="148" opacity="0.3"/>
+      <line x1="34" y1="135" x2="46" y2="128" opacity="0.4"/>
+      <line x1="34" y1="135" x2="44" y2="148" opacity="0.3"/>
+      <circle cx="2" cy="128" r="2" fill="#5a9aba" opacity="0.3"/>
+      <circle cx="46" cy="128" r="2" fill="#5a9aba" opacity="0.3"/>
+      <circle cx="4" cy="148" r="1.5" fill="#5a9aba" opacity="0.2"/>
+      <circle cx="44" cy="148" r="1.5" fill="#5a9aba" opacity="0.2"/>
+      <line x1="24" y1="145" x2="16" y2="170" stroke-width="1.5"/>
+      <line x1="24" y1="145" x2="32" y2="170" stroke-width="1.5"/>
+    </g>
+
+    <!-- Stage 3: Mobile figure (Pocket era) -->
+    <g class="body-stage hidden" id="bodyMobile" stroke="#8a6aaa" stroke-width="1.5" stroke-linecap="round">
+      <circle cx="24" cy="115" r="5" fill="none"/>
+      <line x1="24" y1="120" x2="24" y2="152"/>
+      <line x1="24" y1="130" x2="16" y2="142"/>
+      <line x1="24" y1="130" x2="32" y2="138"/>
+      <!-- Phone in hand -->
+      <rect x="30" y="134" width="7" height="12" rx="1.5" fill="none" stroke-width="1"/>
+      <circle cx="33.5" cy="143" r="0.8" fill="#8a6aaa" opacity="0.5"/>
+      <!-- Notification pulse -->
+      <circle cx="33.5" cy="134" r="3" fill="none" stroke="#c4554d" stroke-width="0.5" opacity="0">
+        <animate attributeName="r" values="3;8;3" dur="2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <line x1="24" y1="152" x2="18" y2="172"/>
+      <line x1="24" y1="152" x2="30" y2="172"/>
+    </g>
+
+    <!-- Stage 4: Merged figure (AI era) -->
+    <g class="body-stage hidden" id="bodyMerged" stroke-linecap="round">
+      <!-- Original figure (fading) -->
+      <g stroke="#6a8aaa" stroke-width="1" opacity="0.5">
+        <circle cx="18" cy="115" r="5" fill="none"/>
+        <line x1="18" y1="120" x2="18" y2="155"/>
+        <line x1="18" y1="130" x2="10" y2="142"/>
+        <line x1="18" y1="130" x2="26" y2="142"/>
+        <line x1="18" y1="155" x2="12" y2="175"/>
+        <line x1="18" y1="155" x2="24" y2="175"/>
+      </g>
+      <!-- Mirror/algorithmic self -->
+      <g stroke="#aa5a6a" stroke-width="1" opacity="0.4">
+        <circle cx="30" cy="115" r="5" fill="none"/>
+        <line x1="30" y1="120" x2="30" y2="155"/>
+        <line x1="30" y1="130" x2="22" y2="142"/>
+        <line x1="30" y1="130" x2="38" y2="142"/>
+        <line x1="30" y1="155" x2="24" y2="175"/>
+        <line x1="30" y1="155" x2="36" y2="175"/>
+      </g>
+      <!-- Connecting threads -->
+      <line x1="18" y1="115" x2="30" y2="115" stroke="#7a6a8a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2 2">
+        <animate attributeName="stroke-dashoffset" values="0;4" dur="1.5s" repeatCount="indefinite"/>
+      </line>
+      <line x1="18" y1="140" x2="30" y2="140" stroke="#7a6a8a" stroke-width="0.5" opacity="0.2" stroke-dasharray="2 2">
+        <animate attributeName="stroke-dashoffset" values="0;-4" dur="2s" repeatCount="indefinite"/>
+      </line>
+    </g>
+  </svg>
+  <span class="body-label" id="bodyLabel">You</span>
+</aside>
+
+<!-- Lens Switcher -->
+<nav id="lensSwitcher">
+  <button class="lens-btn" data-lens="behavioral"><span class="lens-tooltip">Behavioral</span></button>
+  <button class="lens-btn" data-lens="social"><span class="lens-tooltip">Social</span></button>
+  <button class="lens-btn" data-lens="market"><span class="lens-tooltip">Market</span></button>
+  <button class="lens-btn" data-lens="planetary"><span class="lens-tooltip">Planetary</span></button>
+  <button class="lens-btn" data-lens="heuristic"><span class="lens-tooltip">Heuristic</span></button>
+  <button class="lens-btn" data-lens="power"><span class="lens-tooltip">Winners &amp; Losers</span></button>
+</nav>
+
+<!-- ════════════════════════════════════════ -->
+<!-- MAIN TIMELINE CONTENT                   -->
+<!-- ════════════════════════════════════════ -->
+<main>
+
+<!-- ── HERO ── -->
+<section class="hero-section">
+  <div class="hero-river-hint"></div>
+  <div class="content-col">
+    <div class="hero-year">1919 &mdash; Present</div>
+    <h1 class="hero-title">The Architecture<br>of <em>Interaction</em></h1>
+    <p class="hero-sub">How humans and computers learned to think together. A century of co-evolution traced through behavior, markets, identity, and planetary cost.</p>
+    <div class="hero-scroll"><span class="pulse"></span> Scroll to enter the river</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- ERA 1: THE FOUNDATIONS (1919-1960) -->
+<!-- ═══════════════════════════════ -->
+<section class="era-section" data-era="foundations" data-paradigm="terminal">
+  <div class="content-col">
+    <div class="era-header">
+      <div class="era-tag">Era I</div>
+      <h2 class="era-title">The Foundations</h2>
+      <div class="era-years">1919 &ndash; 1960</div>
+    </div>
+
+    <div class="timeline-node" data-year="1919">
+      <div class="node-year">1919</div>
+      <h3 class="node-title">Bauhaus Founded</h3>
+      <p class="node-hook">Walter Gropius opens a school in Weimar. Form follows function. Grid systems replace ornament. A rational visual grammar is born that will shape every screen you have ever touched.</p>
+      <div class="node-stat">Mass production incentivized. Craft displaced.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Rational visual grammar replaces ornament. The eye learns to parse information hierarchically.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Industrial manufacturing booms. Traditional craftsmen displaced by standardized production.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Design democratized through mass production. Beauty no longer reserved for the wealthy.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Industrial-scale production accelerates resource extraction. The factory as design philosophy.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Seeds of Consistency &amp; Standards (H4) and Aesthetic Minimalist Design (H8). The grid is the first interface pattern.</div>
+        <div class="lens-panel" data-lens="power"><div class="lens-label">Winners &amp; Losers</div>Winners: Industrial manufacturers, modernist architects. Losers: Traditional craftsmen, ornamental artisans.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1945a">
+      <div class="node-year">1945</div>
+      <h3 class="node-title">Vannevar Bush's Memex</h3>
+      <p class="node-hook">"As We May Think" published in The Atlantic. Bush imagines a desk-sized device that lets scholars follow associative trails through stored knowledge. Hypertext conceived 45 years before the web.</p>
+      <div class="node-stat">Shifted thinking from linear reading to associative browsing</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>The mind modeled as a web, not a line. Reading becomes browsing. Attention becomes nonlinear.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Laid the intellectual groundwork for search engines. Influenced ARPA funding priorities.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Post-WWII dream of democratized knowledge access. Science as a public good.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1945b">
+      <div class="node-year">1945</div>
+      <h3 class="node-title">ENIAC</h3>
+      <p class="node-hook">30 tons of vacuum tubes in a Philadelphia basement. The first general-purpose electronic computer shifts calculation from human "computers" (mostly women) to machines. A new kind of labor disappears overnight.</p>
+      <div class="node-stat">$500K military investment. Human computers displaced.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Calculation offloaded from brain to machine. The cognitive division of labor begins.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Military funding validates federal R&amp;D investment. The defense-to-civilian pipeline established.</div>
+        <div class="lens-panel" data-lens="power"><div class="lens-label">Winners &amp; Losers</div>Winners: Military-industrial complex. Losers: Human computers, predominantly women, erased from history.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Inaugurated "big science" infrastructure. Computing as energy-intensive endeavor begins here.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1950">
+      <div class="node-year">1950s</div>
+      <h3 class="node-title">Cybernetics &amp; SAGE</h3>
+      <p class="node-hook">Humans integrated into digital control loops. Light guns, real-time displays, feedback systems. The air defense network that cost more than the Manhattan Project birthed interactive computing as a side effect.</p>
+      <div class="node-stat">$61B for SAGE. 20% of IBM's workforce on one contract.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>The "cyborg" metaphor emerges. Humans modeled as information processors in feedback loops.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Massive capital: $61B for SAGE alone. Military blank checks created an entire industry.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Global surveillance dome conceived. The "closed world" of continental defense reshapes geopolitics.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Continent-scale computing infrastructure. The first data centers, disguised as bunkers.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1960">
+      <div class="node-year">1960</div>
+      <h3 class="node-title">Man-Computer Symbiosis</h3>
+      <p class="node-hook">J.C.R. Licklider publishes the paper that seeds everything. Not replacement, not tool use, but symbiosis. The human and the computer thinking together, each doing what the other cannot.</p>
+      <div class="node-stat">Spawned ARPANET. Then the internet economy. Then everything.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Interactive computing replaces batch processing. The conversation between human and machine begins.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Foundation of User Control and Freedom (H3). The user is not a passenger. The user drives.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Collaborative tools, remote work cultures begin. Computing as communication, not just calculation.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- ERA 2: THE INTERFACE EMERGES (1963-1984) -->
+<!-- ═══════════════════════════════ -->
+<section class="era-section" data-era="interface" data-paradigm="terminal">
+  <div class="content-col">
+    <div class="era-header">
+      <div class="era-tag">Era II</div>
+      <h2 class="era-title">The Interface Emerges</h2>
+      <div class="era-years">1963 &ndash; 1984</div>
+    </div>
+
+    <div class="timeline-node" data-year="1963">
+      <div class="node-year">1963</div>
+      <h3 class="node-title">Sutherland's Sketchpad</h3>
+      <p class="node-hook">A PhD thesis that invented the future. Draw on a screen with a light pen and the computer understands geometry. The first WYSIWYG. The first direct manipulation. Computing begins to feel like thinking.</p>
+      <div class="node-stat">First direct manipulation interface. Sparked the entire CAD industry.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>First WYSIWYG interaction. What you see is what you get. The gap between intention and result collapses.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Direct manipulation born. Recognition over Recall (H6) demonstrated for the first time.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Sparked CAD/CAM industries worth hundreds of billions today.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1968">
+      <div class="node-year">1968</div>
+      <h3 class="node-title">The Mother of All Demos</h3>
+      <p class="node-hook">Douglas Engelbart demonstrates the mouse, hypertext, video conferencing, collaborative editing, and windowed interfaces to a stunned audience in San Francisco. Every interaction you perform today was shown in this 90-minute demo.</p>
+      <div class="node-stat">Mouse licensed to Apple. Became standard in billions of devices.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Pointing replaces typing. The hand gains a digital extension. Spatial navigation becomes intuitive.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Flexibility and Efficiency of Use (H7). Power users and novices share the same tool.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Remote collaboration demonstrated live. The first glimpse of Zoom, 52 years early.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1973">
+      <div class="node-year">1973</div>
+      <h3 class="node-title">Xerox Alto &amp; Star</h3>
+      <p class="node-hook">Desktops. Trash cans. Folders. Visual metaphors replace memorized commands. The office migrates onto the screen. Xerox invents the future and then famously fumbles it.</p>
+      <div class="node-stat">Technology adopted by Apple and Microsoft. Xerox kept the receipts.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Recognition replaces recall. You see a folder, you know what it does. The metaphor does the teaching.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Recognition Rather Than Recall (H6). Consistency and Standards (H4). The GUI heuristic canon begins.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Xerox PARC's inventions worth trillions, captured by competitors. The original fumble.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <!-- ★ PARADIGM SHIFT: Terminal → GUI ★ -->
+    <div class="timeline-node paradigm-shift-node" data-year="1984" data-shift="gui">
+      <div class="node-year">1984</div>
+      <h3 class="node-title">Apple Macintosh</h3>
+      <p class="node-hook">Point and click becomes the norm. Computing enters homes, schools, kitchens. The command line retreats. For the first time, a computer is friendly. The relief is physical.</p>
+      <div class="node-stat">Dominated desktop publishing. E-waste begins its exponential curve.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Point and click as default. The mouse hand becomes second nature. A generation learns to compute without commands.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Desktop publishing revolution. Apple revitalized. The personal computer market explodes.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>E-waste begins its exponential curve. Planned obsolescence enters the consumer vocabulary.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Computing enters homes and schools. The digital divide begins: who has a Mac, who doesn't.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- ERA 3: THE NETWORK (1990-2006) -->
+<!-- ═══════════════════════════════ -->
+<section class="era-section" data-era="network" data-paradigm="web">
+  <div class="content-col">
+    <div class="era-header">
+      <div class="era-tag">Era III</div>
+      <h2 class="era-title">The Network</h2>
+      <div class="era-years">1990 &ndash; 2006</div>
+    </div>
+
+    <div class="timeline-node" data-year="1990">
+      <div class="node-year">1990</div>
+      <h3 class="node-title">The World Wide Web</h3>
+      <p class="node-hook">Tim Berners-Lee writes a proposal his boss labels "Vague but exciting." Clicking a blue underlined word takes you somewhere else. The feeling of infinite possibility. The browser as portal.</p>
+      <div class="node-stat">Spawned the dot-com boom. Amazon. Google. Everything connected.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Clicking links replaces typing commands. Browsing becomes casual, endless, associative. Bush's Memex realized.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Dot-com boom and bust. Amazon, Google, eBay. A new economy built on hyperlinks.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Data centers begin their energy ascent. The physical infrastructure of the virtual world grows.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Information access democratized globally. 78% decline in teen pregnancy correlated with information access.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="1995">
+      <div class="node-year">1995</div>
+      <h3 class="node-title">Amazon &amp; 1-Click</h3>
+      <p class="node-hook">Jeff Bezos patents removing friction from purchasing. One click and something arrives at your door. The most consequential UX decision in commerce: every barrier removed is revenue gained.</p>
+      <div class="node-stat">E-commerce projected $6.88T by 2026. ~21% of all retail.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Impulse buying enabled by friction removal. The gap between desire and purchase approaches zero.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Aesthetic and Minimalist Design (H8) applied to commerce. Fewer clicks equals more revenue.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Physical retail disrupted. Local economies strained. The everything store changes everything.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Main streets empty. Delivery workers multiply. The convenience economy reshapes cities.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2004">
+      <div class="node-year">2004</div>
+      <h3 class="node-title">Facebook</h3>
+      <p class="node-hook">A Harvard dorm room product that learns to monetize human connection. The News Feed, the Like button, the algorithmic sort. Your attention becomes the product. Your identity becomes a performance.</p>
+      <div class="node-stat">Monetized human attention across billions of users via ads</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Dopamine-driven scrolling. Variable reward mechanisms. The slot machine in your social life.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Echo chambers amplified. Mental health paradigms altered. Identity becomes performative, curated.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Attention monetized at scale. The advertising model becomes the internet's business model.</div>
+        <div class="lens-panel" data-lens="power"><div class="lens-label">Winners &amp; Losers</div>Winners: Platform owners, advertisers. Losers: Local journalism, privacy, teen mental health.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- ERA 4: THE POCKET (2007-2017) -->
+<!-- ═══════════════════════════════ -->
+<section class="era-section" data-era="pocket" data-paradigm="mobile">
+  <div class="content-col">
+    <div class="era-header">
+      <div class="era-tag">Era IV</div>
+      <h2 class="era-title">The Pocket</h2>
+      <div class="era-years">2007 &ndash; 2017</div>
+    </div>
+
+    <!-- ★ PARADIGM SHIFT: Wide → Mobile ★ -->
+    <div class="timeline-node paradigm-shift-node" data-year="2007" data-shift="mobile">
+      <div class="node-year">2007</div>
+      <h3 class="node-title">iPhone</h3>
+      <p class="node-hook">Steve Jobs puts a computer in your pocket and you never put it down. Pinch, swipe, tap. The interface becomes your body. Phantom vibration syndrome: your nervous system wired to a rectangle of glass.</p>
+      <div class="node-stat">$500B+ annual smartphone market. Trillion-dollar app ecosystems.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Touch-based interaction feels natural. The phone as body extension. 7 to 9 hours daily screen time for teens.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Rare earth mining accelerates. Conflict minerals. Cobalt from the DRC. The phone's hidden geography.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>App Store creates $500B+ economy. Nokia and BlackBerry destroyed. New billionaires minted from apps.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Ubiquitous computing changes daily life. Always on, always connected. Addiction concerns rise.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2016">
+      <div class="node-year">2016</div>
+      <h3 class="node-title">Stories &amp; Pokemon GO</h3>
+      <p class="node-hook">Ephemeral sharing. Physical movement for digital rewards. Instagram Stories proves content doesn't need to last. Pokemon GO proves the screen doesn't need to end at the glass.</p>
+      <div class="node-stat">AR proves commercial viability. $1B+ revenue in months.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>FOMO amplified. Permanence anxiety reduced. Identity shifts from archive to fleeting performance.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Augmented reality proves commercial viability. Location-based services become billion-dollar markets.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Strangers gather in parks chasing digital creatures. The screen escapes the pocket into shared physical space.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node paradigm-shift-node" data-year="2018" data-shift="social">
+      <div class="node-year">2018</div>
+      <h3 class="node-title">TikTok</h3>
+      <p class="node-hook">The algorithm doesn't just show you what your friends share. It learns what your eyes linger on and builds a mirror of your unconscious interests. Attention spans compressed to seconds. Identity construction outsourced to a black box.</p>
+      <div class="node-stat">$100B+ creator economy birthed. Algorithm ownership becomes geopolitical.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>AI-tailored "For You" feed. Content consumption becomes passive. The user stops choosing.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Viral micro-trends break traditional marketing lifecycles. Identity as algorithmic reflection.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Creator economy explodes. Traditional media budgets redistributed to individuals with phones.</div>
+        <div class="lens-panel" data-lens="power"><div class="lens-label">Winners &amp; Losers</div>Winners: Content creators, ByteDance. Losers: Traditional media, anyone over 30 trying to keep up.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ -->
+<!-- ERA 5: THE MERGE (2020-Present) -->
+<!-- ═══════════════════════════════ -->
+<section class="era-section" data-era="merge" data-paradigm="merge">
+  <div class="content-col">
+    <div class="era-header">
+      <div class="era-tag">Era V</div>
+      <h2 class="era-title">The Merge</h2>
+      <div class="era-years">2020 &ndash; Present</div>
+    </div>
+
+    <div class="timeline-node" data-year="2020">
+      <div class="node-year">2020</div>
+      <h3 class="node-title">Pandemic</h3>
+      <p class="node-hook">The world goes inside. Zoom hits 300 million daily users. Your living room becomes your office, your school, your bar, your doctor's waiting room. The screen becomes the only window. Essential labor splits along interface access: those who Zoom and those who deliver.</p>
+      <div class="node-stat">Zoom: 300M daily users. $100B+ valuation. "You're on mute."</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Explosive scaling of collaborative UIs. Zoom fatigue: too many faces, not enough bodies.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>"Alone together" paradox. The domestic sanctuary merges with the digital panopticon.</div>
+        <div class="lens-panel" data-lens="power"><div class="lens-label">Winners &amp; Losers</div>Winners: Tech platforms, remote workers. Losers: Service workers, small businesses, children's social development.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2022">
+      <div class="node-year">2022</div>
+      <h3 class="node-title">ChatGPT &amp; Stable Diffusion</h3>
+      <p class="node-hook">The text cursor becomes the universal interface. Type what you want and it appears. Users become directors, not operators. The prompt replaces every prior paradigm. Simultaneously: democratized creativity and democratized misinformation.</p>
+      <div class="node-stat">OpenAI hits $80B+ valuation. The universal interface is a blinking cursor.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Users become creative directors. The "multiplier effect." Natural language replaces learned gestures.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>The universal interface (text cursor) replaces all prior paradigms. Help and Documentation (H10) becomes conversational.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>Knowledge work and creative labor markets disrupted simultaneously. Every industry recalibrates.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Democratized creativity AND misinformation. The cost of producing anything drops to near zero.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2023">
+      <div class="node-year">2023</div>
+      <h3 class="node-title">Apple Vision Pro</h3>
+      <p class="node-hook">Your eyes become the cursor. A micro-gesture of your fingers becomes the click. The physical monitor begins its obsolescence. The question: is this an empathic telepresence device or the most sophisticated isolation chamber ever built?</p>
+      <div class="node-stat">AR market projected $100B by 2030. Gaze as primary input.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Gaze and micro-gesture as primary input. The body becomes the controller. No intermediary device.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Isolation device AND empathic telepresence. Eye contact mediated by cameras. Presence redefined.</div>
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>Planned obsolescence of the physical monitor. New categories of e-waste. Server farms for spatial computing.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2024">
+      <div class="node-year">2024</div>
+      <h3 class="node-title">Neuralink: First Human Implant</h3>
+      <p class="node-hook">A chip in Noland Arbaugh's brain lets him move a cursor by thinking. Physical inputs bypassed entirely. Thought to action with no intermediary. Licklider's 1960 symbiosis vision physically realized, 64 years later. The boundary between thought and machine action dissolves.</p>
+      <div class="node-stat">BCI market reaches $3B+. The interface disappears into the body.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="behavioral"><div class="lens-label">Behavioral</div>Physical inputs bypassed entirely. The mouse, the touch screen, the gesture, the gaze: all rendered archaeological.</div>
+        <div class="lens-panel" data-lens="heuristic"><div class="lens-label">Heuristic</div>Licklider's symbiosis physically realized. Every heuristic must be reconsidered when the interface is thought itself.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Medical breakthrough AND existential ethics. Who gets augmented? Who decides what "normal" cognition means?</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+
+    <div class="timeline-node" data-year="2025">
+      <div class="node-year">Now</div>
+      <h3 class="node-title">The Datacenter Crisis</h3>
+      <p class="node-hook">Every interaction on this page required electricity. The global AI infrastructure boom demands 945 terawatt-hours by 2030, roughly 3% of all electricity on Earth. Facilities optimize their efficiency, but volume overwhelms every savings. The river we've been swimming in has a temperature.</p>
+      <div class="node-stat">945 TWh by 2030. $7T infrastructure boom. 3% of global electricity.</div>
+      <div class="node-lenses">
+        <div class="lens-panel" data-lens="planetary"><div class="lens-label">Planetary</div>PUE paradox: facilities optimize, but volume overwhelms savings. Eco-anxiety paired with total AI reliance.</div>
+        <div class="lens-panel" data-lens="social"><div class="lens-label">Social</div>Cognitive dissonance: we know the cost, we can't stop using it. The algorithmic self precedes the physical self.</div>
+        <div class="lens-panel" data-lens="market"><div class="lens-label">Market</div>$7 trillion infrastructure investment. The largest capital deployment since electrification itself.</div>
+      </div>
+      <div class="node-divider"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ENDING ── -->
+<section class="ending-section" id="ending">
+  <div class="ending-question" id="endingQ">You are the interface.</div>
+  <div class="ending-answer" id="endingA">
+    The river is not the technology. The river is you, shaped by it.<span class="ending-cursor"></span>
+  </div>
+</section>
+
+</main>
+
+<script>
+// ════════════════════════════════════
+// RIVER CANVAS ANIMATION
+// ════════════════════════════════════
+(function() {
+  var canvas = document.getElementById('riverCanvas');
+  var ctx = canvas.getContext('2d');
+  var W, H, scrollProgress = 0, time = 0;
+  var particles = [];
+  var activeLens = null;
+  var currentParadigm = 'terminal';
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Noise function (smooth pseudo-random)
+  function noise(x, y) {
+    var n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+    return (n - Math.floor(n)) * 2 - 1;
+  }
+
+  function flowNoise(x, t) {
+    return Math.sin(x * 0.5 + t * 0.3) * 0.5
+         + Math.sin(x * 1.1 + t * 0.7) * 0.3
+         + Math.sin(x * 2.3 + t * 1.1) * 0.15
+         + Math.sin(x * 3.7 + t * 0.5) * 0.05;
+  }
+
+  // River properties at current scroll
+  function getRiverProps(p) {
+    var width = 2 + p * p * 160;
+    var turbulence = p * p * 40;
+    var speed = 0.3 + p * 1.5;
+    var branches = Math.floor(p * 4);
+    var opacity = 0.15 + p * 0.25;
+
+    // Color based on era/lens
+    var r = 30 + p * 40, g = 80 + p * 30, b = 120 + p * 20;
+    if (activeLens === 'behavioral') { r = 200; g = 160; b = 60; }
+    else if (activeLens === 'social') { r = 180; g = 70; b = 70; }
+    else if (activeLens === 'planetary') { r = 60; g = 110; b = 170; }
+    else if (activeLens === 'market') { r = 60; g = 160; b = 70; }
+
+    return { width: width, turbulence: turbulence, speed: speed, branches: branches, opacity: opacity, r: r, g: g, b: b };
+  }
+
+  // Particle class
+  function Particle(props) {
+    this.reset(props);
+  }
+  Particle.prototype.reset = function(props) {
+    var cx = W * 0.5;
+    this.x = cx + (Math.random() - 0.5) * props.width * 0.8;
+    this.y = -10 - Math.random() * H * 0.3;
+    this.speed = props.speed * (0.5 + Math.random() * 0.5);
+    this.size = 1 + Math.random() * (1 + scrollProgress * 2);
+    this.alpha = 0.2 + Math.random() * 0.5;
+    this.life = 0;
+  };
+  Particle.prototype.update = function(dt, props) {
+    this.life += dt;
+    var cx = W * 0.5;
+    var noiseVal = flowNoise(this.y * 0.005, time) * props.turbulence;
+    this.x += noiseVal * dt * 0.5;
+    this.y += this.speed * dt * 60;
+
+    // Constrain to river channel
+    var halfW = props.width * 0.5;
+    if (this.x < cx - halfW) this.x = cx - halfW;
+    if (this.x > cx + halfW) this.x = cx + halfW;
+
+    if (this.y > H + 20) this.reset(props);
+  };
+  Particle.prototype.draw = function(ctx, props) {
+    var fade = Math.min(1, this.life * 2);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + Math.round(props.r) + ',' + Math.round(props.g) + ',' + Math.round(props.b) + ',' + (this.alpha * fade * props.opacity) + ')';
+    ctx.fill();
+  };
+
+  // Initialize particles
+  for (var i = 0; i < 120; i++) {
+    var initProps = getRiverProps(0);
+    var p = new Particle(initProps);
+    p.y = Math.random() * H;
+    particles.push(p);
+  }
+
+  // Draw river channel
+  function drawChannel(props) {
+    var cx = W * 0.5;
+    var halfW = props.width * 0.5;
+
+    // Draw multiple layers for depth
+    for (var layer = 3; layer >= 0; layer--) {
+      var layerW = halfW * (1 + layer * 0.3);
+      var layerOpacity = props.opacity * (0.03 + layer * 0.02);
+
+      ctx.beginPath();
+      ctx.moveTo(cx - layerW, 0);
+
+      for (var y = 0; y < H; y += 20) {
+        var nx = flowNoise(y * 0.003 + layer * 0.5, time * 0.5) * props.turbulence * 0.3;
+        ctx.lineTo(cx - layerW + nx, y);
+      }
+      ctx.lineTo(cx - layerW, H);
+      ctx.lineTo(cx + layerW, H);
+
+      for (var y2 = H; y2 >= 0; y2 -= 20) {
+        var nx2 = flowNoise(y2 * 0.003 + layer * 0.5 + 10, time * 0.5) * props.turbulence * 0.3;
+        ctx.lineTo(cx + layerW + nx2, y2);
+      }
+      ctx.closePath();
+
+      ctx.fillStyle = 'rgba(' + Math.round(props.r) + ',' + Math.round(props.g) + ',' + Math.round(props.b) + ',' + layerOpacity + ')';
+      ctx.fill();
+    }
+
+    // Center glow line
+    ctx.beginPath();
+    ctx.moveTo(cx, 0);
+    for (var y3 = 0; y3 < H; y3 += 10) {
+      var nx3 = flowNoise(y3 * 0.004, time * 0.7) * props.turbulence * 0.15;
+      ctx.lineTo(cx + nx3, y3);
+    }
+    ctx.strokeStyle = 'rgba(' + Math.round(props.r + 40) + ',' + Math.round(props.g + 40) + ',' + Math.round(props.b + 40) + ',' + (props.opacity * 0.4) + ')';
+    ctx.lineWidth = 1 + scrollProgress;
+    ctx.stroke();
+  }
+
+  // Animation loop
+  var lastTime = 0;
+  function animate(timestamp) {
+    var dt = Math.min((timestamp - lastTime) / 1000, 0.05);
+    lastTime = timestamp;
+    time += dt;
+
+    ctx.clearRect(0, 0, W, H);
+    var props = getRiverProps(scrollProgress);
+
+    drawChannel(props);
+
+    // Update and draw particles
+    var activeCount = Math.floor(20 + scrollProgress * 100);
+    for (var i = 0; i < Math.min(particles.length, activeCount); i++) {
+      particles[i].update(dt, props);
+      particles[i].draw(ctx, props);
+    }
+
+    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+
+  // ════════════════════════════════════
+  // SCROLL TRACKING
+  // ════════════════════════════════════
+  var progressBar = document.getElementById('progressBar');
+  var siteNav = document.getElementById('siteNav');
+  var lensSwitcher = document.getElementById('lensSwitcher');
+  var paradigmFlash = document.getElementById('paradigmFlash');
+  var lastParadigm = '';
+
+  var bodyStages = {
+    dot: document.getElementById('bodyDot'),
+    seated: document.getElementById('bodySeated'),
+    connected: document.getElementById('bodyConnected'),
+    mobile: document.getElementById('bodyMobile'),
+    merged: document.getElementById('bodyMerged')
+  };
+  var bodyLabel = document.getElementById('bodyLabel');
+  var bodyLabels = ['You', 'User', 'Node', 'Carrier', 'Signal'];
+
+  function updateScroll() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    scrollProgress = Math.max(0, Math.min(1, scrollTop / docHeight));
+
+    // Progress bar
+    progressBar.style.width = (scrollProgress * 100) + '%';
+
+    // Nav and lens visibility
+    if (scrollTop > 200) {
+      siteNav.classList.add('visible');
+      lensSwitcher.classList.add('visible');
+    } else {
+      siteNav.classList.remove('visible');
+      lensSwitcher.classList.remove('visible');
+    }
+
+    // Digital body evolution
+    var stage = scrollProgress < 0.15 ? 'dot'
+              : scrollProgress < 0.35 ? 'seated'
+              : scrollProgress < 0.55 ? 'connected'
+              : scrollProgress < 0.75 ? 'mobile'
+              : 'merged';
+
+    Object.keys(bodyStages).forEach(function(key) {
+      if (bodyStages[key]) {
+        if (key === stage) {
+          bodyStages[key].classList.remove('hidden');
+          bodyStages[key].classList.add('visible');
+        } else {
+          bodyStages[key].classList.remove('visible');
+          bodyStages[key].classList.add('hidden');
+        }
+      }
+    });
+
+    var labelIdx = stage === 'dot' ? 0 : stage === 'seated' ? 1 : stage === 'connected' ? 2 : stage === 'mobile' ? 3 : 4;
+    bodyLabel.textContent = bodyLabels[labelIdx];
+
+    // Paradigm detection
+    var paradigm = 'terminal';
+    var eraSections = document.querySelectorAll('.era-section');
+    eraSections.forEach(function(section) {
+      var rect = section.getBoundingClientRect();
+      if (rect.top < H * 0.5) {
+        paradigm = section.getAttribute('data-paradigm') || paradigm;
+      }
+    });
+
+    // Check for paradigm shift nodes
+    document.querySelectorAll('.paradigm-shift-node').forEach(function(node) {
+      var rect = node.getBoundingClientRect();
+      if (rect.top < H * 0.5 && rect.bottom > 0) {
+        var shift = node.getAttribute('data-shift');
+        if (shift === 'gui') paradigm = 'gui';
+        else if (shift === 'mobile') paradigm = 'mobile';
+        else if (shift === 'social') paradigm = 'social';
+      }
+    });
+
+    if (paradigm !== lastParadigm) {
+      // Flash effect on paradigm shift
+      if (lastParadigm && lastParadigm !== paradigm) {
+        paradigmFlash.classList.add('active');
+        setTimeout(function() { paradigmFlash.classList.remove('active'); }, 200);
+      }
+
+      // Remove old paradigm classes
+      document.body.classList.remove('paradigm-terminal', 'paradigm-gui', 'paradigm-web', 'paradigm-mobile', 'paradigm-social', 'paradigm-merge');
+      document.body.classList.add('paradigm-' + paradigm);
+      currentParadigm = paradigm;
+      lastParadigm = paradigm;
+    }
+
+    // Ending
+    var ending = document.getElementById('ending');
+    if (ending) {
+      var endRect = ending.getBoundingClientRect();
+      if (endRect.top < H * 0.6) {
+        document.getElementById('endingQ').classList.add('visible');
+        document.getElementById('endingA').classList.add('visible');
+      }
+    }
+  }
+
+  window.addEventListener('scroll', updateScroll, { passive: true });
+  updateScroll();
+
+  // ════════════════════════════════════
+  // NODE REVEAL (Intersection Observer)
+  // ════════════════════════════════════
+  try {
+    var nodeObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+    document.querySelectorAll('.timeline-node').forEach(function(node) {
+      nodeObserver.observe(node);
+    });
+  } catch(e) {
+    document.querySelectorAll('.timeline-node').forEach(function(node) {
+      node.classList.add('visible');
+    });
+  }
+
+  // ════════════════════════════════════
+  // LENS SWITCHING
+  // ════════════════════════════════════
+  var lensButtons = document.querySelectorAll('.lens-btn');
+  lensButtons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var lens = btn.getAttribute('data-lens');
+
+      if (btn.classList.contains('active')) {
+        // Deactivate
+        btn.classList.remove('active');
+        activeLens = null;
+        document.querySelectorAll('.node-lenses').forEach(function(nl) { nl.classList.remove('active'); });
+        document.querySelectorAll('.lens-panel').forEach(function(lp) { lp.classList.remove('visible'); });
+      } else {
+        // Activate this lens
+        lensButtons.forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        activeLens = lens;
+
+        // Show matching lens panels
+        document.querySelectorAll('.node-lenses').forEach(function(nl) { nl.classList.add('active'); });
+        document.querySelectorAll('.lens-panel').forEach(function(lp) {
+          if (lp.getAttribute('data-lens') === lens) {
+            lp.classList.add('visible');
+          } else {
+            lp.classList.remove('visible');
+          }
+        });
+      }
+    });
+  });
+
+  // Start with terminal paradigm
+  document.body.classList.add('paradigm-terminal');
+
+  // Fallback reveal
+  setTimeout(function() {
+    document.querySelectorAll('.timeline-node:not(.visible)').forEach(function(node) {
+      node.classList.add('visible');
+    });
+  }, 2000);
+
+})();
+</script>
+</body>
+</html>

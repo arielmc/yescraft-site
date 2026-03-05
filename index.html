@@ -216,6 +216,12 @@ nav.scrolled { padding: 0.8rem 2.5rem; box-shadow: 0 4px 20px rgba(0,0,0,0.04); 
 .geo-core-card .app-frame-card { border-color: rgba(196, 85, 77, 0.12); }
 .geo-core-card .app-frame-card:hover { border-color: rgba(196, 85, 77, 0.25); }
 
+/* ── Lab experiment link ── */
+.lab-experiment-link { display: inline-flex; align-items: center; gap: 0.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.3); text-decoration: none; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 1.5rem; transition: all 0.3s ease; }
+.lab-experiment-link:hover { color: var(--dark-teal); }
+.lab-experiment-link .arrow { transition: transform 0.3s var(--spring); }
+.lab-experiment-link:hover .arrow { transform: translateX(4px); }
+
 /* ── App-frame screenshots ── */
 .app-frame-screenshot { width: 100%; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(0,0,0,0.3); display: block; position: relative; }
 
@@ -755,6 +761,10 @@ footer a:hover { color: var(--ink); }
         </div>
       </div>
     </div>
+    <a href="/collisions/" class="lab-experiment-link">
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8" opacity="0.3"/><line x1="12" y1="1" x2="12" y2="4" opacity="0.4"/><line x1="12" y1="20" x2="12" y2="23" opacity="0.4"/><line x1="1" y1="12" x2="4" y2="12" opacity="0.4"/><line x1="20" y1="12" x2="23" y2="12" opacity="0.4"/></svg>
+      The Shrinking Distance <span class="arrow">&#8594;</span>
+    </a>
   </div>
 </section>
 

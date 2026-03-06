@@ -15,9 +15,9 @@
 :root {
   --bg: #060a14;
   --bg-surface: #0a1020;
-  --text: #c8d0e0;
-  --text-dim: #5a6578;
-  --text-bright: #e8ecf4;
+  --text: #d0d8e8;
+  --text-dim: #7e8a9e;
+  --text-bright: #edf0f6;
   --river-base: #1a3a5a;
   --river-glow: #2a6a8a;
 
@@ -59,38 +59,168 @@ body { font-family: var(--paradigm-font); background: var(--paradigm-bg); color:
 /* ── River Canvas ── */
 #riverCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-/* ── Digital Body Sidebar ── */
-#digitalBody { position: fixed; left: 0; top: 0; width: 72px; height: 100vh; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem 0; }
-#digitalBody svg { width: 48px; height: 280px; overflow: visible; }
-#digitalBody .body-stage { transition: opacity 1.2s ease, transform 1.2s var(--ease-out); }
-#digitalBody .body-stage.hidden { opacity: 0; transform: scale(0.8); }
-#digitalBody .body-stage.visible { opacity: 1; transform: scale(1); }
-.body-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.12em; writing-mode: vertical-rl; text-orientation: mixed; position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%) rotate(180deg); transition: opacity 0.6s ease; }
+/* ── Digital Body (Octopus label — minimal, octopus is canvas-drawn) ── */
+#digitalBody { position: fixed; left: 0; top: 0; width: 80px; height: auto; z-index: 55; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 3.2rem 0.3rem 0; pointer-events: none; }
+#digitalBody::-webkit-scrollbar { display: none; }
+/* SVG removed — octopus is now canvas-drawn */
+.body-label { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.12em; writing-mode: horizontal-tb; text-orientation: initial; position: relative; bottom: auto; left: auto; transform: none; transition: opacity 0.6s ease, color 0.6s ease; text-align: center; width: 100%; padding: 0.2rem 0; border-radius: 4px; background: rgba(255,255,255,0.04); flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
+.body-label::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(42,106,138,0.6); transition: background 0.6s ease; flex-shrink: 0; }
+
+/* ═══ V2: CANVAS OCTOPUS ═══ */
+
+/* Octopus intro tooltip */
+.octo-intro {
+  position: fixed; left: 80px; top: 25%; z-index: 60; max-width: 240px; /* left/top overridden by JS for canvas octopus */
+  background: rgba(12, 18, 32, 0.95); border: 1px solid rgba(42,106,138,0.4);
+  border-radius: 10px; padding: 1rem; font-size: 0.75rem; color: var(--text);
+  line-height: 1.6; opacity: 0; pointer-events: none; transition: opacity 0.5s ease;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.octo-intro::before {
+  content: ''; position: absolute; left: -6px; top: 40px;
+  width: 12px; height: 12px; background: rgba(12, 18, 32, 0.95);
+  border-left: 1px solid rgba(42,106,138,0.4); border-bottom: 1px solid rgba(42,106,138,0.4);
+  transform: rotate(45deg);
+}
+.octo-intro.visible { opacity: 1; pointer-events: auto; }
+.octo-intro strong { display: block; color: var(--text-bright); font-size: 0.8rem; margin-bottom: 0.5rem; }
+.octo-intro p { margin: 0 0 0.6rem; }
+.octo-intro-dismiss {
+  padding: 0.3rem 0.8rem; background: rgba(42,106,138,0.3); border: 1px solid rgba(42,106,138,0.5);
+  border-radius: 6px; color: var(--text-bright); cursor: pointer; font-size: 0.65rem;
+  font-family: 'JetBrains Mono', monospace; transition: background 0.2s ease;
+}
+.octo-intro-dismiss:hover { background: rgba(42,106,138,0.5); }
+
+/* Paradigm-specific body label dot colors */
+.paradigm-terminal .body-label::before { background: rgba(42,106,138,0.6); }
+.paradigm-gui .body-label::before { background: rgba(76,175,80,0.6); }
+.paradigm-web .body-label::before { background: rgba(212,165,67,0.6); }
+.paradigm-mobile .body-label::before { background: rgba(196,85,77,0.6); }
+.paradigm-social .body-label::before { background: rgba(196,85,77,0.8); }
+.paradigm-merge .body-label::before { background: rgba(138,92,246,0.6); }
+
+/* Canvas octopus progressive degradation is handled via canvas drawing properties */
 
 /* ── Lens Switcher ── */
-#lensSwitcher { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 0.6rem; padding: 0.5rem 1rem; background: rgba(6, 10, 20, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.06); border-radius: 40px; opacity: 0; transition: opacity 0.6s ease; }
+#lensSwitcher { position: fixed; top: 3rem; left: 50%; transform: translateX(-50%); z-index: 50; display: flex; gap: 0.35rem; padding: 0.5rem 0.8rem; background: rgba(12, 18, 32, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; opacity: 0; transition: opacity 0.6s ease; box-shadow: 0 4px 24px rgba(0,0,0,0.5); }
 #lensSwitcher.visible { opacity: 1; }
-.lens-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; background: none; cursor: pointer; position: relative; transition: all 0.3s var(--spring); display: flex; align-items: center; justify-content: center; }
-.lens-btn::before { content: ''; width: 14px; height: 14px; border-radius: 50%; transition: all 0.3s ease; }
+.lens-btn { height: 30px; border-radius: 8px; border: 1.5px solid rgba(255,255,255,0.08); background: rgba(255,255,255,0.04); cursor: pointer; position: relative; transition: all 0.25s ease; display: flex; align-items: center; gap: 0.4rem; padding: 0 0.65rem; }
+.lens-btn::before { content: ''; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; transition: all 0.3s ease; }
+.lens-btn::after { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.04em; color: rgba(255,255,255,0.5); transition: color 0.2s; }
 .lens-btn[data-lens="behavioral"]::before { background: var(--lens-behavioral); }
+.lens-btn[data-lens="behavioral"]::after { content: 'Behavior'; }
 .lens-btn[data-lens="market"]::before { background: var(--lens-market); }
+.lens-btn[data-lens="market"]::after { content: 'Market'; }
 .lens-btn[data-lens="social"]::before { background: var(--lens-social); }
+.lens-btn[data-lens="social"]::after { content: 'Social'; }
 .lens-btn[data-lens="planetary"]::before { background: var(--lens-planetary); }
+.lens-btn[data-lens="planetary"]::after { content: 'Planet'; }
 .lens-btn[data-lens="heuristic"]::before { background: var(--lens-heuristic); }
+.lens-btn[data-lens="heuristic"]::after { content: 'Heuristic'; }
 .lens-btn[data-lens="power"]::before { background: var(--lens-power); }
-.lens-btn:hover { transform: scale(1.2); }
-.lens-btn.active { border-color: currentColor; transform: scale(1.15); }
+.lens-btn[data-lens="power"]::after { content: 'Power'; }
+.lens-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); }
+.lens-btn:hover::after { color: rgba(255,255,255,0.8); }
+.lens-btn.active { border-color: currentColor; background: rgba(255,255,255,0.06); }
+.lens-btn.active::after { color: rgba(255,255,255,0.9); }
 .lens-btn.active[data-lens="behavioral"] { border-color: var(--lens-behavioral); }
 .lens-btn.active[data-lens="social"] { border-color: var(--lens-social); }
 .lens-btn.active[data-lens="planetary"] { border-color: var(--lens-planetary); }
 .lens-btn.active[data-lens="market"] { border-color: var(--lens-market); }
 .lens-btn.active[data-lens="heuristic"] { border-color: var(--lens-heuristic); }
 .lens-btn.active[data-lens="power"] { border-color: var(--lens-power); }
-.lens-tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; white-space: nowrap; color: var(--text-dim); opacity: 0; transition: opacity 0.2s; pointer-events: none; padding-bottom: 6px; letter-spacing: 0.06em; }
-.lens-btn:hover .lens-tooltip { opacity: 1; }
+.lens-tooltip { display: none; }
+
+/* ── Universal Lens Strip ── */
+.lens-strip {
+  position: fixed; top: 5.5rem; left: 50%; transform: translateX(-50%) translateY(-8px);
+  z-index: 49; width: min(800px, calc(100vw - 160px)); max-height: 70vh;
+  overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.15) transparent;
+  background: rgba(12, 18, 32, 0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 10px;
+  opacity: 0; pointer-events: none; transition: opacity 0.35s ease, transform 0.35s var(--ease-out);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.lens-strip.visible { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+.lens-strip-header {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0;
+  background: rgba(12, 18, 32, 0.98); z-index: 1; border-radius: 10px 10px 0 0;
+}
+.lens-strip-title { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; flex: 1; }
+.lens-strip-count { font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--text-dim); }
+.lens-strip-close { background: none; border: none; color: var(--text-dim); font-size: 0.9rem; cursor: pointer; padding: 0 4px; line-height: 1; }
+.lens-strip-close:hover { color: var(--text-bright); }
+.lens-strip-items { padding: 0.3rem 0; }
+.lens-strip-item {
+  display: flex; align-items: flex-start; gap: 0.6rem; padding: 0.45rem 0.8rem;
+  cursor: pointer; transition: background 0.2s; border-left: 2px solid transparent;
+}
+.lens-strip-item:hover { background: rgba(255,255,255,0.04); }
+.lens-strip-item-year {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.5rem; color: var(--text-dim);
+  min-width: 2.5rem; flex-shrink: 0; letter-spacing: 0.04em; padding-top: 1px;
+}
+.lens-strip-item-text {
+  font-size: 0.72rem; color: var(--text); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+body.layout-lens-bottom .lens-strip { top: auto; bottom: 4rem; transform: translateX(-50%) translateY(8px); }
+body.layout-lens-bottom .lens-strip.visible { transform: translateX(-50%) translateY(0); }
+@media (max-width: 900px) {
+  .lens-strip { top: auto; bottom: 10rem; width: calc(100vw - 1.5rem); transform: translateX(-50%) translateY(8px); max-height: 50vh; }
+  .lens-strip.visible { transform: translateX(-50%) translateY(0); }
+}
+
+/* ── Behavior Profile Panel ── */
+.behavior-panel {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+  z-index: 200; width: min(400px, calc(100vw - 2rem)); max-height: 80vh;
+  background: rgba(12, 18, 32, 0.96); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(212,165,67,0.25); border-radius: 12px;
+  opacity: 0; pointer-events: none; transition: all 0.35s var(--ease-out);
+  box-shadow: 0 12px 48px rgba(0,0,0,0.6); overflow-y: auto;
+}
+.behavior-panel.visible { opacity: 1; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+.behavior-panel-header {
+  display: flex; align-items: center; padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.behavior-panel-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(212,165,67,0.9); flex: 1;
+}
+.behavior-panel-close { background: none; border: none; color: var(--text-dim); font-size: 1rem; cursor: pointer; padding: 0 4px; }
+.behavior-panel-close:hover { color: var(--text-bright); }
+.behavior-panel-body { padding: 1rem; }
+.bp-type-badge {
+  font-family: 'Sora', sans-serif; font-size: 1.3rem; font-weight: 600;
+  text-transform: capitalize; margin-bottom: 0.5rem;
+}
+.bp-description { font-size: 0.8rem; color: var(--text); line-height: 1.6; margin-bottom: 1rem; }
+.bp-stats { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.bp-stat {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.35rem 0.5rem; background: rgba(255,255,255,0.03); border-radius: 6px;
+}
+.bp-stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.bp-stat-value { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-bright); }
+.bp-privacy { font-size: 0.6rem; color: var(--text-dim); font-style: italic; margin: 0; }
+.behavior-panel-footer {
+  display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1rem;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.behavior-reset-btn {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; padding: 0.3rem 0.6rem;
+  background: rgba(196,85,77,0.15); border: 1px solid rgba(196,85,77,0.3);
+  border-radius: 5px; color: rgba(196,85,77,0.8); cursor: pointer; transition: all 0.2s;
+}
+.behavior-reset-btn:hover { background: rgba(196,85,77,0.25); color: rgba(196,85,77,1); }
+.bp-coming-soon { font-family: 'JetBrains Mono', monospace; font-size: 0.45rem; color: var(--text-dim); letter-spacing: 0.06em; margin-left: auto; }
 
 /* ── Progress Bar ── */
-#progressBar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--era-foundations), var(--era-interface), var(--era-network), var(--era-pocket), var(--era-merge)); z-index: 100; width: 0%; transition: width 0.05s linear; }
+#progressBar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, var(--era-foundations), var(--era-interface), var(--era-network), var(--era-pocket), var(--era-merge)); z-index: 100; width: 0%; transition: width 0.05s linear; box-shadow: 0 0 8px rgba(42,106,138,0.3); }
 
 /* ── Nav ── */
 .site-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 60; padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; opacity: 0; transition: opacity 0.4s ease; }
@@ -100,21 +230,32 @@ body { font-family: var(--paradigm-font); background: var(--paradigm-bg); color:
 
 /* ── Main Content ── */
 main { position: relative; z-index: 5; }
-.content-col { max-width: var(--content-width); margin: 0 auto; padding: 0 2rem; padding-left: 80px; transition: max-width 0.8s var(--ease-out), padding 0.8s var(--ease-out); }
+.content-col { max-width: var(--content-width); margin: 0 auto; padding: 0 2rem; padding-right: 190px; transition: max-width 0.8s var(--ease-out), padding 0.8s var(--ease-out); }
 
 /* ── Hero ── */
 .hero-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
-.hero-section .content-col { max-width: 900px; padding-left: 100px; }
+.hero-section .content-col { max-width: 900px; padding-right: 200px; }
 .hero-year { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.3s forwards; }
 .hero-title { font-family: 'Sora', sans-serif; font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 300; color: var(--text-bright); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
 .hero-title em { font-style: normal; font-weight: 600; }
-.hero-sub { font-size: 1.05rem; color: var(--text-dim); max-width: 520px; line-height: 1.7; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards; }
-.hero-scroll { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; opacity: 0; animation: fadeUp 0.8s ease 0.9s forwards; }
+.hero-sub { font-size: 1.1rem; color: var(--text); max-width: 520px; line-height: 1.7; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.7s forwards; }
+.hero-scroll { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.5); letter-spacing: 0.15em; text-transform: uppercase; display: flex; align-items: center; gap: 0.8rem; opacity: 0; animation: fadeUp 0.8s ease 0.9s forwards; }
 .hero-scroll .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--river-glow); animation: pulse 2s ease-in-out infinite; }
-.hero-river-hint { position: absolute; left: 50%; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--river-glow) 30%, var(--river-glow) 70%, transparent); opacity: 0.15; pointer-events: none; transform: translateX(-50%); }
+.hero-river-hint { position: absolute; left: 70px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--river-glow) 30%, var(--river-glow) 70%, transparent); opacity: 0.15; pointer-events: none; }
 
 /* ── Era Headers ── */
-.era-section { padding: 15vh 0 5vh; position: relative; }
+.era-section { padding: 15vh 0 5vh; position: relative; transition: background 1s ease; }
+/* Era background tints */
+.era-section[data-era="foundations"] { background: radial-gradient(ellipse at 50% 0%, rgba(42,106,138,0.07), transparent 70%); }
+.era-section[data-era="foundations"] .content-col { border-right: 3px solid rgba(42,106,138,0.25); }
+.era-section[data-era="interface"] { background: radial-gradient(ellipse at 50% 0%, rgba(76,175,80,0.06), transparent 70%); }
+.era-section[data-era="interface"] .content-col { border-right: 3px solid rgba(76,175,80,0.2); }
+.era-section[data-era="network"] { background: radial-gradient(ellipse at 50% 0%, rgba(212,165,67,0.06), transparent 70%); }
+.era-section[data-era="network"] .content-col { border-right: 3px solid rgba(212,165,67,0.2); }
+.era-section[data-era="pocket"] { background: radial-gradient(ellipse at 50% 0%, rgba(196,85,77,0.06), transparent 70%); }
+.era-section[data-era="pocket"] .content-col { border-right: 3px solid rgba(196,85,77,0.2); }
+.era-section[data-era="merge"] { background: radial-gradient(ellipse at 50% 0%, rgba(138,92,246,0.06), transparent 70%); }
+.era-section[data-era="merge"] .content-col { border-right: 3px solid rgba(138,92,246,0.2); }
 .era-header { margin-bottom: 4rem; }
 .era-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.8rem; }
 .era-title { font-family: var(--paradigm-heading); font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 600; color: var(--text-bright); letter-spacing: -0.02em; line-height: 1.2; }
@@ -125,7 +266,7 @@ main { position: relative; z-index: 5; }
 .timeline-node.visible { opacity: 1; transform: translateY(0); }
 .node-year { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.15em; margin-bottom: 0.4rem; }
 .node-title { font-family: var(--paradigm-heading); font-size: clamp(1.2rem, 2.5vw, 1.7rem); font-weight: 600; color: var(--text-bright); letter-spacing: -0.01em; margin-bottom: 0.5rem; line-height: 1.25; }
-.node-hook { font-size: 0.95rem; color: var(--text); margin-bottom: 1rem; line-height: 1.65; }
+.node-hook { font-size: 1rem; color: var(--text); margin-bottom: 1rem; line-height: 1.7; }
 .node-stat { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--lens-planetary); padding: 0.5rem 0.8rem; background: rgba(74, 127, 186, 0.08); border-left: 2px solid var(--lens-planetary); border-radius: 0 4px 4px 0; margin-bottom: 1rem; display: inline-block; letter-spacing: 0.02em; }
 .node-divider { width: 40px; height: 1px; background: rgba(255,255,255,0.06); margin: 2rem 0; }
 
@@ -141,6 +282,84 @@ main { position: relative; z-index: 5; }
 .lens-panel[data-lens="heuristic"] { border-left-color: var(--lens-heuristic); color: var(--lens-heuristic); }
 .lens-panel[data-lens="power"] { border-left-color: var(--lens-power); color: var(--lens-power); }
 .lens-label { font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.12em; opacity: 0.7; margin-bottom: 0.3rem; }
+
+/* ═══ V2: BIAS ANNOTATION CARDS ═══ */
+.bias-card {
+  position: fixed;
+  left: 150px;
+  top: 50%;
+  transform: translateY(-50%) translateX(-20px);
+  width: 260px;
+  padding: 1.2rem;
+  background: rgba(6,10,20,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(212,165,67,0.15);
+  border-left: 3px solid var(--lens-behavioral);
+  border-radius: 0 8px 8px 0;
+  z-index: 45;
+  opacity: 0;
+  transition: opacity 0.6s ease, transform 0.6s var(--ease-out);
+  pointer-events: none;
+}
+.bias-card.visible {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
+  pointer-events: auto;
+}
+.bias-card-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5rem;
+  color: var(--lens-behavioral);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+.bias-card-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.65;
+}
+.bias-card-source {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.45rem;
+  color: var(--text-dim);
+  margin-top: 0.7rem;
+  opacity: 0.4;
+  font-style: italic;
+}
+.bias-card-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 16px;
+  height: 16px;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  cursor: pointer;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+.bias-card-close:hover { opacity: 1; }
+
+@media (max-width: 900px) {
+  .bias-card {
+    left: 1rem;
+    right: 1rem;
+    width: auto;
+    top: auto;
+    bottom: 70px;
+    transform: translateY(20px);
+    border-left: none;
+    border-top: 3px solid var(--lens-behavioral);
+    border-radius: 8px 8px 0 0;
+  }
+  .bias-card.visible { transform: translateY(0); }
+}
 
 /* ═══ PARADIGM SHIFTS ═══ */
 
@@ -167,7 +386,7 @@ main { position: relative; z-index: 5; }
 .paradigm-web .timeline-node { border-radius: 0; border-left: 1px solid rgba(106, 154, 216, 0.2); padding-left: 1.5rem; }
 
 /* Mobile Paradigm */
-.paradigm-mobile .content-col { max-width: 420px; padding-left: 80px; }
+.paradigm-mobile .content-col { max-width: 420px; padding-right: 190px; }
 .paradigm-mobile .timeline-node { border-radius: 16px; background: rgba(255,255,255,0.03); padding: 1.5rem; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.06); }
 .paradigm-mobile .node-title { font-size: 1.1rem; }
 .paradigm-mobile .node-hook { font-size: 0.88rem; }
@@ -185,6 +404,218 @@ main { position: relative; z-index: 5; }
 .paradigm-flash { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: white; z-index: 200; opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
 .paradigm-flash.active { opacity: 0.6; }
 
+/* ═══ V2: ENHANCED PARADIGM TRANSITIONS ═══ */
+
+/* Terminal: CRT scanline flicker + prompt cursor */
+.paradigm-terminal::after {
+  animation: crtFlicker 0.15s infinite alternate;
+}
+@keyframes crtFlicker {
+  from { opacity: 0.48; }
+  to { opacity: 0.52; }
+}
+.paradigm-terminal .node-title::before {
+  content: '> ';
+  color: #3a6a4a;
+  font-weight: 400;
+}
+.paradigm-terminal .node-hook::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 0.9em;
+  background: #70c898;
+  margin-left: 3px;
+  vertical-align: text-bottom;
+  animation: cursorBlink 1s step-end infinite;
+  opacity: 0.6;
+}
+/* V2.5: Teletype effect — suppress ::after during typewriter */
+.teletype-active .node-hook::after { display: none !important; }
+.teletype-active .node-hook { min-height: 1.5em; }
+.teletype-cursor { display: inline-block; width: 6px; height: 0.9em; background: #70c898; margin-left: 2px; vertical-align: text-bottom; animation: cursorBlink 1s step-end infinite; opacity: 0.7; }
+
+/* V2.5: AI Auto-complete effect — suppress merge ::after during generation */
+.autocomplete-active .node-hook::after { display: none !important; }
+.autocomplete-active .node-hook { min-height: 1.5em; }
+.autocomplete-word { animation: wordShimmer 0.5s ease forwards; }
+@keyframes wordShimmer {
+  0% { opacity: 0; text-shadow: 0 0 8px rgba(106,138,170,0.4); }
+  50% { opacity: 0.7; text-shadow: 0 0 12px rgba(106,138,170,0.3); }
+  100% { opacity: 1; text-shadow: none; }
+}
+.autocomplete-cursor { display: inline-block; width: 4px; height: 1em; background: var(--lens-planetary); margin-left: 3px; vertical-align: text-bottom; animation: cursorBlink 0.8s step-end infinite; opacity: 0.6; }
+
+/* V2.5: Social scroll hijack notice */
+.scroll-hijack-notice {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--lens-social);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: hijackNotice 2.5s ease forwards;
+  z-index: 100;
+  pointer-events: none;
+}
+@keyframes hijackNotice {
+  0% { opacity: 0; transform: translate(-50%, -50%) translateY(10px); }
+  20% { opacity: 0.8; transform: translate(-50%, -50%) translateY(0); }
+  70% { opacity: 0.8; }
+  100% { opacity: 0; transform: translate(-50%, -50%) translateY(-10px); }
+}
+
+/* Web: hand cursor everywhere + blue underlines */
+.paradigm-web .node-hook { cursor: pointer; }
+.paradigm-web .node-stat { cursor: pointer; }
+.paradigm-web * { cursor: pointer; }
+
+/* Mobile: undismissable notification badge */
+.paradigm-mobile::after {
+  content: '3';
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 22px;
+  height: 22px;
+  background: #c4554d;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: notifPulse 2s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes notifPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Merge/AI: blinking cursor after node hooks */
+.paradigm-merge .node-hook::after {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 1em;
+  background: var(--lens-planetary);
+  margin-left: 4px;
+  opacity: 0;
+  animation: predictiveCursor 3s ease-in-out infinite;
+  vertical-align: text-bottom;
+}
+@keyframes predictiveCursor {
+  0%, 70%, 100% { opacity: 0; }
+  75%, 95% { opacity: 0.5; }
+}
+
+/* Link wave (Web paradigm shift) */
+.paradigm-link-wave {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #0000EE;
+  z-index: 200;
+  pointer-events: none;
+  animation: linkWaveExpand 1.2s ease-out forwards;
+}
+@keyframes linkWaveExpand {
+  0% { width: 10px; height: 10px; opacity: 0.8; transform: translate(-50%, -50%); }
+  100% { width: 300vw; height: 300vw; opacity: 0; transform: translate(-50%, -50%); }
+}
+
+/* Viewport snap transition (Mobile paradigm shift) */
+.viewport-snapping .content-col {
+  transition: max-width 0.6s var(--spring), padding 0.6s var(--spring) !important;
+}
+
+/* Feed timer (Social paradigm) */
+.feed-timer {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  z-index: 55;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+  opacity: 0;
+  animation: feedTimerIn 0.4s ease 0.5s forwards;
+}
+.feed-timer.fading { animation: fadeOut 0.6s ease forwards; }
+.feed-timer-val {
+  display: block;
+  font-size: 1.4rem;
+  color: var(--lens-social);
+  letter-spacing: 0.05em;
+}
+.feed-timer-label {
+  display: block;
+  font-size: 0.5rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+@keyframes feedTimerIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* AI shimmer (Merge paradigm shift) */
+.ai-shimmer .node-title {
+  animation: aiTextShimmer 2s ease;
+}
+@keyframes aiTextShimmer {
+  0% { filter: blur(0); }
+  15% { filter: blur(3px); }
+  30% { filter: blur(0); }
+  50% { filter: blur(1.5px); }
+  100% { filter: blur(0); }
+}
+
+/* BCI: cursor disappears, proximity activation */
+body.bci-active { cursor: none !important; }
+body.bci-active * { cursor: none !important; }
+body.bci-active .timeline-node {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+body.bci-active .timeline-node:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 30px rgba(74, 127, 186, 0.15);
+}
+/* Pre-glow on elements near cursor */
+.bci-preglow {
+  box-shadow: 0 0 20px rgba(74, 127, 186, 0.1) !important;
+  transition: box-shadow 0.5s ease !important;
+}
+
+/* Datacenter: energy cost flash */
+.energy-flash {
+  position: fixed;
+  z-index: 100;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  color: var(--lens-planetary);
+  opacity: 0;
+  pointer-events: none;
+  animation: energyCostFlash 1.5s ease forwards;
+}
+@keyframes energyCostFlash {
+  0% { opacity: 0; transform: translateY(0); }
+  20% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
 /* ── Ending ── */
 .ending-section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 4rem 2rem; }
 .ending-question { font-family: 'Sora', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 300; color: var(--text-bright); margin-bottom: 2rem; opacity: 0; transform: translateY(20px); transition: all 1s var(--ease-out); }
@@ -200,13 +631,260 @@ main { position: relative; z-index: 5; }
 @keyframes cursorBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 @keyframes bodyPulse { 0%, 100% { filter: drop-shadow(0 0 3px rgba(42, 106, 138, 0.3)); } 50% { filter: drop-shadow(0 0 8px rgba(42, 106, 138, 0.6)); } }
 
+/* ═══ CONSTELLATION MODE ═══ */
+.constellation-overlay {
+  position: fixed; inset: 0; z-index: 300;
+  background: rgba(4, 8, 16, 0.92);
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.5s ease;
+  display: flex; flex-direction: column;
+}
+.constellation-overlay.active { opacity: 1; pointer-events: auto; }
+
+.constellation-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 2rem; border-bottom: 1px solid rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.constellation-title {
+  font-family: 'Sora', sans-serif; font-size: 0.85rem; font-weight: 400;
+  color: var(--text-bright); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.constellation-close {
+  background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 50%;
+  width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim); cursor: pointer; font-size: 1rem;
+  transition: border-color 0.2s, color 0.2s;
+}
+.constellation-close:hover { border-color: var(--text-bright); color: var(--text-bright); }
+
+.constellation-threads {
+  display: flex; gap: 0.5rem; padding: 0.8rem 2rem;
+  flex-wrap: wrap; flex-shrink: 0;
+}
+.thread-pill {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.35rem 0.8rem; border-radius: 20px;
+  border: 1px solid; cursor: pointer;
+  transition: all 0.25s ease; opacity: 0.5;
+  background: transparent;
+}
+.thread-pill.active { opacity: 1; }
+.thread-pill:hover { opacity: 0.8; }
+
+.constellation-body { position: relative; flex: 1; overflow: hidden; }
+.constellation-canvas { position: absolute; inset: 0; }
+.constellation-nodes { position: absolute; inset: 0; pointer-events: none; }
+
+.constellation-node {
+  position: absolute; pointer-events: auto; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 0.3rem;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.constellation-node .c-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 1.5px solid; transition: all 0.3s ease;
+  box-shadow: 0 0 0 0 transparent;
+}
+.constellation-node:hover .c-dot {
+  transform: scale(1.5);
+  box-shadow: 0 0 12px currentColor;
+}
+.constellation-node .c-label {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+  color: var(--text-dim); white-space: nowrap; text-align: center;
+  letter-spacing: 0.05em; max-width: 90px; overflow: hidden; text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+.constellation-node:hover .c-label { color: var(--text-bright); }
+.constellation-node.highlighted .c-dot {
+  transform: scale(1.8);
+  box-shadow: 0 0 16px currentColor;
+}
+.constellation-node.highlighted .c-label { color: var(--text-bright); }
+.constellation-node.dimmed { opacity: 0.15; }
+
+.constellation-node .c-year {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
+  color: var(--text-dim); opacity: 0.5;
+}
+
+/* Constellation detail panel */
+.constellation-detail {
+  position: absolute; right: 0; top: 0; bottom: 0; width: 320px;
+  background: rgba(8, 14, 28, 0.95); border-left: 1px solid rgba(255,255,255,0.06);
+  padding: 2rem 1.5rem; overflow-y: auto;
+  transform: translateX(100%); transition: transform 0.35s ease;
+  z-index: 10;
+}
+.constellation-detail.visible { transform: translateX(0); }
+.constellation-detail-title {
+  font-family: 'Sora', sans-serif; font-size: 1.1rem; font-weight: 300;
+  color: var(--text-bright); margin-bottom: 0.3rem;
+}
+.constellation-detail-year {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+  color: var(--text-dim); letter-spacing: 0.1em; margin-bottom: 1rem;
+}
+.constellation-detail-hook {
+  font-size: 0.8rem; color: var(--text); line-height: 1.7; margin-bottom: 1.5rem;
+}
+.constellation-detail-threads {
+  display: flex; flex-direction: column; gap: 0.5rem;
+}
+.constellation-detail-thread {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  letter-spacing: 0.06em; padding: 0.3rem 0.6rem; border-radius: 4px;
+  border: 1px solid; opacity: 0.7;
+}
+
+/* Constellation trigger in lens bar */
+.constellation-trigger {
+  background: rgba(255,255,255,0.04); border: 1.5px solid rgba(255,255,255,0.10);
+  border-radius: 8px; height: 30px;
+  display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+  color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.75rem;
+  transition: all 0.25s ease; margin-left: 0.2rem; padding: 0 0.65rem;
+  font-family: 'JetBrains Mono', monospace;
+}
+.constellation-trigger::after { content: 'Map'; font-size: 0.55rem; letter-spacing: 0.04em; }
+.constellation-trigger:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); color: rgba(255,255,255,0.85); }
+
+@keyframes constellationPulse {
+  0%, 100% { box-shadow: 0 0 0 0 transparent; }
+  50% { box-shadow: 0 0 8px currentColor; }
+}
+
+/* ═══ SETTINGS PANEL ═══ */
+.settings-toggle {
+  width: 28px; height: 28px; border-radius: 7px;
+  border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04);
+  color: rgba(255,255,255,0.45); font-size: 0.85rem; cursor: pointer;
+  transition: all 0.2s ease; display: flex; align-items: center; justify-content: center;
+}
+.settings-toggle:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); border-color: rgba(255,255,255,0.2); }
+
+.settings-panel {
+  position: fixed; top: 3.5rem; right: 1.5rem; z-index: 65;
+  width: 220px; padding: 1rem;
+  background: rgba(12, 18, 32, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  opacity: 0; transform: translateY(-8px); pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s var(--ease-out);
+}
+.settings-panel.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+.settings-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 0.8rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.settings-header span {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+}
+.settings-header button {
+  background: none; border: none; color: var(--text-dim);
+  font-size: 1rem; cursor: pointer; padding: 0; line-height: 1;
+  transition: color 0.2s;
+}
+.settings-header button:hover { color: var(--text-bright); }
+
+.settings-option {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.4rem 0; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; color: var(--text);
+}
+.settings-option select {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 5px; color: var(--text-bright); padding: 0.25rem 0.4rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.55rem;
+  cursor: pointer; outline: none;
+}
+.settings-option select:focus { border-color: rgba(42,106,138,0.5); }
+.settings-option select option { background: #0a1020; color: var(--text); }
+
+.settings-reset-btn {
+  width: 100%; margin-top: 0.6rem; padding: 0.35rem;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 6px; color: var(--text-dim); cursor: pointer;
+  font-family: 'JetBrains Mono', monospace; font-size: 0.5rem;
+  letter-spacing: 0.05em; transition: all 0.2s;
+}
+.settings-reset-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); border-color: rgba(255,255,255,0.12); }
+
+/* ═══ LAYOUT VARIANTS ═══ */
+
+/* Lens bar position */
+body.layout-lens-bottom #lensSwitcher { top: auto; bottom: 1.5rem; }
+
+/* River variants */
+body.layout-river-dim #riverCanvas { opacity: 0.15; }
+body.layout-river-off #riverCanvas { display: none; }
+
+/* ═══ KEYBOARD HELP OVERLAY ═══ */
+.keyboard-help {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 200; padding: 1.5rem 2rem;
+  background: rgba(12, 18, 32, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 14px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+}
+.keyboard-help.visible { opacity: 1; pointer-events: auto; }
+.keyboard-help-title {
+  font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+  color: var(--text-dim); letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 0.8rem; padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.keyboard-help-row {
+  display: flex; align-items: center; gap: 0.8rem; padding: 0.3rem 0;
+}
+.keyboard-help-key {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 24px; height: 22px; padding: 0 0.4rem;
+  background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 4px; font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem; color: var(--text-bright);
+}
+.keyboard-help-desc {
+  font-family: 'DM Sans', sans-serif; font-size: 0.72rem; color: var(--text);
+}
+
+/* ═══ LENS HINT PULSE ═══ */
+@keyframes lensHintPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(42,106,138,0); }
+  50% { box-shadow: 0 0 20px 6px rgba(42,106,138,0.4); }
+}
+#lensSwitcher.lens-hint-pulse {
+  animation: lensHintPulse 1s ease-in-out 3;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   #digitalBody { display: none; }
-  .content-col { padding-left: 2rem; }
-  .hero-section .content-col { padding-left: 2rem; }
+  .river-nav { display: none !important; }
+  .octo-intro { display: none; }
+  .content-col { padding-left: 2rem; padding-right: 2rem; }
+  .era-section .content-col { border-left: none; }
+  .hero-section .content-col { padding-left: 2rem; padding-right: 2rem; }
   .paradigm-mobile .content-col { padding-left: 1.5rem; max-width: 100%; }
-  #lensSwitcher { bottom: 1rem; }
+  #lensSwitcher { top: auto; bottom: 0.8rem; padding: 0.35rem 0.5rem; gap: 0.25rem; border-radius: 10px; flex-wrap: wrap; justify-content: center; max-width: calc(100vw - 1.5rem); }
+  .lens-btn { height: 26px; padding: 0 0.5rem; gap: 0.3rem; }
+  .lens-btn::before { width: 6px; height: 6px; }
+  .lens-btn::after { font-size: 0.5rem; }
+  .constellation-node .c-dot { width: 14px; height: 14px; }
+  .constellation-node .c-label { font-size: 0.5rem; }
+  .constellation-detail { width: 100%; height: 45%; top: auto; bottom: 0; left: 0;
+    transform: translateY(100%); border-left: none; border-top: 1px solid rgba(255,255,255,0.06); }
+  .constellation-detail.visible { transform: translateY(0); }
+  .constellation-header { padding: 0.8rem 1.2rem; }
+  .constellation-threads { padding: 0.5rem 1.2rem; }
 }
 @media (max-width: 600px) {
   .hero-title { font-size: 1.8rem; }
@@ -727,63 +1405,115 @@ main { position: relative; z-index: 5; }
   100% { box-shadow: 0 0 0 0 rgba(42,106,138,0); }
 }
 
-/* ── River Navigator ── */
+/* ── River Navigator (independent right rail) ── */
 .river-nav {
   position: fixed;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 0;
+  top: 0;
+  width: 180px;
+  height: 100vh;
   z-index: 55;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2px;
+  gap: 0;
   opacity: 0;
   transition: opacity 0.4s ease;
+  pointer-events: none;
+  padding: 3.2rem 0.4rem 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+}
+.river-nav::-webkit-scrollbar { display: none; }
+.river-nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(12, 18, 32, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-left: 1px solid rgba(255,255,255,0.06);
+  z-index: -1;
   pointer-events: none;
 }
 .river-nav.visible { opacity: 1; pointer-events: auto; }
 .river-nav-surface {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  color: var(--text-dim);
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.5);
   text-decoration: none;
-  margin-bottom: 8px;
-  opacity: 0.5;
-  transition: opacity 0.3s;
+  margin-bottom: 4px;
+  transition: color 0.3s;
+  text-align: center;
+  width: 100%;
+  padding: 2px 0;
 }
-.river-nav-surface:hover { opacity: 1; color: var(--text-bright); }
+.river-nav-surface:hover { color: var(--text-bright); }
 .river-nav-era {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 4px 0;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0;
+  padding: 3px 0;
 }
-.river-nav-era + .river-nav-era { margin-top: 2px; }
-.river-nav-era-label {
+.river-nav-era + .river-nav-era { border-top: 1px solid rgba(255,255,255,0.06); }
+.river-nav-era-name {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.45rem;
-  color: var(--text-dim);
-  opacity: 0.3;
-  letter-spacing: 0.05em;
+  font-size: 0.55rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  padding: 3px 2px;
+  text-align: center;
+  width: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.river-nav-dot {
+.river-nav-items {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 1px;
+  padding: 1px 0;
+}
+.river-nav-item {
+  --nav-scale: 1;
   display: block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.15);
-  transition: all 0.3s ease;
+  padding: 4px 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: calc(0.65rem * var(--nav-scale));
+  color: rgba(255,255,255, calc(0.4 + 0.2 * (var(--nav-scale) - 1)));
+  text-decoration: none;
+  border-radius: 4px;
+  transition: font-size 0.15s ease-out, color 0.15s ease-out, background 0.25s ease, padding 0.15s ease-out;
+  border-left: 2px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
+  line-height: 1.5;
+  transform-origin: left center;
 }
-.river-nav-dot:hover { background: rgba(255,255,255,0.5); transform: scale(1.5); }
-.river-nav-dot.active { background: var(--river-glow); box-shadow: 0 0 6px var(--river-glow); }
-.river-nav-era[data-era="foundations"] .river-nav-dot.active { background: var(--era-foundations); box-shadow: 0 0 6px var(--era-foundations); }
-.river-nav-era[data-era="interface"] .river-nav-dot.active { background: var(--era-interface); box-shadow: 0 0 6px var(--era-interface); }
-.river-nav-era[data-era="network"] .river-nav-dot.active { background: var(--era-network); box-shadow: 0 0 6px var(--era-network); }
-.river-nav-era[data-era="pocket"] .river-nav-dot.active { background: var(--era-pocket); box-shadow: 0 0 6px var(--era-pocket); }
-.river-nav-era[data-era="merge"] .river-nav-dot.active { background: var(--era-merge); box-shadow: 0 0 6px var(--era-merge); }
-@media (max-width: 768px) { .river-nav { display: none; } }
+.river-nav-item:hover {
+  color: rgba(255,255,255,0.85);
+  background: rgba(255,255,255,0.06);
+}
+.river-nav-item.active {
+  color: var(--text-bright);
+  border-left-color: var(--river-glow);
+  background: rgba(42,106,138,0.12);
+}
+.river-nav-era[data-era="foundations"] .river-nav-item.active { border-left-color: var(--era-foundations); background: rgba(58,90,106,0.12); }
+.river-nav-era[data-era="interface"] .river-nav-item.active { border-left-color: var(--era-interface); background: rgba(74,122,90,0.12); }
+.river-nav-era[data-era="network"] .river-nav-item.active { border-left-color: var(--era-network); background: rgba(90,106,154,0.12); }
+.river-nav-era[data-era="pocket"] .river-nav-item.active { border-left-color: var(--era-pocket); background: rgba(122,90,138,0.12); }
+.river-nav-era[data-era="merge"] .river-nav-item.active { border-left-color: var(--era-merge); background: rgba(138,74,90,0.12); }
+/* river nav is now an independent fixed right rail */
 
 /* ── Reduced Motion ── */
 @media (prefers-reduced-motion: reduce) {
@@ -797,7 +1527,30 @@ main { position: relative; z-index: 5; }
   .artifact-thumbs span { opacity: 1; animation: none; }
   .tactile-dot { opacity: 0.6; animation: none; }
   .timeline-node.thread-target { animation: none; }
-  .river-nav-dot { transition: none; }
+  .river-nav-item { transition: none; }
+  /* V2: reduced motion overrides */
+  .paradigm-terminal::after { animation: none; }
+  .paradigm-terminal .node-hook::after { animation: none; opacity: 0; }
+  .paradigm-mobile::after { animation: none; }
+  .paradigm-merge .node-hook::after { animation: none; opacity: 0; }
+  .paradigm-link-wave { animation: none; display: none; }
+  .feed-timer { animation: none; opacity: 1; }
+  .ai-shimmer .node-title { animation: none; filter: none; }
+  .energy-flash { animation: none; display: none; }
+  #octoMantle { animation: none; }
+  .octo-tentacle { transition: none; }
+  #octoAura animate { animation: none; }
+  .paradigm-social #octoEyes { animation: none; }
+  #octopusSvg.octo-dissolving .octo-tentacle { animation: none; }
+  .bias-card { transition-duration: 0.01ms; }
+  /* V2.5: reduced motion gates */
+  .teletype-cursor { animation: none; display: none; }
+  .autocomplete-word { animation: none; opacity: 1; }
+  .autocomplete-cursor { animation: none; display: none; }
+  .scroll-hijack-notice { animation: none; display: none; }
+  .constellation-overlay { transition-duration: 0.01ms; }
+  .constellation-node .c-dot { transition: none; }
+  .constellation-detail { transition: none; }
 }
 </style>
 </head>
@@ -815,99 +1568,78 @@ main { position: relative; z-index: 5; }
 <!-- Site Nav -->
 <nav class="site-nav" id="siteNav">
   <a href="/">YesCraft.ai</a>
-  <a href="/collisions/">Collisions</a>
+  <div style="display:flex;align-items:center;gap:0.8rem">
+    <a href="/collisions/">Collisions</a>
+    <button id="settingsToggle" class="settings-toggle" title="Customize layout (,)">⚙</button>
+  </div>
 </nav>
 
-<!-- Digital Body Sidebar -->
+<!-- Settings Panel -->
+<div id="settingsPanel" class="settings-panel">
+  <div class="settings-header"><span>Layout</span><button id="settingsClose">&times;</button></div>
+  <label class="settings-option"><span>Lens bar</span>
+    <select id="prefLensBar"><option value="top">Top</option><option value="bottom">Bottom</option></select>
+  </label>
+  <label class="settings-option"><span>River</span>
+    <select id="prefRiver"><option value="on">On</option><option value="dim">Dimmed</option><option value="off">Off</option></select>
+  </label>
+  <button id="prefReset" class="settings-reset-btn">Reset defaults</button>
+</div>
+
+<!-- Digital Body (Octopus label — octopus is canvas-drawn) -->
 <aside id="digitalBody">
-  <svg viewBox="0 0 48 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Stage 0: Primordial dot (pre-computer) -->
-    <g class="body-stage visible" id="bodyDot">
-      <circle cx="24" cy="140" r="4" fill="#2a6a8a" opacity="0.6">
-        <animate attributeName="r" values="4;5;4" dur="3s" repeatCount="indefinite"/>
-      </circle>
-    </g>
-
-    <!-- Stage 1: Seated figure (Desktop era) -->
-    <g class="body-stage hidden" id="bodySeated" stroke="#3a8aaa" stroke-width="1.5" stroke-linecap="round">
-      <circle cx="24" cy="100" r="6" fill="none"/>
-      <line x1="24" y1="106" x2="24" y2="145"/>
-      <line x1="24" y1="120" x2="14" y2="135"/>
-      <line x1="24" y1="120" x2="34" y2="135"/>
-      <line x1="24" y1="145" x2="16" y2="170"/>
-      <line x1="24" y1="145" x2="32" y2="170"/>
-      <rect x="34" y="112" width="12" height="10" rx="1" stroke-width="1" opacity="0.5"/>
-      <line x1="40" y1="122" x2="40" y2="126" stroke-width="1" opacity="0.3"/>
-    </g>
-
-    <!-- Stage 2: Connected figure (Network era) -->
-    <g class="body-stage hidden" id="bodyConnected" stroke="#5a9aba" stroke-width="1" stroke-linecap="round" opacity="0.9">
-      <circle cx="24" cy="100" r="6" fill="none" stroke-width="1.5"/>
-      <line x1="24" y1="106" x2="24" y2="145" stroke-width="1.5"/>
-      <line x1="24" y1="120" x2="14" y2="135" stroke-width="1.5"/>
-      <line x1="24" y1="120" x2="34" y2="135" stroke-width="1.5"/>
-      <!-- Tendrils -->
-      <line x1="14" y1="135" x2="2" y2="128" opacity="0.4"/>
-      <line x1="14" y1="135" x2="4" y2="148" opacity="0.3"/>
-      <line x1="34" y1="135" x2="46" y2="128" opacity="0.4"/>
-      <line x1="34" y1="135" x2="44" y2="148" opacity="0.3"/>
-      <circle cx="2" cy="128" r="2" fill="#5a9aba" opacity="0.3"/>
-      <circle cx="46" cy="128" r="2" fill="#5a9aba" opacity="0.3"/>
-      <circle cx="4" cy="148" r="1.5" fill="#5a9aba" opacity="0.2"/>
-      <circle cx="44" cy="148" r="1.5" fill="#5a9aba" opacity="0.2"/>
-      <line x1="24" y1="145" x2="16" y2="170" stroke-width="1.5"/>
-      <line x1="24" y1="145" x2="32" y2="170" stroke-width="1.5"/>
-    </g>
-
-    <!-- Stage 3: Mobile figure (Pocket era) -->
-    <g class="body-stage hidden" id="bodyMobile" stroke="#8a6aaa" stroke-width="1.5" stroke-linecap="round">
-      <circle cx="24" cy="115" r="5" fill="none"/>
-      <line x1="24" y1="120" x2="24" y2="152"/>
-      <line x1="24" y1="130" x2="16" y2="142"/>
-      <line x1="24" y1="130" x2="32" y2="138"/>
-      <!-- Phone in hand -->
-      <rect x="30" y="134" width="7" height="12" rx="1.5" fill="none" stroke-width="1"/>
-      <circle cx="33.5" cy="143" r="0.8" fill="#8a6aaa" opacity="0.5"/>
-      <!-- Notification pulse -->
-      <circle cx="33.5" cy="134" r="3" fill="none" stroke="#c4554d" stroke-width="0.5" opacity="0">
-        <animate attributeName="r" values="3;8;3" dur="2s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
-      </circle>
-      <line x1="24" y1="152" x2="18" y2="172"/>
-      <line x1="24" y1="152" x2="30" y2="172"/>
-    </g>
-
-    <!-- Stage 4: Merged figure (AI era) -->
-    <g class="body-stage hidden" id="bodyMerged" stroke-linecap="round">
-      <!-- Original figure (fading) -->
-      <g stroke="#6a8aaa" stroke-width="1" opacity="0.5">
-        <circle cx="18" cy="115" r="5" fill="none"/>
-        <line x1="18" y1="120" x2="18" y2="155"/>
-        <line x1="18" y1="130" x2="10" y2="142"/>
-        <line x1="18" y1="130" x2="26" y2="142"/>
-        <line x1="18" y1="155" x2="12" y2="175"/>
-        <line x1="18" y1="155" x2="24" y2="175"/>
-      </g>
-      <!-- Mirror/algorithmic self -->
-      <g stroke="#aa5a6a" stroke-width="1" opacity="0.4">
-        <circle cx="30" cy="115" r="5" fill="none"/>
-        <line x1="30" y1="120" x2="30" y2="155"/>
-        <line x1="30" y1="130" x2="22" y2="142"/>
-        <line x1="30" y1="130" x2="38" y2="142"/>
-        <line x1="30" y1="155" x2="24" y2="175"/>
-        <line x1="30" y1="155" x2="36" y2="175"/>
-      </g>
-      <!-- Connecting threads -->
-      <line x1="18" y1="115" x2="30" y2="115" stroke="#7a6a8a" stroke-width="0.5" opacity="0.3" stroke-dasharray="2 2">
-        <animate attributeName="stroke-dashoffset" values="0;4" dur="1.5s" repeatCount="indefinite"/>
-      </line>
-      <line x1="18" y1="140" x2="30" y2="140" stroke="#7a6a8a" stroke-width="0.5" opacity="0.2" stroke-dasharray="2 2">
-        <animate attributeName="stroke-dashoffset" values="0;-4" dur="2s" repeatCount="indefinite"/>
-      </line>
-    </g>
-  </svg>
-  <span class="body-label" id="bodyLabel">You</span>
+  <span class="body-label" id="bodyLabel">Observer</span>
 </aside>
+
+<!-- River Navigator (independent right rail) -->
+<nav id="riverNav" class="river-nav" aria-label="Timeline navigation">
+  <a href="#" class="river-nav-surface" title="Back to surface">↑ surface</a>
+  <div class="river-nav-era" data-era="foundations">
+    <span class="river-nav-era-name">Foundations</span>
+    <div class="river-nav-items">
+      <a href="#node-1919" class="river-nav-item" data-node="1919" title="1919 · Bauhaus">1919 Bauhaus</a>
+      <a href="#node-1945a" class="river-nav-item" data-node="1945a" title="1945 · Memex">'45 Memex</a>
+      <a href="#node-1945b" class="river-nav-item" data-node="1945b" title="1945 · ENIAC">'45 ENIAC</a>
+      <a href="#node-1950" class="river-nav-item" data-node="1950" title="1950s · SAGE">'50s SAGE</a>
+      <a href="#node-1960" class="river-nav-item" data-node="1960" title="1960 · Licklider">'60 Licklider</a>
+    </div>
+  </div>
+  <div class="river-nav-era" data-era="interface">
+    <span class="river-nav-era-name">Interface</span>
+    <div class="river-nav-items">
+      <a href="#node-1963" class="river-nav-item" data-node="1963" title="1963 · Sketchpad">'63 Sketchpad</a>
+      <a href="#node-1968" class="river-nav-item" data-node="1968" title="1968 · Engelbart">'68 Engelbart</a>
+      <a href="#node-1973" class="river-nav-item" data-node="1973" title="1973 · Xerox Alto">'73 Alto</a>
+      <a href="#node-1984" class="river-nav-item" data-node="1984" title="1984 · Macintosh">'84 Macintosh</a>
+    </div>
+  </div>
+  <div class="river-nav-era" data-era="network">
+    <span class="river-nav-era-name">Network</span>
+    <div class="river-nav-items">
+      <a href="#node-1990" class="river-nav-item" data-node="1990" title="1990 · WWW">'90 WWW</a>
+      <a href="#node-1995" class="river-nav-item" data-node="1995" title="1995 · Amazon">'95 Amazon</a>
+      <a href="#node-2004" class="river-nav-item" data-node="2004" title="2004 · Facebook">'04 Facebook</a>
+    </div>
+  </div>
+  <div class="river-nav-era" data-era="pocket">
+    <span class="river-nav-era-name">Pocket</span>
+    <div class="river-nav-items">
+      <a href="#node-2007" class="river-nav-item" data-node="2007" title="2007 · iPhone">'07 iPhone</a>
+      <a href="#node-2016" class="river-nav-item" data-node="2016" title="2016 · Stories">'16 Stories</a>
+      <a href="#node-2018" class="river-nav-item" data-node="2018" title="2018 · TikTok">'18 TikTok</a>
+    </div>
+  </div>
+  <div class="river-nav-era" data-era="merge">
+    <span class="river-nav-era-name">Merge</span>
+    <div class="river-nav-items">
+      <a href="#node-2020" class="river-nav-item" data-node="2020" title="2020 · Pandemic">'20 Pandemic</a>
+      <a href="#node-2022" class="river-nav-item" data-node="2022" title="2022 · ChatGPT">'22 ChatGPT</a>
+      <a href="#node-2023" class="river-nav-item" data-node="2023" title="2023 · Sensory">'23 Sensory</a>
+      <a href="#node-2024" class="river-nav-item" data-node="2024" title="2024 · Neuralink">'24 Neuralink</a>
+      <a href="#node-2025" class="river-nav-item" data-node="2025" title="Now · Datacenter">Now Data</a>
+    </div>
+  </div>
+</nav>
 
 <!-- Lens Switcher -->
 <nav id="lensSwitcher">
@@ -917,47 +1649,34 @@ main { position: relative; z-index: 5; }
   <button class="lens-btn" data-lens="planetary"><span class="lens-tooltip">Planetary</span></button>
   <button class="lens-btn" data-lens="heuristic"><span class="lens-tooltip">Heuristic</span></button>
   <button class="lens-btn" data-lens="power"><span class="lens-tooltip">Winners &amp; Losers</span></button>
+  <button class="constellation-trigger" id="constellationTrigger" aria-label="Open constellation view" title="Constellation view (C)">✦</button>
 </nav>
 
-<!-- River Navigator -->
-<nav id="riverNav" class="river-nav" aria-label="Timeline navigation">
-  <a href="#" class="river-nav-surface" title="Back to surface">↑</a>
-  <div class="river-nav-era" data-era="foundations">
-    <span class="river-nav-era-label">I</span>
-    <a href="#node-1919" class="river-nav-dot" data-node="1919" title="1919 · Bauhaus"></a>
-    <a href="#node-1945a" class="river-nav-dot" data-node="1945a" title="1945 · Memex"></a>
-    <a href="#node-1945b" class="river-nav-dot" data-node="1945b" title="1945 · ENIAC"></a>
-    <a href="#node-1950" class="river-nav-dot" data-node="1950" title="1950s · SAGE"></a>
-    <a href="#node-1960" class="river-nav-dot" data-node="1960" title="1960 · Licklider"></a>
+<!-- Universal Lens Strip -->
+<div id="lensUniversalStrip" class="lens-strip">
+  <div class="lens-strip-header">
+    <span class="lens-strip-title" id="lensStripTitle"></span>
+    <span class="lens-strip-count" id="lensStripCount"></span>
+    <button class="lens-strip-close" id="lensStripClose">&times;</button>
   </div>
-  <div class="river-nav-era" data-era="interface">
-    <span class="river-nav-era-label">II</span>
-    <a href="#node-1963" class="river-nav-dot" data-node="1963" title="1963 · Sketchpad"></a>
-    <a href="#node-1968" class="river-nav-dot" data-node="1968" title="1968 · Engelbart"></a>
-    <a href="#node-1973" class="river-nav-dot" data-node="1973" title="1973 · Xerox Alto"></a>
-    <a href="#node-1984" class="river-nav-dot" data-node="1984" title="1984 · Macintosh"></a>
+  <div class="lens-strip-items" id="lensStripItems"></div>
+</div>
+
+<!-- Behavior Profile Panel -->
+<div id="behaviorPanel" class="behavior-panel">
+  <div class="behavior-panel-header">
+    <span class="behavior-panel-title">Your Interaction Profile</span>
+    <button class="behavior-panel-close" id="behaviorPanelClose">&times;</button>
   </div>
-  <div class="river-nav-era" data-era="network">
-    <span class="river-nav-era-label">III</span>
-    <a href="#node-1990" class="river-nav-dot" data-node="1990" title="1990 · WWW"></a>
-    <a href="#node-1995" class="river-nav-dot" data-node="1995" title="1995 · Amazon"></a>
-    <a href="#node-2004" class="river-nav-dot" data-node="2004" title="2004 · Facebook"></a>
+  <div class="behavior-panel-body" id="behaviorPanelBody"></div>
+  <div class="behavior-panel-footer">
+    <button id="behaviorReset" class="behavior-reset-btn">Clear profile data</button>
+    <span class="bp-coming-soon">AI analysis coming soon</span>
   </div>
-  <div class="river-nav-era" data-era="pocket">
-    <span class="river-nav-era-label">IV</span>
-    <a href="#node-2007" class="river-nav-dot" data-node="2007" title="2007 · iPhone"></a>
-    <a href="#node-2016" class="river-nav-dot" data-node="2016" title="2016 · Stories"></a>
-    <a href="#node-2018" class="river-nav-dot" data-node="2018" title="2018 · TikTok"></a>
-  </div>
-  <div class="river-nav-era" data-era="merge">
-    <span class="river-nav-era-label">V</span>
-    <a href="#node-2020" class="river-nav-dot" data-node="2020" title="2020 · Pandemic"></a>
-    <a href="#node-2022" class="river-nav-dot" data-node="2022" title="2022 · ChatGPT"></a>
-    <a href="#node-2023" class="river-nav-dot" data-node="2023" title="2023 · Sensory"></a>
-    <a href="#node-2024" class="river-nav-dot" data-node="2024" title="2024 · Neuralink"></a>
-    <a href="#node-2025" class="river-nav-dot" data-node="2025" title="Now · Datacenter"></a>
-  </div>
-</nav>
+</div>
+
+
+<!-- River Navigator is now an independent right rail -->
 
 <!-- ════════════════════════════════════════ -->
 <!-- MAIN TIMELINE CONTENT                   -->
@@ -1539,6 +2258,37 @@ main { position: relative; z-index: 5; }
 
 </main>
 
+<!-- ═══ CONSTELLATION OVERLAY ═══ -->
+<div id="constellation" class="constellation-overlay" aria-label="Constellation view of bias threads">
+  <div class="constellation-header">
+    <span class="constellation-title">✦ Constellation — Bias Threads</span>
+    <button class="constellation-close" aria-label="Close constellation" id="constellationClose">&times;</button>
+  </div>
+  <div class="constellation-threads" id="constellationThreads"></div>
+  <div class="constellation-body">
+    <canvas id="constellationCanvas" class="constellation-canvas"></canvas>
+    <div id="constellationNodes" class="constellation-nodes"></div>
+    <div id="constellationDetail" class="constellation-detail"></div>
+  </div>
+</div>
+
+<!-- Octopus Intro Tooltip -->
+<div id="octoIntro" class="octo-intro">
+  <strong>Meet the Observer</strong>
+  <p>This octopus is your digital body — its tentacles track each lens of analysis. Click a tip to activate a lens. Hover near a tentacle to see its notes.</p>
+  <button id="octoIntroDismiss" class="octo-intro-dismiss">Got it</button>
+</div>
+
+<!-- Keyboard Help Overlay -->
+<div id="keyboardHelp" class="keyboard-help">
+  <div class="keyboard-help-title">Keyboard Shortcuts</div>
+  <div class="keyboard-help-row"><span class="keyboard-help-key">C</span><span class="keyboard-help-desc">Constellation map</span></div>
+  <div class="keyboard-help-row"><span class="keyboard-help-key">,</span><span class="keyboard-help-desc">Settings panel</span></div>
+  <div class="keyboard-help-row"><span class="keyboard-help-key">P</span><span class="keyboard-help-desc">Your interaction profile</span></div>
+  <div class="keyboard-help-row"><span class="keyboard-help-key">?</span><span class="keyboard-help-desc">This help</span></div>
+  <div class="keyboard-help-row"><span class="keyboard-help-key">Esc</span><span class="keyboard-help-desc">Close overlay</span></div>
+</div>
+
 <script>
 // ════════════════════════════════════
 // RIVER CANVAS ANIMATION
@@ -1547,16 +2297,474 @@ main { position: relative; z-index: 5; }
   var canvas = document.getElementById('riverCanvas');
   var ctx = canvas.getContext('2d');
   var W, H, scrollProgress = 0, time = 0;
+  var RIVER_CX = 70; // river always on left side, octopus lives here
   var particles = [];
   var activeLens = null;
+  var lensBlend = 0;
+  var lensTargetR = 0, lensTargetG = 0, lensTargetB = 0;
   var currentParadigm = 'terminal';
+
+  // ════════════════════════════════════
+  // BEHAVIOR PROFILE TRACKING
+  // ════════════════════════════════════
+  var PROFILE_KEY = 'hci-behavior-profile';
+  var behaviorProfile = loadBehaviorProfile();
+  var dwellTimers = {};
+  var heatmapThrottle = 0;
+  var lastScrollTop = 0;
+
+  function loadBehaviorProfile() {
+    try {
+      var d = JSON.parse(localStorage.getItem(PROFILE_KEY));
+      if (d && d.version === 1) return d;
+    } catch(e) {}
+    return {
+      version: 1, sessions: 0, totalTime: 0,
+      nodeDwell: {}, eraDwell: {}, lensClicks: {}, nodeClicks: {},
+      annotationsViewed: 0, scrollDepth: 0, avgScrollSpeed: 0,
+      mouseHeatmap: {}, interactionPattern: 'explorer', lastUpdated: Date.now()
+    };
+  }
+
+  function saveBehaviorProfile() {
+    try { localStorage.setItem(PROFILE_KEY, JSON.stringify(behaviorProfile)); } catch(e) {}
+  }
+
+  behaviorProfile.sessions++;
+  var sessionStartTime = Date.now();
+
+  function startDwell(nodeId) {
+    if (!dwellTimers[nodeId]) dwellTimers[nodeId] = Date.now();
+  }
+
+  function endDwell(nodeId) {
+    if (dwellTimers[nodeId]) {
+      var elapsed = Date.now() - dwellTimers[nodeId];
+      if (elapsed < 200) { delete dwellTimers[nodeId]; return; } // ignore fleeting intersections
+      if (!behaviorProfile.nodeDwell[nodeId]) behaviorProfile.nodeDwell[nodeId] = 0;
+      behaviorProfile.nodeDwell[nodeId] += elapsed;
+      var node = document.getElementById(nodeId);
+      if (node) {
+        var era = node.closest('.era-section');
+        if (era) {
+          var eraName = era.getAttribute('data-era');
+          if (eraName) {
+            if (!behaviorProfile.eraDwell[eraName]) behaviorProfile.eraDwell[eraName] = 0;
+            behaviorProfile.eraDwell[eraName] += elapsed;
+          }
+        }
+      }
+      delete dwellTimers[nodeId];
+    }
+  }
+
+  function computeProfileType() {
+    var p = behaviorProfile;
+    var nodesVisited = Object.keys(p.nodeDwell).length;
+    var totalDwell = 0;
+    Object.keys(p.nodeDwell).forEach(function(k) { totalDwell += p.nodeDwell[k]; });
+    var lensesUsed = Object.keys(p.lensClicks).length;
+    var avgDwell = nodesVisited > 0 ? totalDwell / nodesVisited : 0;
+
+    if (lensesUsed >= 3 && avgDwell > 8000) return 'analyst';
+    if (nodesVisited >= 15 && avgDwell < 5000) return 'explorer';
+    if (nodesVisited < 10 && avgDwell > 12000) return 'deep-diver';
+    return 'skimmer';
+  }
+
+  function getProfileInsight() {
+    var type = computeProfileType();
+    var p = behaviorProfile;
+    var topEra = null, topEraTime = 0;
+    Object.keys(p.eraDwell).forEach(function(era) {
+      if (p.eraDwell[era] > topEraTime) { topEraTime = p.eraDwell[era]; topEra = era; }
+    });
+    var topLens = null, topLensCount = 0;
+    Object.keys(p.lensClicks).forEach(function(lens) {
+      if (p.lensClicks[lens] > topLensCount) { topLensCount = p.lensClicks[lens]; topLens = lens; }
+    });
+    var eraNames = {
+      foundations: 'Foundations (1919-1960)', interface: 'Interface (1963-1984)',
+      network: 'Network (1990-2004)', pocket: 'Pocket (2007-2018)', merge: 'Merge (2020-present)'
+    };
+    var typeDesc = {
+      analyst: 'You read deeply and use multiple lenses. You want to understand the systems, not just the surface.',
+      explorer: 'You move quickly through the whole timeline. You see the big picture before the details.',
+      'deep-diver': 'You anchor into specific moments and study them. Depth over breadth.',
+      skimmer: 'You browse lightly. The timeline is a river and you are letting it carry you.'
+    };
+    return {
+      type: type, description: typeDesc[type] || '', topEra: topEra ? eraNames[topEra] : null,
+      topLens: topLens, scrollDepth: Math.round(p.scrollDepth * 100), sessions: p.sessions
+    };
+  }
+
+  // Mouse heatmap tracking
+  document.addEventListener('mousemove', function(e) {
+    var now = Date.now();
+    if (now - heatmapThrottle < 200) return;
+    heatmapThrottle = now;
+    var col = Math.floor(e.clientX / (window.innerWidth / 20));
+    var row = Math.floor(e.clientY / (window.innerHeight / 20));
+    var key = col + '-' + row;
+    if (!behaviorProfile.mouseHeatmap[key]) behaviorProfile.mouseHeatmap[key] = 0;
+    behaviorProfile.mouseHeatmap[key]++;
+  });
+
+  // Auto-save every 10 seconds
+  setInterval(function() {
+    behaviorProfile.totalTime += 10000;
+    behaviorProfile.lastUpdated = Date.now();
+    behaviorProfile.interactionPattern = computeProfileType();
+    saveBehaviorProfile();
+  }, 10000);
+
+  // ── Turing Test: Octopus predicts your behavior ──
+  var turingState = {
+    predictions: [],       // { text, type, target, time, result: null|'correct'|'wrong' }
+    correct: 0,
+    wrong: 0,
+    lastPrediction: 0,
+    cooldown: 8000,        // ms between predictions
+    activePrediction: null, // currently shown prediction
+    bubbleAlpha: 0,
+    actionLog: []          // recent actions: { type, value, time }
+  };
+
+  function logTuringAction(type, value) {
+    turingState.actionLog.push({ type: type, value: value, time: Date.now() });
+    if (turingState.actionLog.length > 30) turingState.actionLog.shift();
+    // Check if active prediction was fulfilled
+    checkTuringPrediction(type, value);
+  }
+
+  function checkTuringPrediction(type, value) {
+    var p = turingState.activePrediction;
+    if (!p || p.result) return;
+    var age = Date.now() - p.time;
+    if (age > 20000) { p.result = 'expired'; turingState.wrong++; return; }
+    if (p.type === 'lens' && type === 'lens' && value === p.target) {
+      p.result = 'correct'; turingState.correct++;
+      if (typeof logOctoNote === 'function') logOctoNote('predicted ✓');
+    } else if (p.type === 'scroll_dir' && type === 'scroll_dir' && value === p.target) {
+      p.result = 'correct'; turingState.correct++;
+    } else if (p.type === 'revisit' && type === 'node_visible' && value === p.target) {
+      p.result = 'correct'; turingState.correct++;
+      if (typeof logOctoNote === 'function') logOctoNote('knew it ✓');
+    } else if (p.type === 'dwell_era' && type === 'era_enter' && value === p.target) {
+      p.result = 'correct'; turingState.correct++;
+    }
+  }
+
+  function generateTuringPrediction() {
+    var now = Date.now();
+    if (now - turingState.lastPrediction < turingState.cooldown) return;
+    if (turingState.activePrediction && !turingState.activePrediction.result) return;
+    var actions = turingState.actionLog;
+    if (actions.length < 5) return;
+    // Need enough observation time
+    var bp = behaviorProfile;
+    var totalDwell = 0;
+    Object.keys(bp.nodeDwell).forEach(function(k) { totalDwell += bp.nodeDwell[k]; });
+    if (totalDwell < 10000) return; // at least 10s of observation
+
+    var prediction = null;
+    var roll = Math.random();
+
+    // Strategy 1: Predict next lens based on usage pattern (40% chance)
+    if (roll < 0.4) {
+      var recentLenses = actions.filter(function(a) { return a.type === 'lens'; });
+      if (recentLenses.length >= 2) {
+        // Find least-used lens that exists
+        var allLenses = ['behavioral', 'social', 'market', 'planetary', 'heuristic', 'power'];
+        var usedSet = {};
+        recentLenses.forEach(function(a) { usedSet[a.value] = (usedSet[a.value] || 0) + 1; });
+        var unused = allLenses.filter(function(l) { return !usedSet[l]; });
+        if (unused.length > 0) {
+          var next = unused[Math.floor(Math.random() * unused.length)];
+          var lensNames = { behavioral: 'Behavioral', social: 'Social', market: 'Market', planetary: 'Planetary', heuristic: 'Heuristic', power: 'Power' };
+          prediction = { text: 'you\'ll try ' + (lensNames[next] || next) + ' next', type: 'lens', target: next, time: now, result: null };
+        }
+      }
+    }
+
+    // Strategy 2: Predict revisit to high-dwell node (30% chance)
+    if (!prediction && roll < 0.7) {
+      var topNode = null, topDwell = 0;
+      Object.keys(bp.nodeDwell).forEach(function(k) {
+        if (bp.nodeDwell[k] > topDwell) { topDwell = bp.nodeDwell[k]; topNode = k; }
+      });
+      if (topNode && topDwell > 5000) {
+        var el = document.getElementById(topNode);
+        if (el && !el.classList.contains('visible')) {
+          var yearEl = el.querySelector('.node-year');
+          var yearText = yearEl ? yearEl.textContent.trim() : topNode.replace('node-', '');
+          prediction = { text: 'you\'ll go back to ' + yearText, type: 'revisit', target: topNode, time: now, result: null };
+        }
+      }
+    }
+
+    // Strategy 3: Predict scroll direction (20% chance)
+    if (!prediction && roll < 0.9) {
+      var scrollActions = actions.filter(function(a) { return a.type === 'scroll_dir'; });
+      if (scrollActions.length >= 3) {
+        var lastDir = scrollActions[scrollActions.length - 1].value;
+        var sameCount = 0;
+        for (var si = scrollActions.length - 1; si >= 0 && scrollActions[si].value === lastDir; si--) sameCount++;
+        if (sameCount >= 3) {
+          // Predict reversal after sustained scrolling
+          var reverseDir = lastDir === 'down' ? 'up' : 'down';
+          prediction = { text: 'about to scroll ' + reverseDir, type: 'scroll_dir', target: reverseDir, time: now, result: null };
+        }
+      }
+    }
+
+    // Strategy 4: Profile-based prediction (10% chance)
+    if (!prediction) {
+      var pType = computeProfileType();
+      if (pType === 'skimmer') {
+        prediction = { text: 'you\'ll speed through this', type: 'style', target: null, time: now, result: null };
+        setTimeout(function() { if (prediction.result === null) prediction.result = 'shown'; }, 8000);
+      } else if (pType === 'deep-diver') {
+        prediction = { text: 'you\'re going to linger here', type: 'style', target: null, time: now, result: null };
+        setTimeout(function() { if (prediction.result === null) prediction.result = 'shown'; }, 8000);
+      }
+    }
+
+    if (prediction) {
+      turingState.activePrediction = prediction;
+      turingState.predictions.push(prediction);
+      if (turingState.predictions.length > 20) turingState.predictions.shift();
+      turingState.lastPrediction = now;
+      if (typeof logOctoNote === 'function') logOctoNote('predicting…');
+    }
+  }
+
+  // Run prediction generator every 5 seconds
+  setInterval(generateTuringPrediction, 5000);
+
+  function drawTuringBubble(ctx) {
+    var b = octoBody;
+    if (b.alpha < 0.1 || b.scale < 0.3) return;
+    var p = turingState.activePrediction;
+    var showBubble = p && !p.result;
+    var correctFlash = p && p.result === 'correct' && (Date.now() - p.time) < 22000;
+
+    turingState.bubbleAlpha += ((showBubble || correctFlash ? 1 : 0) - turingState.bubbleAlpha) * 0.08;
+    if (turingState.bubbleAlpha < 0.03) return;
+
+    var s = b.scale;
+    var bx = b.x + OCTO.mantleW * s * 0.5;
+    var by = b.y - OCTO.mantleH * s * 0.7;
+    var alpha = turingState.bubbleAlpha * b.alpha * 0.85;
+
+    ctx.save();
+    // Thought bubble circles
+    var dotSizes = [2.5, 4, 6];
+    for (var di = 0; di < dotSizes.length; di++) {
+      var dr = dotSizes[di] * s;
+      var dotX = b.x + (OCTO.mantleW * s * 0.3) + di * 8 * s;
+      var dotY = b.y - (OCTO.mantleH * s * 0.45) - di * 6 * s;
+      ctx.beginPath(); ctx.arc(dotX, dotY, dr, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(20,26,40,' + (alpha * 0.7) + ')';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(136,153,170,' + (alpha * 0.4) + ')';
+      ctx.lineWidth = 0.8 * s; ctx.stroke();
+    }
+
+    // Main bubble
+    var bubbleW = 80 * s, bubbleH = 22 * s, bubbleR = 8 * s;
+    ctx.beginPath();
+    ctx.moveTo(bx - bubbleW/2 + bubbleR, by - bubbleH/2);
+    ctx.lineTo(bx + bubbleW/2 - bubbleR, by - bubbleH/2);
+    ctx.quadraticCurveTo(bx + bubbleW/2, by - bubbleH/2, bx + bubbleW/2, by - bubbleH/2 + bubbleR);
+    ctx.lineTo(bx + bubbleW/2, by + bubbleH/2 - bubbleR);
+    ctx.quadraticCurveTo(bx + bubbleW/2, by + bubbleH/2, bx + bubbleW/2 - bubbleR, by + bubbleH/2);
+    ctx.lineTo(bx - bubbleW/2 + bubbleR, by + bubbleH/2);
+    ctx.quadraticCurveTo(bx - bubbleW/2, by + bubbleH/2, bx - bubbleW/2, by + bubbleH/2 - bubbleR);
+    ctx.lineTo(bx - bubbleW/2, by - bubbleH/2 + bubbleR);
+    ctx.quadraticCurveTo(bx - bubbleW/2, by - bubbleH/2, bx - bubbleW/2 + bubbleR, by - bubbleH/2);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(20,26,40,' + (alpha * 0.8) + ')';
+    ctx.fill();
+    ctx.strokeStyle = correctFlash ? 'rgba(76,175,80,' + (alpha * 0.7) + ')' : 'rgba(136,153,170,' + (alpha * 0.35) + ')';
+    ctx.lineWidth = 1 * s; ctx.stroke();
+
+    // Text
+    var displayText = correctFlash ? '✓ ' + p.text : (p ? p.text : '');
+    ctx.font = Math.round(5.5 * s) + 'px "JetBrains Mono", monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = correctFlash ? 'rgba(76,175,80,' + alpha + ')' : 'rgba(200,210,230,' + (alpha * 0.9) + ')';
+    ctx.fillText(displayText, bx, by);
+
+    // Accuracy counter (bottom right of bubble)
+    if (turingState.correct + turingState.wrong > 0) {
+      var accText = turingState.correct + '/' + (turingState.correct + turingState.wrong);
+      ctx.font = Math.round(4 * s) + 'px "JetBrains Mono", monospace';
+      ctx.textAlign = 'right';
+      ctx.fillStyle = 'rgba(136,153,170,' + (alpha * 0.5) + ')';
+      ctx.fillText(accText, bx + bubbleW/2 - 4*s, by + bubbleH/2 + 6*s);
+    }
+    ctx.restore();
+  }
+
+  // Open/close behavior panel
+  function openBehaviorPanel() {
+    if (typeof logOctoNote === 'function') logOctoNote('reflecting…');
+    var panel = document.getElementById('behaviorPanel');
+    if (!panel) return;
+    var insight = getProfileInsight();
+    var body = document.getElementById('behaviorPanelBody');
+    if (body) {
+      var nodesVisited = Object.keys(behaviorProfile.nodeDwell).length;
+      body.innerHTML = '<div class="bp-type-badge" style="color: var(--text-bright);">' + insight.type.replace('-', ' ') + '</div>' +
+        '<p class="bp-description">' + insight.description + '</p>' +
+        '<div class="bp-stats">' +
+          '<div class="bp-stat"><span class="bp-stat-label">Sessions</span><span class="bp-stat-value">' + insight.sessions + '</span></div>' +
+          '<div class="bp-stat"><span class="bp-stat-label">Nodes explored</span><span class="bp-stat-value">' + nodesVisited + '/25</span></div>' +
+          '<div class="bp-stat"><span class="bp-stat-label">Scroll depth</span><span class="bp-stat-value">' + insight.scrollDepth + '%</span></div>' +
+          (insight.topEra ? '<div class="bp-stat"><span class="bp-stat-label">Most time in</span><span class="bp-stat-value">' + insight.topEra + '</span></div>' : '') +
+          (insight.topLens ? '<div class="bp-stat"><span class="bp-stat-label">Favorite lens</span><span class="bp-stat-value">' + insight.topLens + '</span></div>' : '') +
+        '</div>' +
+        '<p class="bp-privacy">All data stays in your browser. Nothing is transmitted.</p>';
+    }
+    panel.classList.add('visible');
+  }
+
+  function closeBehaviorPanel() {
+    var panel = document.getElementById('behaviorPanel');
+    if (panel) panel.classList.remove('visible');
+  }
 
   function resize() {
     W = canvas.width = window.innerWidth;
     H = canvas.height = window.innerHeight;
+    RIVER_CX = W < 900 ? W * 0.5 : 70;
   }
   resize();
   window.addEventListener('resize', resize);
+
+  // ════════════════════════════════════
+  // CANVAS OCTOPUS — INTELLIGENT CREATURE
+  // ════════════════════════════════════
+  var OCTO = {
+    mantleW: 140, mantleH: 100,
+    eyeRadius: 16, pupilRadius: 7, eyeSpacing: 38,
+    segmentsPerTentacle: 16, segmentLength: 22,
+    constraintIterations: 4, damping: 0.97, gravity: 0.12,
+    petRadius: 70, dragRadius: 25,
+    positions: {
+      hero:    { xRatio: 0.06, yRatio: 0.40, scale: 1.0,  alpha: 0.85 },
+      reading: { xRatio: 0.045, yRatio: 0.30, scale: 0.50, alpha: 0.30 },
+      between: { xRatio: 0.05, yRatio: 0.50, scale: 0.70, alpha: 0.60 },
+      idle:    { xRatio: 0.045, yRatio: 0.35, scale: 0.60, alpha: 0.50 },
+      retreat: { xRatio: 0.035, yRatio: 0.15, scale: 0.35, alpha: 0.18 }
+    },
+    personality: { stranger: 5, acquaintance: 20 }
+  };
+
+  var OCTO_EMOTIONS = {
+    terminal: { fill: [42,106,138], fillA: 0.25, stroke: [42,106,138], strokeA: 0.5, breathRate: 0.25, breathAmp: 0.04, wave: 0.3, pupilShift: 0, glowColor: [42,106,138], glowRadius: 60, bodyOpacity: 1, tentacleOpacity: 0.5, jitter: 0, dissolve: false, label: 'Observer' },
+    gui:      { fill: [74,122,90], fillA: 0.3, stroke: [74,122,90], strokeA: 0.6, breathRate: 0.33, breathAmp: 0.045, wave: 0.5, pupilShift: -0.5, glowColor: [74,122,90], glowRadius: 65, bodyOpacity: 1, tentacleOpacity: 0.45, jitter: 0, dissolve: false, label: 'Curious' },
+    web:      { fill: [90,106,154], fillA: 0.3, stroke: [90,106,154], strokeA: 0.6, breathRate: 0.4, breathAmp: 0.05, wave: 0.8, pupilShift: 0, glowColor: [90,106,154], glowRadius: 70, bodyOpacity: 1, tentacleOpacity: 0.4, jitter: 0, dissolve: false, label: 'Reaching' },
+    mobile:   { fill: [122,90,138], fillA: 0.3, stroke: [122,90,138], strokeA: 0.6, breathRate: 0.55, breathAmp: 0.06, wave: 1.2, pupilShift: 1, glowColor: [122,90,138], glowRadius: 75, bodyOpacity: 1, tentacleOpacity: 0.4, jitter: 0, dissolve: false, label: 'Compressed' },
+    social:   { fill: [196,85,77], fillA: 0.25, stroke: [196,85,77], strokeA: 0.5, breathRate: 0.8, breathAmp: 0.07, wave: 2.0, pupilShift: -1, glowColor: [196,85,77], glowRadius: 80, bodyOpacity: 1, tentacleOpacity: 0.5, jitter: 1.5, dissolve: false, label: 'Agitated' },
+    merge:    { fill: [138,74,90], fillA: 0.12, stroke: [106,138,170], strokeA: 0.35, breathRate: 0.2, breathAmp: 0.03, wave: 0.4, pupilShift: 0, glowColor: [138,92,246], glowRadius: 90, bodyOpacity: 0.6, tentacleOpacity: 0.3, jitter: 0, dissolve: true, label: 'Dissolving' }
+  };
+
+  // Verlet physics
+  function VerletPoint(x, y, pinned) {
+    this.x = x; this.y = y; this.oldX = x; this.oldY = y; this.pinned = !!pinned;
+  }
+  VerletPoint.prototype.update = function(damping, gx, gy) {
+    if (this.pinned) return;
+    var vx = (this.x - this.oldX) * damping;
+    var vy = (this.y - this.oldY) * damping;
+    this.oldX = this.x; this.oldY = this.y;
+    this.x += vx + gx; this.y += vy + gy;
+  };
+  function Constraint(p1, p2, length) {
+    this.p1 = p1; this.p2 = p2; this.length = length;
+  }
+  Constraint.prototype.satisfy = function() {
+    var dx = this.p2.x - this.p1.x, dy = this.p2.y - this.p1.y;
+    var dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
+    var diff = (dist - this.length) / dist * 0.5;
+    if (!this.p1.pinned) { this.p1.x += dx * diff; this.p1.y += dy * diff; }
+    if (!this.p2.pinned) { this.p2.x -= dx * diff; this.p2.y -= dy * diff; }
+  };
+  function createTentacle(startX, startY, angle, segments, segLen) {
+    var points = [], constraints = [];
+    for (var i = 0; i <= segments; i++) {
+      points.push(new VerletPoint(startX + Math.cos(angle) * segLen * i, startY + Math.sin(angle) * segLen * i, i === 0));
+    }
+    for (var j = 0; j < points.length - 1; j++) {
+      constraints.push(new Constraint(points[j], points[j + 1], segLen));
+    }
+    return { points: points, constraints: constraints };
+  }
+
+  // Personality memory
+  function loadOctoMemory() {
+    try { var d = JSON.parse(localStorage.getItem('hci-octo-memory')); if (d && typeof d.petCount === 'number') return d; } catch(e) {}
+    return { petCount: 0, lastVisit: Date.now(), totalVisits: 1 };
+  }
+  function saveOctoMemory(mem) { try { localStorage.setItem('hci-octo-memory', JSON.stringify(mem)); } catch(e) {} }
+  function getPersonality(pc) { return pc >= OCTO.personality.acquaintance ? 'friend' : pc >= OCTO.personality.stranger ? 'acquaintance' : 'stranger'; }
+
+  var octoMemory = loadOctoMemory();
+  octoMemory.totalVisits++; octoMemory.lastVisit = Date.now();
+  saveOctoMemory(octoMemory);
+
+  var octoBody = {
+    x: W * 0.18, y: H * 0.4, scale: 1.0, alpha: 0.85,
+    targetX: W * 0.18, targetY: H * 0.4, targetScale: 1.0, targetAlpha: 0.85,
+    state: 'hero', breathPhase: 0,
+    pupilLX: 0, pupilLY: 0, pupilRX: 0, pupilRY: 0,
+    blinkTimer: 4, blinkAmount: 0,
+    petFlash: 0, wiggle: 0,
+    dragIdx: -1, dragging: false,
+    mouseX: W * 0.5, mouseY: H * 0.5,
+    personality: getPersonality(octoMemory.petCount),
+    tentacles: [], idleTimer: 0, lastScrollTime: 0,
+    waveTimer: 0, wavingTentacle: -1,
+    insightOrbX: 0, insightOrbY: 0, insightOrbR: 0
+  };
+
+  var octoHearts = [];
+  function spawnHearts(x, y, count) {
+    for (var i = 0; i < count; i++) {
+      octoHearts.push({ x: x + (Math.random() - 0.5) * 40, y: y, vx: (Math.random() - 0.5) * 1.5, vy: -(1.5 + Math.random() * 2), life: 1, size: 10 + Math.random() * 8 });
+    }
+  }
+
+  function initOctopusTentacles() {
+    // Fan wide: ~150° arc from lower-left to lower-right, spread at roots
+    var defs = [
+      { name: 'behavioral', color: [212,165,67],  lens: 'behavioral', angle: Math.PI * 0.90 },
+      { name: 'social',     color: [196,85,77],   lens: 'social',     angle: Math.PI * 0.76 },
+      { name: 'market',     color: [76,175,80],    lens: 'market',     angle: Math.PI * 0.62 },
+      { name: 'planetary',  color: [74,127,186],   lens: 'planetary',  angle: Math.PI * 0.38 },
+      { name: 'heuristic',  color: [136,153,170],  lens: 'heuristic',  angle: Math.PI * 0.24 },
+      { name: 'power',      color: [208,208,208],  lens: 'power',      angle: Math.PI * 0.10 },
+      { name: 'pointer',    color: [232,236,244],  lens: null,          angle: Math.PI * 0.50 }
+    ];
+    octoBody.tentacles = [];
+    var bodyBottom = octoBody.y + OCTO.mantleH * 0.35;
+    var edgeR = OCTO.mantleW * 0.45; // wider root spread
+    for (var i = 0; i < defs.length; i++) {
+      var d = defs[i];
+      var segs = d.name === 'pointer' ? 8 : OCTO.segmentsPerTentacle;
+      var sLen = d.name === 'pointer' ? 12 : OCTO.segmentLength;
+      // Fan root positions along mantle edge
+      var rootX = octoBody.x + Math.cos(d.angle - Math.PI * 0.5) * edgeR;
+      var rootY = bodyBottom;
+      var chain = createTentacle(rootX, rootY, d.angle, segs, sLen);
+      octoBody.tentacles.push({ chain: chain, name: d.name, color: d.color, lens: d.lens, baseAngle: d.angle, glowAmount: 0, annotations: [], annotationAlpha: 0 });
+    }
+  }
+  initOctopusTentacles();
+  buildTentacleAnnotations();
 
   // Noise function (smooth pseudo-random)
   function noise(x, y) {
@@ -1565,28 +2773,37 @@ main { position: relative; z-index: 5; }
   }
 
   function flowNoise(x, t) {
-    return Math.sin(x * 0.5 + t * 0.3) * 0.5
-         + Math.sin(x * 1.1 + t * 0.7) * 0.3
+    return Math.sin(x * 0.5 + t * 0.3) * 0.45
+         + Math.sin(x * 1.1 + t * 0.7) * 0.25
          + Math.sin(x * 2.3 + t * 1.1) * 0.15
-         + Math.sin(x * 3.7 + t * 0.5) * 0.05;
+         + Math.sin(x * 3.7 + t * 0.5) * 0.08
+         + Math.sin(x * 5.1 + t * 1.3) * 0.04
+         + Math.sin(x * 7.3 + t * 0.9) * 0.02;
   }
 
-  // River properties at current scroll
+  // River properties at current scroll (V2: velocity response + branch points)
   function getRiverProps(p) {
-    var width = 2 + p * p * 160;
-    var turbulence = p * p * 40;
-    var speed = 0.3 + p * 1.5;
+    var velocityBoost = Math.min(scrollVelocity * 0.08, 2.5);
+    var width = 6 + p * p * 180;
+    var turbulence = p * p * 45 + velocityBoost * 10;
+    var speed = 0.35 + p * 1.8 + velocityBoost;
     var branches = Math.floor(p * 4);
-    var opacity = 0.15 + p * 0.25;
+    var opacity = 0.18 + p * 0.28;
 
-    // Color based on era/lens
-    var r = 30 + p * 40, g = 80 + p * 30, b = 120 + p * 20;
-    if (activeLens === 'behavioral') { r = 200; g = 160; b = 60; }
-    else if (activeLens === 'social') { r = 180; g = 70; b = 70; }
-    else if (activeLens === 'planetary') { r = 60; g = 110; b = 170; }
-    else if (activeLens === 'market') { r = 60; g = 160; b = 70; }
+    // V2: Branch angle at paradigm shift boundaries
+    var branchAngle = 0;
+    if (p > 0.24 && p < 0.32) branchAngle = 0.3;   // GUI shift
+    if (p > 0.44 && p < 0.52) branchAngle = -0.25;  // Web shift
+    if (p > 0.54 && p < 0.62) branchAngle = 0.4;    // Mobile shift
+    if (p > 0.68 && p < 0.76) branchAngle = -0.35;  // Social shift
 
-    return { width: width, turbulence: turbulence, speed: speed, branches: branches, opacity: opacity, r: r, g: g, b: b };
+    // Color: smooth blend from base to lens color via lensBlend
+    var baseR = 30 + p * 40, baseG = 80 + p * 30, baseB = 120 + p * 20;
+    var r = baseR + (lensTargetR - baseR) * lensBlend;
+    var g = baseG + (lensTargetG - baseG) * lensBlend;
+    var b = baseB + (lensTargetB - baseB) * lensBlend;
+
+    return { width: width, turbulence: turbulence, speed: speed, branches: branches, opacity: opacity, r: r, g: g, b: b, branchAngle: branchAngle, lensBlend: lensBlend };
   }
 
   // Particle class
@@ -1594,85 +2811,1004 @@ main { position: relative; z-index: 5; }
     this.reset(props);
   }
   Particle.prototype.reset = function(props) {
-    var cx = W * 0.5;
-    this.x = cx + (Math.random() - 0.5) * props.width * 0.8;
+    var cx = RIVER_CX;
+    this.x = cx + (Math.random() - 0.5) * props.width * 0.9;
     this.y = -10 - Math.random() * H * 0.3;
-    this.speed = props.speed * (0.5 + Math.random() * 0.5);
-    this.size = 1 + Math.random() * (1 + scrollProgress * 2);
-    this.alpha = 0.2 + Math.random() * 0.5;
+    this.speed = props.speed * (0.4 + Math.random() * 0.6);
+    this.size = 1 + Math.random() * (2.5 + scrollProgress * 3);
+    this.alpha = 0.25 + Math.random() * 0.55;
     this.life = 0;
+    this.wobblePhase = Math.random() * Math.PI * 2;
   };
   Particle.prototype.update = function(dt, props) {
     this.life += dt;
-    var cx = W * 0.5;
+    var cx = RIVER_CX;
     var noiseVal = flowNoise(this.y * 0.005, time) * props.turbulence;
-    this.x += noiseVal * dt * 0.5;
+    // Add gentle sine-wave lateral drift for flowing water feel
+    var waveDrift = Math.sin(this.y * 0.006 + time * 0.7 + this.wobblePhase) * 0.8;
+    this.x += (noiseVal * 0.5 + waveDrift) * dt;
     this.y += this.speed * dt * 60;
 
-    // Constrain to river channel
+    // Constrain to river channel (softer edge bounce)
     var halfW = props.width * 0.5;
-    if (this.x < cx - halfW) this.x = cx - halfW;
-    if (this.x > cx + halfW) this.x = cx + halfW;
+    if (this.x < cx - halfW) { this.x = cx - halfW; this.wobblePhase += 0.5; }
+    if (this.x > cx + halfW) { this.x = cx + halfW; this.wobblePhase += 0.5; }
 
     if (this.y > H + 20) this.reset(props);
   };
-  Particle.prototype.draw = function(ctx, props) {
+  Particle.prototype.draw = function(ctx, props, idx) {
     var fade = Math.min(1, this.life * 2);
+    var a = this.alpha * fade * props.opacity;
+    if (a < 0.01) return;
+    var r = Math.round(props.r), g = Math.round(props.g), bl = Math.round(props.b);
+    var rB = Math.min(255, r + 50), gB = Math.min(255, g + 50), bB = Math.min(255, bl + 50);
+
+    // Shimmer: every 5th particle twinkles brighter
+    var shimmer = 1;
+    if (idx % 5 === 0) shimmer = 0.6 + Math.sin(time * 4 + idx * 1.7) * 0.4;
+
+    // Glow layer (additive, every 2nd particle for richer look)
+    if (idx % 2 === 0 && !reducedMotion) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size * 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (a * 0.15 * shimmer) + ')';
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Core particle (brighter)
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-    ctx.fillStyle = 'rgba(' + Math.round(props.r) + ',' + Math.round(props.g) + ',' + Math.round(props.b) + ',' + (this.alpha * fade * props.opacity) + ')';
+    ctx.arc(this.x, this.y, this.size * (0.8 + shimmer * 0.2), 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + rB + ',' + gB + ',' + bB + ',' + (a * shimmer) + ')';
     ctx.fill();
   };
 
-  // Initialize particles
-  for (var i = 0; i < 120; i++) {
+  // Initialize particles — more for a richer river
+  for (var i = 0; i < 320; i++) {
     var initProps = getRiverProps(0);
     var p = new Particle(initProps);
     p.y = Math.random() * H;
     particles.push(p);
   }
 
-  // Draw river channel
+  // Draw river channel — lush flowing river with many strands & sparkles
   function drawChannel(props) {
-    var cx = W * 0.5;
+    var cx = RIVER_CX;
     var halfW = props.width * 0.5;
+    // Full-blend color (used by center glow — Layer 3)
+    var r = Math.round(props.r), g = Math.round(props.g), bl = Math.round(props.b);
+    var rB = Math.min(255, r + 40), gB = Math.min(255, g + 40), bB = Math.min(255, bl + 40);
+    var rH = Math.min(255, r + 70), gH = Math.min(255, g + 70), bH = Math.min(255, bl + 70);
+    // Per-layer partial lens blend for depth (base color with reduced lens tint)
+    var lb = props.lensBlend || 0;
+    // Compute base (no-lens) color for partial-blend layers
+    var p0 = scrollProgress;
+    var bR = 30 + p0 * 40, bG = 80 + p0 * 30, bBl = 120 + p0 * 20;
+    // Layer 0/0.5: 50% lens blend
+    var l0r = Math.round(bR + (lensTargetR - bR) * lb * 0.5);
+    var l0g = Math.round(bG + (lensTargetG - bG) * lb * 0.5);
+    var l0b = Math.round(bBl + (lensTargetB - bBl) * lb * 0.5);
+    // Layer 1 (ambient glow): 40% lens blend
+    var l1r = Math.round(bR + (lensTargetR - bR) * lb * 0.4);
+    var l1g = Math.round(bG + (lensTargetG - bG) * lb * 0.4);
+    var l1b = Math.round(bBl + (lensTargetB - bBl) * lb * 0.4);
+    // Layer 2 (strands): 60% lens blend
+    var l2r = Math.round(bR + (lensTargetR - bR) * lb * 0.6);
+    var l2g = Math.round(bG + (lensTargetG - bG) * lb * 0.6);
+    var l2b = Math.round(bBl + (lensTargetB - bBl) * lb * 0.6);
+    var l2rB = Math.min(255, l2r + 40), l2gB = Math.min(255, l2g + 40), l2bB = Math.min(255, l2b + 40);
+    // Layer 4 (edge ripples): 30% lens blend
+    var l4r = Math.round(bR + (lensTargetR - bR) * lb * 0.3);
+    var l4g = Math.round(bG + (lensTargetG - bG) * lb * 0.3);
+    var l4b = Math.round(bBl + (lensTargetB - bBl) * lb * 0.3);
+    var l4rB = Math.min(255, l4r + 40), l4gB = Math.min(255, l4g + 40), l4bB = Math.min(255, l4b + 40);
 
-    // Draw multiple layers for depth
-    for (var layer = 3; layer >= 0; layer--) {
-      var layerW = halfW * (1 + layer * 0.3);
-      var layerOpacity = props.opacity * (0.03 + layer * 0.02);
+    // Layer 0: Soft flowing current bands (organic river feel)
+    if (!reducedMotion) {
+      ctx.save();
+      for (var bi = 0; bi < 5; bi++) {
+        var bandOffset = (bi / 4 - 0.5) * halfW * 1.2;
+        var bandSpeed = 0.12 + bi * 0.04;
+        var bandAlpha = props.opacity * 0.035;
+        ctx.beginPath();
+        ctx.moveTo(cx + bandOffset, 0);
+        for (var yb = 0; yb < H; yb += 20) {
+          var bDrift = flowNoise(yb * 0.0012 + bi * 3, time * bandSpeed) * halfW * 0.35;
+          var bSway = Math.sin(yb * 0.0018 + time * 0.15 + bi * 2.1) * 15;
+          ctx.lineTo(cx + bandOffset + bDrift + bSway, yb);
+        }
+        ctx.shadowBlur = 40 + bi * 10;
+        ctx.shadowColor = 'rgba(' + l0r + ',' + l0g + ',' + l0b + ',' + (bandAlpha * 2) + ')';
+        ctx.strokeStyle = 'rgba(' + l0r + ',' + l0g + ',' + l0b + ',' + bandAlpha + ')';
+        ctx.lineWidth = 8 + bi * 4 + scrollProgress * 6;
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
 
+    // Layer 0.5: Depth current bands (parallax-like flowing opacity bands)
+    if (!reducedMotion) {
+      for (var db = 0; db < 3; db++) {
+        var dbOffset = (db - 1) * halfW * 0.4;
+        var dbWidth = halfW * 0.25;
+        var dbSpeed = 0.1 + db * 0.03;
+        var dbPhase = time * dbSpeed + db * 4;
+        var dbAlpha = props.opacity * (0.025 + Math.sin(dbPhase) * 0.012);
+        if (dbAlpha < 0.005) continue;
+        ctx.beginPath();
+        for (var yd = 0; yd < H; yd += 25) {
+          var ddx = flowNoise(yd * 0.0015 + db * 2, time * dbSpeed) * dbWidth;
+          if (yd === 0) ctx.moveTo(cx + dbOffset + ddx - dbWidth, yd);
+          else ctx.lineTo(cx + dbOffset + ddx - dbWidth, yd);
+        }
+        for (var yd2 = H; yd2 >= 0; yd2 -= 25) {
+          var ddx2 = flowNoise(yd2 * 0.0015 + db * 2 + 3, time * dbSpeed) * dbWidth;
+          ctx.lineTo(cx + dbOffset + ddx2 + dbWidth, yd2);
+        }
+        ctx.closePath();
+        var l05rB = Math.min(255, l0r + 40), l05gB = Math.min(255, l0g + 40), l05bB = Math.min(255, l0b + 40);
+        ctx.fillStyle = 'rgba(' + l05rB + ',' + l05gB + ',' + l05bB + ',' + dbAlpha + ')';
+        ctx.fill();
+      }
+    }
+
+    // Layer 1: Wide ambient glow (outermost)
+    for (var layer = 5; layer >= 0; layer--) {
+      var layerW = halfW * (1 + layer * 0.35);
+      var layerOpacity = props.opacity * (0.03 + layer * 0.018);
       ctx.beginPath();
       ctx.moveTo(cx - layerW, 0);
-
-      for (var y = 0; y < H; y += 20) {
-        var nx = flowNoise(y * 0.003 + layer * 0.5, time * 0.5) * props.turbulence * 0.3;
+      for (var y = 0; y < H; y += 18) {
+        var nx = flowNoise(y * 0.003 + layer * 0.5, time * 0.4) * props.turbulence * 0.35;
         ctx.lineTo(cx - layerW + nx, y);
       }
       ctx.lineTo(cx - layerW, H);
       ctx.lineTo(cx + layerW, H);
-
-      for (var y2 = H; y2 >= 0; y2 -= 20) {
-        var nx2 = flowNoise(y2 * 0.003 + layer * 0.5 + 10, time * 0.5) * props.turbulence * 0.3;
+      for (var y2 = H; y2 >= 0; y2 -= 18) {
+        var nx2 = flowNoise(y2 * 0.003 + layer * 0.5 + 10, time * 0.4) * props.turbulence * 0.35;
         ctx.lineTo(cx + layerW + nx2, y2);
       }
       ctx.closePath();
-
-      ctx.fillStyle = 'rgba(' + Math.round(props.r) + ',' + Math.round(props.g) + ',' + Math.round(props.b) + ',' + layerOpacity + ')';
+      ctx.fillStyle = 'rgba(' + l1r + ',' + l1g + ',' + l1b + ',' + layerOpacity + ')';
       ctx.fill();
     }
 
-    // Center glow line
+    // Layer 2: Multiple flowing strand lines (the flowing-water effect)
+    var strandCount = 7 + Math.floor(scrollProgress * 5);
+    for (var si = 0; si < strandCount; si++) {
+      var strandOffset = (si / (strandCount - 1) - 0.5) * halfW * 1.6;
+      var strandFreq = 0.002 + si * 0.0008;
+      var strandPhase = si * 1.7;
+      var strandSpeed = 0.3 + (si % 3) * 0.15;
+      var strandAlpha = props.opacity * (0.08 + Math.sin(time * 0.5 + si) * 0.03);
+      var strandWidth = 0.4 + (si % 2) * 0.3 + scrollProgress * 0.4;
+
+      ctx.beginPath();
+      ctx.moveTo(cx + strandOffset, 0);
+      for (var ys = 0; ys < H; ys += 8) {
+        var wave1 = Math.sin(ys * strandFreq + time * strandSpeed + strandPhase) * (8 + scrollProgress * 6);
+        var wave2 = Math.sin(ys * strandFreq * 2.3 + time * strandSpeed * 1.4 + strandPhase * 0.7) * 3;
+        var drift = flowNoise(ys * 0.004 + si * 0.3, time * 0.5) * props.turbulence * 0.12;
+        var hDrift = Math.sin(time * 0.08 + si * 0.5) * (3 + scrollProgress * 5);
+        ctx.lineTo(cx + strandOffset + wave1 + wave2 + drift + hDrift, ys);
+      }
+      // Alternate between partial-blend river color and brighter highlight
+      var isHighlight = (si % 3 === 0);
+      var sr = isHighlight ? l2rB : l2r;
+      var sg = isHighlight ? l2gB : l2g;
+      var sb = isHighlight ? l2bB : l2b;
+      ctx.strokeStyle = 'rgba(' + sr + ',' + sg + ',' + sb + ',' + strandAlpha + ')';
+      ctx.lineWidth = strandWidth;
+      ctx.stroke();
+    }
+
+    // Layer 3: Center glow line (primary current)
     ctx.beginPath();
     ctx.moveTo(cx, 0);
-    for (var y3 = 0; y3 < H; y3 += 10) {
+    for (var y3 = 0; y3 < H; y3 += 8) {
       var nx3 = flowNoise(y3 * 0.004, time * 0.7) * props.turbulence * 0.15;
       ctx.lineTo(cx + nx3, y3);
     }
-    ctx.strokeStyle = 'rgba(' + Math.round(props.r + 40) + ',' + Math.round(props.g + 40) + ',' + Math.round(props.b + 40) + ',' + (props.opacity * 0.4) + ')';
-    ctx.lineWidth = 1 + scrollProgress;
+    ctx.save();
+    ctx.shadowBlur = 8 + scrollProgress * 14;
+    ctx.shadowColor = 'rgba(' + rH + ',' + gH + ',' + bH + ',' + (props.opacity * 0.5) + ')';
+    ctx.strokeStyle = 'rgba(' + rB + ',' + gB + ',' + bB + ',' + (props.opacity * 0.45) + ')';
+    ctx.lineWidth = 1.5 + scrollProgress * 2;
     ctx.stroke();
+    ctx.restore();
+
+    // Layer 3b: Secondary & tertiary current lines flanking center
+    var flanks = [
+      { off: -halfW * 0.25, freq: 0.0035, speed: 0.55, alpha: 0.3, width: 1.0 },
+      { off:  halfW * 0.25, freq: 0.0038, speed: 0.6,  alpha: 0.25, width: 0.8 },
+      { off: -halfW * 0.5,  freq: 0.003,  speed: 0.45, alpha: 0.15, width: 0.6 },
+      { off:  halfW * 0.5,  freq: 0.0032, speed: 0.5,  alpha: 0.15, width: 0.6 }
+    ];
+    for (var fi = 0; fi < flanks.length; fi++) {
+      var f = flanks[fi];
+      ctx.beginPath();
+      ctx.moveTo(cx + f.off, 0);
+      for (var yf = 0; yf < H; yf += 10) {
+        var fnx = flowNoise(yf * f.freq + fi * 2, time * f.speed) * props.turbulence * 0.2;
+        var fwave = Math.sin(yf * 0.005 + time * f.speed * 1.3 + fi * 1.5) * 4;
+        ctx.lineTo(cx + f.off + fnx + fwave, yf);
+      }
+      ctx.save();
+      ctx.shadowBlur = 4 + scrollProgress * 6;
+      ctx.shadowColor = 'rgba(' + l2rB + ',' + l2gB + ',' + l2bB + ',' + (props.opacity * f.alpha * 0.4) + ')';
+      ctx.strokeStyle = 'rgba(' + l2rB + ',' + l2gB + ',' + l2bB + ',' + (props.opacity * f.alpha) + ')';
+      ctx.lineWidth = f.width + scrollProgress * 0.8;
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // Layer 4: Edge ripple wavelets
+    for (var edge = 0; edge < 2; edge++) {
+      var edgeSign = edge === 0 ? -1 : 1;
+      var edgeX = cx + edgeSign * halfW * 0.85;
+      for (var ri = 0; ri < 3; ri++) {
+        var ripplePhase = ri * 2.1 + edge * 3.3;
+        var rippleAlpha = props.opacity * (0.04 + ri * 0.015);
+        ctx.beginPath();
+        for (var yr = 0; yr < H; yr += 12) {
+          var rWave = Math.sin(yr * 0.008 + time * 0.8 + ripplePhase) * (3 + scrollProgress * 4) * edgeSign;
+          var rDrift = flowNoise(yr * 0.005 + ri + edge * 5, time * 0.35) * 2;
+          if (yr === 0) ctx.moveTo(edgeX + rWave + rDrift, yr);
+          else ctx.lineTo(edgeX + rWave + rDrift, yr);
+        }
+        ctx.strokeStyle = 'rgba(' + l4rB + ',' + l4gB + ',' + l4bB + ',' + rippleAlpha + ')';
+        ctx.lineWidth = 0.3 + ri * 0.15;
+        ctx.stroke();
+      }
+    }
+
+    // Layer 5: Sparkle points (bright twinkling dots along the river)
+    if (!reducedMotion) {
+      ctx.save();
+      ctx.globalCompositeOperation = 'lighter';
+      var sparkleCount = 25 + Math.floor(scrollProgress * 35);
+      for (var sp = 0; sp < sparkleCount; sp++) {
+        var spSeed = sp * 137.508; // golden angle
+        var spY = ((spSeed + time * 40) % (H + 40)) - 20;
+        var spXBase = cx + (flowNoise(sp * 0.7, time * 0.3) * halfW * 0.7);
+        var spTwinkle = Math.sin(time * 3 + sp * 2.3) * 0.5 + 0.5;
+        var spAlpha = props.opacity * spTwinkle * (0.25 + scrollProgress * 0.35);
+        var spSize = (0.5 + spTwinkle * 1.5) * (0.7 + scrollProgress * 0.5);
+        if (spAlpha > 0.02) {
+          // Outer glow
+          ctx.beginPath();
+          ctx.arc(spXBase, spY, spSize * 3, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + rH + ',' + gH + ',' + bH + ',' + (spAlpha * 0.2) + ')';
+          ctx.fill();
+          // Bright core
+          ctx.beginPath();
+          ctx.arc(spXBase, spY, spSize, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + Math.min(255, rH + 40) + ',' + Math.min(255, gH + 40) + ',' + Math.min(255, bH + 40) + ',' + (spAlpha * 0.7) + ')';
+          ctx.fill();
+        }
+      }
+      ctx.restore();
+    }
+
+    // Layer 6: Branch channel at paradigm shift points
+    if (props.branchAngle && Math.abs(props.branchAngle) > 0.05) {
+      var branchW = halfW * 0.4;
+      var branchX = cx + props.branchAngle * 50;
+      // Draw 3 branch strands for a richer fork
+      for (var bi = 0; bi < 3; bi++) {
+        var bOff = (bi - 1) * 4;
+        ctx.beginPath();
+        ctx.moveTo(cx + bOff, H * 0.3);
+        for (var yb = H * 0.3; yb < H * 0.7; yb += 12) {
+          var t2 = (yb - H * 0.3) / (H * 0.4);
+          var bx = cx + bOff + (branchX - cx) * t2 + flowNoise(yb * 0.005 + bi, time * 0.6) * branchW;
+          var bwave = Math.sin(yb * 0.01 + time * 0.8 + bi * 1.5) * 2;
+          ctx.lineTo(bx + bwave, yb);
+        }
+        ctx.strokeStyle = 'rgba(' + l2rB + ',' + l2gB + ',' + l2bB + ',' + (props.opacity * (0.12 - bi * 0.03)) + ')';
+        ctx.lineWidth = (0.8 - bi * 0.15) + scrollProgress * 0.5;
+        ctx.stroke();
+      }
+    }
   }
+
+  // ── Canvas Octopus Drawing ──
+  function drawOctoMantle(ctx, emo, t) {
+    var b = octoBody;
+    if (b.alpha < 0.02) return;
+    var s = b.scale;
+    var breath = Math.sin(b.breathPhase) * emo.breathAmp * s;
+    var w = OCTO.mantleW * s * (1 + breath);
+    var h = OCTO.mantleH * s * (1 - breath * 0.7);
+    ctx.save();
+    ctx.translate(b.x, b.y);
+    if (b.wiggle > 0.01) ctx.rotate(Math.sin(t * 20) * b.wiggle * 0.15);
+    // Glow
+    var gr = emo.glowRadius * s;
+    var grad = ctx.createRadialGradient(0, 0, 0, 0, 0, gr);
+    grad.addColorStop(0, 'rgba(' + emo.glowColor.join(',') + ',' + (0.15 * b.alpha) + ')');
+    grad.addColorStop(1, 'rgba(' + emo.glowColor.join(',') + ',0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(0, 0, gr, 0, Math.PI * 2); ctx.fill();
+    // Body dome
+    var alpha = b.alpha * emo.bodyOpacity;
+    if (emo.dissolve) alpha *= 0.25 + Math.sin(t * 0.5) * 0.1;
+    if (b.petFlash > 0.01) alpha = Math.min(1, alpha + b.petFlash * 0.4);
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.35, h * 0.15);
+    ctx.bezierCurveTo(-w * 0.45, -h * 0.2, -w * 0.2, -h * 0.55, 0, -h * 0.55);
+    ctx.bezierCurveTo(w * 0.2, -h * 0.55, w * 0.45, -h * 0.2, w * 0.35, h * 0.15);
+    ctx.bezierCurveTo(w * 0.3, h * 0.35, w * 0.15, h * 0.45, 0, h * 0.45);
+    ctx.bezierCurveTo(-w * 0.15, h * 0.45, -w * 0.3, h * 0.35, -w * 0.35, h * 0.15);
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(' + emo.fill.join(',') + ',' + (emo.fillA * alpha) + ')';
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(' + emo.stroke.join(',') + ',' + (emo.strokeA * alpha) + ')';
+    ctx.lineWidth = 1.5 * s; ctx.stroke();
+    ctx.restore();
+  }
+
+  // ── "Taking Notes" Head ──
+  var octoNoteLog = []; // ring buffer, max 5
+  var lastNoteTime = 0;
+  function logOctoNote(text) {
+    if (time - lastNoteTime < 0.5) return; // debounce
+    lastNoteTime = time;
+    octoNoteLog.unshift({ text: text, time: time, alpha: 1.0 });
+    if (octoNoteLog.length > 5) octoNoteLog.pop();
+  }
+
+  var octoNotesHover = 0; // 0 = faint, 1 = full hover expand
+  function drawOctoNotes(ctx) {
+    var b = octoBody;
+    if (b.alpha < 0.1 || b.scale < 0.3 || octoNoteLog.length === 0) return;
+    var s = b.scale;
+
+    // Check mouse proximity to octopus face
+    var faceDx = b.mouseX - b.x;
+    var faceDy = b.mouseY - (b.y - OCTO.mantleH * s * 0.15);
+    var faceDist = Math.sqrt(faceDx * faceDx + faceDy * faceDy);
+    var faceRadius = OCTO.mantleW * s * 0.4;
+    var hoverTarget = faceDist < faceRadius ? 1 : 0;
+    octoNotesHover += (hoverTarget - octoNotesHover) * 0.1;
+
+    var isHover = octoNotesHover > 0.15;
+    var hv = Math.min(1, octoNotesHover);
+
+    // Panel dimensions (expand on hover)
+    var panelW = (65 + hv * 85) * s;
+    var lineH = (10 + hv * 6) * s;
+    var panelH = lineH * Math.min(octoNoteLog.length, 5) + 10 * s;
+    var panelX = b.x + (30 + hv * 20) * s;
+    var panelY = b.y - OCTO.mantleH * s * 0.5;
+    var panelAlpha = (0.15 + hv * 0.7) * b.alpha;
+
+    ctx.save();
+
+    // Dark background panel
+    var bgAlpha = (0.2 + hv * 0.65) * b.alpha;
+    var borderR = 5 * s;
+    ctx.fillStyle = 'rgba(8,12,22,' + bgAlpha.toFixed(3) + ')';
+    ctx.beginPath();
+    ctx.moveTo(panelX + borderR, panelY);
+    ctx.arcTo(panelX + panelW, panelY, panelX + panelW, panelY + panelH, borderR);
+    ctx.arcTo(panelX + panelW, panelY + panelH, panelX, panelY + panelH, borderR);
+    ctx.arcTo(panelX, panelY + panelH, panelX, panelY, borderR);
+    ctx.arcTo(panelX, panelY, panelX + panelW, panelY, borderR);
+    ctx.closePath();
+    ctx.fill();
+
+    // Border
+    ctx.strokeStyle = 'rgba(136,153,170,' + (0.08 + hv * 0.2).toFixed(3) + ')';
+    ctx.lineWidth = 0.8 * s;
+    ctx.stroke();
+
+    // Connector line from head to panel
+    ctx.beginPath();
+    ctx.moveTo(b.x + OCTO.mantleW * s * 0.2, b.y - OCTO.mantleH * s * 0.3);
+    ctx.lineTo(panelX, panelY + panelH * 0.3);
+    ctx.strokeStyle = 'rgba(136,153,170,' + (0.1 + hv * 0.15).toFixed(3) + ')';
+    ctx.lineWidth = 0.6 * s;
+    ctx.stroke();
+
+    // Header
+    var headerSize = Math.round((6 + hv * 3) * s);
+    ctx.font = 'bold ' + headerSize + 'px "JetBrains Mono", monospace';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = 'rgba(200,210,230,' + (panelAlpha * 0.5).toFixed(3) + ')';
+    ctx.fillText('notes', panelX + 5 * s, panelY + 2 * s);
+
+    // Notes
+    var fontSize = Math.round((5 + hv * 4) * s);
+    ctx.font = fontSize + 'px "JetBrains Mono", monospace';
+    var yStart = panelY + (9 + hv * 3) * s;
+
+    for (var i = 0; i < Math.min(octoNoteLog.length, 5); i++) {
+      var note = octoNoteLog[i];
+      var age = time - note.time;
+      if (age > 12) { note.alpha = 0; continue; }
+      var fadeAlpha = age < 0.3 ? age / 0.3 : age > 9 ? 1 - (age - 9) / 3 : 1;
+      var a = fadeAlpha * panelAlpha;
+      if (a < 0.01) continue;
+
+      var ny = yStart + i * lineH;
+      // Timestamp dot
+      var dotR = (1.5 + hv * 1) * s;
+      ctx.beginPath(); ctx.arc(panelX + 4 * s, ny + lineH * 0.4, dotR, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(136,153,170,' + (a * 0.5).toFixed(3) + ')';
+      ctx.fill();
+
+      // Note text
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(220,228,240,' + a.toFixed(3) + ')';
+      var displayText = note.text;
+      if (!isHover && displayText.length > 12) displayText = displayText.substring(0, 12) + '…';
+      ctx.fillText(displayText, panelX + 10 * s, ny + lineH * 0.4);
+    }
+    ctx.restore();
+    // Clean expired notes
+    while (octoNoteLog.length > 0 && octoNoteLog[octoNoteLog.length - 1].alpha <= 0) octoNoteLog.pop();
+  }
+
+  function drawOctoEyes(ctx, emo, t) {
+    var b = octoBody;
+    if (b.alpha < 0.02) return;
+    var s = b.scale, eyeR = OCTO.eyeRadius * s, pupilR = OCTO.pupilRadius * s;
+    var spacing = OCTO.eyeSpacing * s * 0.5;
+    var alpha = b.alpha * emo.bodyOpacity;
+    if (emo.dissolve) alpha *= 0.4;
+    var blinkSq = 1 - b.blinkAmount * 0.85;
+    ctx.save();
+    ctx.translate(b.x, b.y - OCTO.mantleH * s * 0.12);
+    if (emo.jitter > 0) ctx.translate((Math.random() - 0.5) * emo.jitter, (Math.random() - 0.5) * emo.jitter);
+    // Left eye
+    ctx.beginPath(); ctx.ellipse(-spacing, 0, eyeR * 0.85, eyeR * blinkSq, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,208,224,' + (0.3 * alpha) + ')'; ctx.fill();
+    ctx.beginPath(); ctx.arc(-spacing + b.pupilLX * s, b.pupilLY * s * blinkSq, pupilR * blinkSq, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(232,236,244,' + (0.7 * alpha) + ')'; ctx.fill();
+    // Right eye
+    ctx.beginPath(); ctx.ellipse(spacing, 0, eyeR * 0.85, eyeR * blinkSq, 0, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(200,208,224,' + (0.3 * alpha) + ')'; ctx.fill();
+    ctx.beginPath(); ctx.arc(spacing + b.pupilRX * s, b.pupilRY * s * blinkSq, pupilR * blinkSq, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(232,236,244,' + (0.7 * alpha) + ')'; ctx.fill();
+    ctx.restore();
+  }
+
+  function drawOctoTentacle(ctx, tent, emo, globalAlpha) {
+    var pts = tent.chain.points;
+    if (pts.length < 3 || globalAlpha < 0.02) return;
+    var alpha = globalAlpha * emo.tentacleOpacity;
+    if (emo.dissolve) alpha *= 0.5;
+    var glow = tent.glowAmount;
+    var s = octoBody.scale;
+    var r = tent.color[0], g = tent.color[1], bl = tent.color[2];
+
+    // Draw tentacle line (tapered: thick at root, thin at tip)
+    for (var seg = 0; seg < pts.length - 1; seg++) {
+      var t = seg / (pts.length - 1);
+      var thickness = (2.5 - t * 1.5 + glow * 1.5) * s;
+      ctx.beginPath();
+      ctx.moveTo(pts[seg].x, pts[seg].y);
+      if (seg < pts.length - 2) {
+        var mx = (pts[seg + 1].x + pts[seg].x) * 0.5;
+        var my = (pts[seg + 1].y + pts[seg].y) * 0.5;
+        ctx.lineTo(mx, my);
+      } else {
+        ctx.lineTo(pts[seg + 1].x, pts[seg + 1].y);
+      }
+      ctx.lineWidth = thickness;
+      ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (alpha + glow * 0.3) + ')';
+      if (emo.dissolve) { ctx.setLineDash([6 * s, 4 * s]); }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+
+    // Suction cups: small circles along the tentacle (every 2nd segment)
+    if (tent.lens && s > 0.3) {
+      for (var sc = 2; sc < pts.length - 1; sc += 2) {
+        var t2 = sc / (pts.length - 1);
+        var cupR = (2.2 - t2 * 1.2) * s;
+        var cupAlpha = alpha * (0.35 + glow * 0.3);
+        // Offset cup slightly to one side of the line
+        var dx = pts[sc].x - pts[sc - 1].x;
+        var dy = pts[sc].y - pts[sc - 1].y;
+        var len = Math.sqrt(dx * dx + dy * dy) || 1;
+        var nx = -dy / len, ny = dx / len; // perpendicular
+        var side = (sc % 4 === 0) ? 1 : -1; // alternate sides
+        var cx = pts[sc].x + nx * cupR * 1.8 * side;
+        var cy = pts[sc].y + ny * cupR * 1.8 * side;
+        ctx.beginPath(); ctx.arc(cx, cy, cupR, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + Math.min(255, r + 30) + ',' + Math.min(255, g + 30) + ',' + Math.min(255, bl + 30) + ',' + cupAlpha + ')';
+        ctx.fill();
+        // Inner highlight
+        ctx.beginPath(); ctx.arc(cx, cy, cupR * 0.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (cupAlpha * 0.5) + ')';
+        ctx.fill();
+      }
+    }
+
+    // Glow pass
+    if (glow > 0.1) {
+      ctx.save();
+      ctx.shadowColor = 'rgba(' + r + ',' + g + ',' + bl + ',' + (glow * 0.5) + ')';
+      ctx.shadowBlur = 8 * glow;
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y);
+      for (var k = 1; k < pts.length - 1; k++) {
+        ctx.quadraticCurveTo(pts[k].x, pts[k].y, (pts[k].x + pts[k + 1].x) * 0.5, (pts[k].y + pts[k + 1].y) * 0.5);
+      }
+      ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (glow * 0.3) + ')';
+      ctx.lineWidth = (3 + glow * 3) * s; ctx.stroke();
+      ctx.restore();
+    }
+  }
+
+  function drawOctoAura(ctx, emo) {
+    if (!activeLens || octoBody.alpha < 0.05) return;
+    var lc = { behavioral: [212,165,67], market: [76,175,80], social: [196,85,77], planetary: [74,127,186], heuristic: [136,153,170], power: [208,208,208] };
+    var c = lc[activeLens]; if (!c) return;
+    var r = (emo.glowRadius + 20) * octoBody.scale;
+    var pulse = Math.sin(time * 2) * 5 * octoBody.scale;
+    ctx.beginPath(); ctx.arc(octoBody.x, octoBody.y, r + pulse, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(' + c.join(',') + ',' + (0.25 * octoBody.alpha) + ')';
+    ctx.lineWidth = 1.5; ctx.stroke();
+  }
+
+  function drawPetParticles(ctx) {
+    for (var i = octoHearts.length - 1; i >= 0; i--) {
+      var h = octoHearts[i];
+      h.x += h.vx; h.y += h.vy; h.vy *= 0.98; h.vx *= 0.98; h.life -= 0.015;
+      if (h.life <= 0) { octoHearts.splice(i, 1); continue; }
+      ctx.save(); ctx.globalAlpha = h.life * 0.7;
+      ctx.font = h.size + 'px serif'; ctx.textAlign = 'center';
+      ctx.fillText('\u2665', h.x, h.y); ctx.restore();
+    }
+  }
+
+  // ── Visible Nodes Cache (for octopus lens tentacles) ──
+  var visibleNodesByLens = {};
+  function cacheVisibleNodes() {
+    visibleNodesByLens = {};
+    var lensKeys = ['behavioral', 'social', 'market', 'planetary', 'heuristic', 'power'];
+    lensKeys.forEach(function(lens) { visibleNodesByLens[lens] = []; });
+    document.querySelectorAll('.timeline-node').forEach(function(nd) {
+      var r = nd.getBoundingClientRect();
+      var cy = r.top + r.height * 0.3;
+      if (cy > -100 && cy < H + 100) {
+        lensKeys.forEach(function(lens) {
+          if (nd.querySelector('.lens-panel[data-lens="' + lens + '"]')) {
+            visibleNodesByLens[lens].push({ x: r.left + 20, y: cy, node: nd });
+          }
+        });
+      }
+    });
+  }
+
+  // ── Build annotation data for each tentacle ──
+  function buildTentacleAnnotations() {
+    var lensKeys = ['behavioral', 'social', 'market', 'planetary', 'heuristic', 'power'];
+    lensKeys.forEach(function(lensName) {
+      var entries = [];
+      document.querySelectorAll('.lens-panel[data-lens="' + lensName + '"]').forEach(function(panel) {
+        var node = panel.closest('.timeline-node');
+        if (!node) return;
+        var yearEl = node.querySelector('.node-year');
+        var year = yearEl ? yearEl.textContent.trim() : '???';
+        var labelEl = panel.querySelector('.lens-label');
+        var text = panel.textContent.replace(labelEl ? labelEl.textContent : '', '').trim();
+        entries.push({ year: year, text: text.substring(0, 50), nodeId: node.id });
+      });
+      entries.sort(function(a, b) {
+        var ya = parseInt(a.year.replace(/'/g, '')) || 9999;
+        var yb = parseInt(b.year.replace(/'/g, '')) || 9999;
+        return yb - ya;
+      });
+      for (var i = 0; i < octoBody.tentacles.length; i++) {
+        if (octoBody.tentacles[i].lens === lensName) {
+          octoBody.tentacles[i].annotations = entries;
+          break;
+        }
+      }
+    });
+  }
+
+  // ── Tentacle Tip Orbs ──
+  function drawTentacleTipOrb(ctx, tent, emo, globalAlpha) {
+    var pts = tent.chain.points;
+    if (pts.length < 2 || globalAlpha < 0.05 || tent.name === 'pointer') return;
+    var tip = pts[pts.length - 1];
+    var s = octoBody.scale;
+    if (s < 0.3) return;
+    var r = tent.color[0], g = tent.color[1], bl = tent.color[2];
+    var orbRadius = (tent.lens ? 5 : 3.5) * s;
+    var pulse = Math.sin(time * 2 + (tent.name ? tent.name.length : 0)) * 0.25 + 0.75;
+    var alpha = globalAlpha * 0.65 * pulse;
+
+    // Glow
+    var grad = ctx.createRadialGradient(tip.x, tip.y, 0, tip.x, tip.y, orbRadius * 3);
+    grad.addColorStop(0, 'rgba(' + r + ',' + g + ',' + bl + ',' + (alpha * 0.35) + ')');
+    grad.addColorStop(1, 'rgba(' + r + ',' + g + ',' + bl + ',0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(tip.x, tip.y, orbRadius * 3, 0, Math.PI * 2); ctx.fill();
+
+    // Core
+    ctx.beginPath(); ctx.arc(tip.x, tip.y, orbRadius, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + Math.min(255, r + 40) + ',' + Math.min(255, g + 40) + ',' + Math.min(255, bl + 40) + ',' + alpha + ')';
+    ctx.fill();
+
+    // Label (lens tentacles only, sufficient scale)
+    if (tent.lens && s > 0.45) {
+      var labels = { behavioral: 'BHV', social: 'SOC', market: 'MKT', planetary: 'PLN', heuristic: 'HEU', power: 'PWR' };
+      var label = labels[tent.lens] || '';
+      ctx.font = Math.round(6.5 * s) + 'px "JetBrains Mono", monospace';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 0.85) + ')';
+      ctx.fillText(label, tip.x, tip.y);
+    }
+  }
+
+  // ── Tentacle Annotation Notes ──
+  function drawTentacleAnnotations(ctx, tent, globalAlpha) {
+    if (!tent.lens || !tent.annotations || tent.annotations.length === 0) return;
+    if (tent.annotationAlpha < 0.02) return;
+    var s = octoBody.scale;
+    if (s < 0.35) return;
+    var pts = tent.chain.points;
+    // 5 note slots spread along the 16-segment tentacle: tip to body
+    var slots = [14, 11, 8, 5, 3];
+    var maxNotes = Math.min(tent.annotations.length, slots.length);
+    var r = tent.color[0], g = tent.color[1], bl = tent.color[2];
+
+    ctx.save();
+    for (var i = 0; i < maxNotes; i++) {
+      var segIdx = slots[i];
+      if (segIdx >= pts.length) continue;
+      var p = pts[segIdx];
+      var ann = tent.annotations[i];
+      var alpha = globalAlpha * tent.annotationAlpha * (0.9 - i * 0.1);
+      if (alpha < 0.02) continue;
+
+      // Compute offset direction: perpendicular to tentacle, away from center
+      var prevP = pts[Math.max(0, segIdx - 1)];
+      var tdx = p.x - prevP.x, tdy = p.y - prevP.y;
+      var tlen = Math.sqrt(tdx * tdx + tdy * tdy) || 1;
+      // Perpendicular: offset away from body center
+      var perpX = -tdy / tlen, perpY = tdx / tlen;
+      if (perpX * (p.x - octoBody.x) + perpY * (p.y - octoBody.y) < 0) { perpX = -perpX; perpY = -perpY; }
+      var offsetDist = 14 * s;
+      var ox = p.x + perpX * offsetDist;
+      var oy = p.y + perpY * offsetDist;
+
+      // Dark background pill for readability
+      var yearText = ann.year;
+      var shortText = ann.text.substring(0, 28) + (ann.text.length > 28 ? '…' : '');
+      ctx.font = 'bold ' + Math.round(7 * s) + 'px "JetBrains Mono", monospace';
+      var yearW = ctx.measureText(yearText).width;
+      ctx.font = Math.round(5.5 * s) + 'px "JetBrains Mono", monospace';
+      var textW = ctx.measureText(shortText).width;
+      var pillW = Math.max(yearW, textW) + 8 * s;
+      var pillH = 16 * s;
+      var pillAlpha = alpha * 0.45;
+
+      ctx.fillStyle = 'rgba(10,14,25,' + pillAlpha + ')';
+      ctx.beginPath();
+      var pr = 3 * s;
+      ctx.moveTo(ox - 2 * s + pr, oy - pillH/2);
+      ctx.arcTo(ox - 2 * s + pillW, oy - pillH/2, ox - 2 * s + pillW, oy + pillH/2, pr);
+      ctx.arcTo(ox - 2 * s + pillW, oy + pillH/2, ox - 2 * s, oy + pillH/2, pr);
+      ctx.arcTo(ox - 2 * s, oy + pillH/2, ox - 2 * s, oy - pillH/2, pr);
+      ctx.arcTo(ox - 2 * s, oy - pillH/2, ox - 2 * s + pillW, oy - pillH/2, pr);
+      ctx.fill();
+
+      // Connector line from tentacle to note
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y); ctx.lineTo(ox, oy);
+      ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + (alpha * 0.25) + ')';
+      ctx.lineWidth = 0.7 * s; ctx.stroke();
+
+      // Year label (lens-colored, bold)
+      ctx.font = 'bold ' + Math.round(7 * s) + 'px "JetBrains Mono", monospace';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + bl + ',' + alpha + ')';
+      ctx.fillText(yearText, ox, oy - 3.5 * s);
+
+      // Abbreviated text
+      ctx.font = Math.round(5.5 * s) + 'px "JetBrains Mono", monospace';
+      ctx.fillStyle = 'rgba(200,210,230,' + (alpha * 0.7) + ')';
+      ctx.fillText(shortText, ox, oy + 4 * s);
+    }
+    ctx.restore();
+  }
+
+  // ── Insight Orb (behavior profile) ──
+  function drawInsightOrb(ctx) {
+    if (behaviorProfile.sessions < 2) return;
+    var totalDwell = 0;
+    Object.keys(behaviorProfile.nodeDwell).forEach(function(k) { totalDwell += behaviorProfile.nodeDwell[k]; });
+    if (totalDwell < 15000) return; // need 15s+ of dwell time
+
+    var b = octoBody;
+    if (b.alpha < 0.1 || b.scale < 0.3) return;
+
+    var orbX = b.x + OCTO.mantleW * b.scale * 0.35;
+    var orbY = b.y - OCTO.mantleH * b.scale * 0.35;
+    var pulse = Math.sin(time * 1.5) * 0.2 + 0.8;
+    var radius = 6 * b.scale * pulse;
+
+    // Store for click detection
+    b.insightOrbX = orbX; b.insightOrbY = orbY; b.insightOrbR = radius * 3;
+
+    ctx.save();
+    var grad = ctx.createRadialGradient(orbX, orbY, 0, orbX, orbY, radius * 3);
+    grad.addColorStop(0, 'rgba(212,165,67,' + (0.35 * b.alpha) + ')');
+    grad.addColorStop(1, 'rgba(212,165,67,0)');
+    ctx.fillStyle = grad;
+    ctx.beginPath(); ctx.arc(orbX, orbY, radius * 3, 0, Math.PI * 2); ctx.fill();
+
+    ctx.beginPath(); ctx.arc(orbX, orbY, radius, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(212,165,67,' + (0.85 * b.alpha) + ')';
+    ctx.fill();
+
+    ctx.font = Math.round(8 * b.scale) + 'px serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(6,10,20,' + (0.9 * b.alpha) + ')';
+    ctx.fillText('\u2731', orbX, orbY); // asterisk character
+    ctx.restore();
+  }
+
+  // ── Smart Positioning ──
+  function updateCanvasOctopus(paradigm, sp, t, dt) {
+    var b = octoBody, emo = OCTO_EMOTIONS[paradigm] || OCTO_EMOTIONS.terminal;
+    var now = Date.now();
+    var isHero = window.scrollY < window.innerHeight * 0.8;
+    var isScrolling = (now - b.lastScrollTime) < 1500;
+    var conOpen = document.querySelector('.constellation-overlay.visible');
+    var setOpen = document.querySelector('.settings-panel.visible');
+    if (conOpen || setOpen) { b.state = 'retreat'; }
+    else if (isHero) { b.state = 'hero'; }
+    else if (isScrolling) { b.state = 'reading'; b.idleTimer = 0; }
+    else { b.idleTimer += dt; b.state = b.idleTimer > 3 ? 'idle' : 'between'; }
+    var pos = OCTO.positions[b.state] || OCTO.positions.hero;
+    var pMod = b.personality === 'friend' ? 1.3 : b.personality === 'acquaintance' ? 1.1 : 1.0;
+    if (W < 900) {
+      b.targetX = W * 0.5; b.targetY = pos.yRatio * H * 0.5 + 80; b.targetScale = pos.scale * 0.45;
+    } else {
+      b.targetX = W * pos.xRatio; b.targetY = H * pos.yRatio; b.targetScale = pos.scale;
+    }
+    b.targetAlpha = Math.min(1, pos.alpha * pMod);
+    if (document.body.classList.contains('layout-river-off')) b.targetAlpha = 0;
+    else if (document.body.classList.contains('layout-river-dim')) b.targetAlpha *= 0.3;
+    var lr = 0.03;
+    b.x += (b.targetX - b.x) * lr; b.y += (b.targetY - b.y) * lr;
+    b.scale += (b.targetScale - b.scale) * lr; b.alpha += (b.targetAlpha - b.alpha) * lr;
+    b.breathPhase += dt * (1 + emo.breathRate) * Math.PI;
+    // Eye tracking
+    var dx = b.mouseX - b.x, dy = b.mouseY - b.y;
+    var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+    var maxShift = OCTO.eyeRadius * 0.4;
+    var sx = (dx / dist) * Math.min(maxShift, dist * 0.015);
+    var sy = (dy / dist) * Math.min(maxShift, dist * 0.015) + emo.pupilShift;
+    b.pupilLX += (sx * 0.9 - b.pupilLX) * 0.08; b.pupilLY += (sy - b.pupilLY) * 0.08;
+    b.pupilRX += (sx * 1.1 - b.pupilRX) * 0.08; b.pupilRY += (sy - b.pupilRY) * 0.08;
+    // Blink
+    b.blinkTimer -= dt;
+    if (b.blinkTimer <= 0) { b.blinkAmount = 1; b.blinkTimer = 3 + Math.random() * 5; }
+    b.blinkAmount *= 0.85; if (b.blinkAmount < 0.01) b.blinkAmount = 0;
+    b.petFlash *= 0.92; b.wiggle *= 0.93;
+    // Idle wave (friend)
+    if (b.state === 'idle' && b.personality === 'friend' && !b.dragging) {
+      b.waveTimer += dt;
+      if (b.waveTimer > 8 + Math.random() * 12) { b.waveTimer = 0; b.wavingTentacle = Math.floor(Math.random() * 6); }
+    } else { b.waveTimer = 0; b.wavingTentacle = -1; }
+    var bodyLabel = document.getElementById('bodyLabel');
+    if (bodyLabel) bodyLabel.textContent = emo.label;
+  }
+
+  // ── Tentacle Physics ──
+  function updateTentaclePhysics(dt) {
+    var b = octoBody; if (b.alpha < 0.02) return;
+    var emo = OCTO_EMOTIONS[currentParadigm] || OCTO_EMOTIONS.terminal;
+    var bodyBottom = b.y + OCTO.mantleH * b.scale * 0.35;
+    for (var i = 0; i < b.tentacles.length; i++) {
+      var tent = b.tentacles[i], chain = tent.chain;
+      var angle = tent.baseAngle;
+      var edgeR = OCTO.mantleW * b.scale * 0.45; // wider root spread
+      chain.points[0].x = b.x + Math.cos(angle - Math.PI * 0.5) * edgeR;
+      chain.points[0].y = bodyBottom;
+      var gx = Math.cos(angle) * OCTO.gravity * 0.3, gy = OCTO.gravity;
+      var wavePhase = time * (1 + emo.breathRate) + i * 1.1;
+      var waveMag = emo.wave * b.scale * 2;
+      var stiffness = OCTO.damping;
+      if (scrollProgress > 0.25) stiffness = Math.min(0.99, stiffness + 0.01);
+      if (scrollProgress > 0.55) { gy *= 0.6; waveMag *= 0.5; }
+      for (var j = 1; j < chain.points.length; j++) {
+        var wX = Math.sin(wavePhase + j * 0.3) * waveMag * (j / chain.points.length);
+        var wY = Math.cos(wavePhase * 0.7 + j * 0.5) * waveMag * 0.3;
+        chain.points[j].update(stiffness, gx + wX * dt, gy + wY * dt);
+      }
+      // Angular stiffness: first 4 segments hold their base angle direction
+      var segLen = tent.name === 'pointer' ? 12 : OCTO.segmentLength;
+      for (var sj = 1; sj <= Math.min(4, chain.points.length - 1); sj++) {
+        var stiffStr = 0.12 * (1 - sj / 5);
+        var idealX = chain.points[0].x + Math.cos(angle) * segLen * sj * b.scale;
+        var idealY = chain.points[0].y + Math.sin(angle) * segLen * sj * b.scale;
+        chain.points[sj].x += (idealX - chain.points[sj].x) * stiffStr;
+        chain.points[sj].y += (idealY - chain.points[sj].y) * stiffStr;
+      }
+      // Cursor attraction
+      if (!b.dragging || b.dragIdx !== i) {
+        var md = Math.sqrt((b.mouseX - b.x) * (b.mouseX - b.x) + (b.mouseY - b.y) * (b.mouseY - b.y));
+        if (md < 400 * b.scale) {
+          var attract = 0.0008 * Math.max(0, 1 - md / (400 * b.scale));
+          for (var k = Math.max(1, chain.points.length - 4); k < chain.points.length; k++) {
+            chain.points[k].x += (b.mouseX - chain.points[k].x) * attract;
+            chain.points[k].y += (b.mouseY - chain.points[k].y) * attract;
+          }
+        }
+      }
+      if (b.dragging && b.dragIdx === i) {
+        var tip = chain.points[chain.points.length - 1];
+        tip.x += (b.mouseX - tip.x) * 0.2; tip.y += (b.mouseY - tip.y) * 0.2;
+      }
+      if (b.wavingTentacle === i) {
+        var tip2 = chain.points[chain.points.length - 1];
+        tip2.x += Math.sin(time * 6) * 20 * b.scale * dt * 3; tip2.y -= 2 * b.scale;
+      }
+      for (var iter = 0; iter < OCTO.constraintIterations; iter++) {
+        for (var c = 0; c < chain.constraints.length; c++) chain.constraints[c].satisfy();
+      }
+
+      // Anti-bunching: repel mid-chain points from other tentacles (enhanced)
+      if (tent.lens && !b.dragging) {
+        for (var oi = 0; oi < b.tentacles.length; oi++) {
+          if (oi === i || !b.tentacles[oi].lens) continue;
+          var ochain = b.tentacles[oi].chain;
+          // Compare at 6 checkpoints along chain for better separation
+          var checks = [2, 4, 6, 8, 10, Math.min(13, chain.points.length - 2)];
+          for (var ci2 = 0; ci2 < checks.length; ci2++) {
+            var pi = checks[ci2];
+            if (pi >= chain.points.length || pi >= ochain.points.length) continue;
+            var rdx = chain.points[pi].x - ochain.points[pi].x;
+            var rdy = chain.points[pi].y - ochain.points[pi].y;
+            var rd = Math.sqrt(rdx * rdx + rdy * rdy) || 1;
+            var minDist = 55 * b.scale;
+            if (rd < minDist) {
+              var repel = (minDist - rd) * 0.018;
+              chain.points[pi].x += (rdx / rd) * repel;
+              chain.points[pi].y += (rdy / rd) * repel;
+            }
+          }
+        }
+      }
+
+      // Lens tentacles subtly reach toward nearest visible node with that lens annotation
+      if (tent.lens && !b.dragging && visibleNodesByLens[tent.lens]) {
+        var lensN = visibleNodesByLens[tent.lens];
+        var bestTarget = null, bestDist = Infinity;
+        for (var vi = 0; vi < lensN.length; vi++) {
+          var vd = Math.abs(lensN[vi].y - H * 0.4);
+          if (vd < bestDist) { bestDist = vd; bestTarget = lensN[vi]; }
+        }
+        if (bestTarget && bestTarget.y > 0 && bestTarget.y < H) {
+          var tip3 = chain.points[chain.points.length - 1];
+          var pullStr = 0.004;
+          tip3.x += (bestTarget.x - tip3.x) * pullStr;
+          tip3.y += (bestTarget.y - tip3.y) * pullStr;
+        }
+      }
+
+      // Glow: active lens match or dragging
+      var targetGlow = (activeLens && tent.lens === activeLens ? 0.7 : 0) + (b.dragging && b.dragIdx === i ? 0.8 : 0);
+      tent.glowAmount += (targetGlow - tent.glowAmount) * 0.05;
+
+      // Annotation visibility: fade in when lens active or mouse near tentacle
+      if (tent.lens) {
+        var showAnnotations = (activeLens === tent.lens);
+        if (!showAnnotations && !b.dragging) {
+          for (var ci = 0; ci < chain.points.length; ci++) {
+            var cdx = b.mouseX - chain.points[ci].x;
+            var cdy = b.mouseY - chain.points[ci].y;
+            if (Math.sqrt(cdx*cdx + cdy*cdy) < 80 * b.scale) { showAnnotations = true; break; }
+          }
+        }
+        tent.annotationAlpha += ((showAnnotations ? 1 : 0) - tent.annotationAlpha) * 0.06;
+      }
+    }
+  }
+
+  // ── Mouse/Touch Interaction ──
+  function getOctoBodyDist(mx, my) { var dx = mx - octoBody.x, dy = my - octoBody.y; return Math.sqrt(dx * dx + dy * dy); }
+  function getNearestTentacleTip(mx, my) {
+    var bestIdx = -1, bestDist = Infinity;
+    for (var i = 0; i < octoBody.tentacles.length; i++) {
+      var pts = octoBody.tentacles[i].chain.points, tip = pts[pts.length - 1];
+      var d = Math.sqrt((mx - tip.x) * (mx - tip.x) + (my - tip.y) * (my - tip.y));
+      if (d < bestDist) { bestDist = d; bestIdx = i; }
+    }
+    return { idx: bestIdx, dist: bestDist };
+  }
+  function triggerPet() {
+    octoBody.petFlash = 0.5; octoBody.wiggle = 0.6; octoBody.blinkAmount = 1;
+    if (typeof logOctoNote === 'function') logOctoNote('hi there');
+    octoMemory.petCount++; saveOctoMemory(octoMemory);
+    octoBody.personality = getPersonality(octoMemory.petCount);
+    if (octoBody.personality === 'friend' && octoMemory.petCount % 10 === 0) spawnHearts(octoBody.x, octoBody.y - 30, 1);
+  }
+  function startDrag(idx) { octoBody.dragging = true; octoBody.dragIdx = idx; document.body.style.userSelect = 'none'; }
+  function endDrag() {
+    if (!octoBody.dragging) return;
+    var idx = octoBody.dragIdx;
+    octoBody.dragging = false; octoBody.dragIdx = -1; document.body.style.userSelect = '';
+    var tent = octoBody.tentacles[idx];
+    // Lens tentacle: activate that lens on drop
+    if (tent && tent.lens) {
+      var lensBtn = document.querySelector('.lens-btn[data-lens="' + tent.lens + '"]');
+      if (lensBtn) lensBtn.click();
+    }
+  }
+  var isTouchDevice = 'ontouchstart' in window;
+  var petR = isTouchDevice ? 100 : OCTO.petRadius;
+  var dragR = isTouchDevice ? 35 : OCTO.dragRadius;
+
+  document.addEventListener('mousemove', function(e) {
+    octoBody.mouseX = e.clientX; octoBody.mouseY = e.clientY;
+  });
+  document.addEventListener('mousedown', function(e) {
+    if (e.target.closest('a, button, input, select, textarea, .settings-panel, .constellation-overlay, .lens-btn, nav, #lensSwitcher, .behavior-panel, .lens-strip')) return;
+    // Check insight orb click
+    if (octoBody.insightOrbR && octoBody.insightOrbR > 0) {
+      var ioDx = e.clientX - octoBody.insightOrbX, ioDy = e.clientY - octoBody.insightOrbY;
+      if (Math.sqrt(ioDx * ioDx + ioDy * ioDy) < octoBody.insightOrbR) {
+        openBehaviorPanel(); e.preventDefault(); return;
+      }
+    }
+    var bodyDist = getOctoBodyDist(e.clientX, e.clientY);
+    var tipInfo = getNearestTentacleTip(e.clientX, e.clientY);
+    if (bodyDist < petR * octoBody.scale) { triggerPet(); e.preventDefault(); }
+    else if (tipInfo.dist < 40 * octoBody.scale && tipInfo.idx >= 0) {
+      // Click on orb: activate that lens
+      var clickTent = octoBody.tentacles[tipInfo.idx];
+      if (clickTent && clickTent.lens) {
+        var lensBtn = document.querySelector('.lens-btn[data-lens="' + clickTent.lens + '"]');
+        if (lensBtn) { lensBtn.click(); e.preventDefault(); return; }
+      }
+      startDrag(tipInfo.idx); e.preventDefault();
+    }
+  });
+  document.addEventListener('mouseup', function() { if (octoBody.dragging) endDrag(); });
+  document.addEventListener('touchmove', function(e) {
+    if (octoBody.dragging && e.touches.length > 0) { e.preventDefault(); octoBody.mouseX = e.touches[0].clientX; octoBody.mouseY = e.touches[0].clientY; }
+  }, { passive: false });
+  document.addEventListener('touchstart', function(e) {
+    if (e.touches.length === 1) {
+      var mx = e.touches[0].clientX, my = e.touches[0].clientY;
+      octoBody.mouseX = mx; octoBody.mouseY = my;
+      if (e.target.closest('a, button, input, select, textarea, .settings-panel, .constellation-overlay, .lens-btn, nav')) return;
+      var bodyDist = getOctoBodyDist(mx, my), tipInfo = getNearestTentacleTip(mx, my);
+      if (bodyDist < petR * octoBody.scale) triggerPet();
+      else if (tipInfo.dist < dragR * octoBody.scale && tipInfo.idx >= 0) startDrag(tipInfo.idx);
+    }
+  }, { passive: true });
+  document.addEventListener('touchend', function() { if (octoBody.dragging) endDrag(); });
+  canvas.addEventListener('dblclick', function(e) {
+    if (getOctoBodyDist(e.clientX, e.clientY) < petR * octoBody.scale) {
+      // Double-click: expand all lens annotations for current era
+      if (activeLens) {
+        var eraEl = document.elementFromPoint(W * 0.5, H * 0.5);
+        if (eraEl) eraEl = eraEl.closest('.era-section');
+        if (eraEl) {
+          eraEl.querySelectorAll('.timeline-node').forEach(function(n) {
+            var lenses = n.querySelector('.node-lenses');
+            if (lenses) lenses.classList.add('active');
+            var panel = n.querySelector('.lens-panel[data-lens="' + activeLens + '"]');
+            if (panel) panel.classList.add('visible');
+          });
+        }
+      }
+      octoBody.wiggle = 0.3; octoBody.blinkAmount = 0.5;
+    }
+  });
 
   // Animation loop
   var lastTime = 0;
@@ -1682,20 +3818,361 @@ main { position: relative; z-index: 5; }
     time += dt;
 
     ctx.clearRect(0, 0, W, H);
+
+    // Subtle depth gradient (water depth effect)
+    if (!reducedMotion) {
+      var depthProgress = scrollProgress * 0.15;
+      var depthGrad = ctx.createLinearGradient(0, 0, 0, H);
+      depthGrad.addColorStop(0, 'rgba(6, 10, 20, 0)');
+      depthGrad.addColorStop(0.5, 'rgba(10, 20, 40, ' + depthProgress + ')');
+      depthGrad.addColorStop(1, 'rgba(15, 30, 50, ' + (depthProgress * 0.7) + ')');
+      ctx.fillStyle = depthGrad;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // Smooth lens blend transition
+    var lensTargetBlend = activeLens ? 1 : 0;
+    lensBlend += (lensTargetBlend - lensBlend) * 0.04;
+    if (lensBlend < 0.01) lensBlend = 0;
+    if (lensBlend > 0.99) lensBlend = 1;
+    // Update lens target color
+    if (activeLens === 'behavioral') { lensTargetR = 200; lensTargetG = 160; lensTargetB = 60; }
+    else if (activeLens === 'social') { lensTargetR = 180; lensTargetG = 70; lensTargetB = 70; }
+    else if (activeLens === 'market') { lensTargetR = 60; lensTargetG = 160; lensTargetB = 70; }
+    else if (activeLens === 'planetary') { lensTargetR = 60; lensTargetG = 110; lensTargetB = 170; }
+    else if (activeLens === 'heuristic') { lensTargetR = 136; lensTargetG = 153; lensTargetB = 170; }
+    else if (activeLens === 'power') { lensTargetR = 180; lensTargetG = 180; lensTargetB = 180; }
+
     var props = getRiverProps(scrollProgress);
 
     drawChannel(props);
 
     // Update and draw particles
-    var activeCount = Math.floor(20 + scrollProgress * 100);
+    var activeCount = Math.floor(80 + scrollProgress * 240);
     for (var i = 0; i < Math.min(particles.length, activeCount); i++) {
       particles[i].update(dt, props);
-      particles[i].draw(ctx, props);
+      particles[i].draw(ctx, props, i);
     }
+
+    // Canvas octopus pipeline
+    var emo = OCTO_EMOTIONS[currentParadigm] || OCTO_EMOTIONS.terminal;
+    updateCanvasOctopus(currentParadigm, scrollProgress, time, dt);
+    if (!reducedMotion) updateTentaclePhysics(dt);
+    for (var ti = 0; ti < octoBody.tentacles.length; ti++) {
+      drawOctoTentacle(ctx, octoBody.tentacles[ti], emo, octoBody.alpha);
+      drawTentacleTipOrb(ctx, octoBody.tentacles[ti], emo, octoBody.alpha);
+      drawTentacleAnnotations(ctx, octoBody.tentacles[ti], octoBody.alpha);
+    }
+    drawOctoAura(ctx, emo);
+    drawOctoMantle(ctx, emo, time);
+    drawOctoNotes(ctx);
+    drawOctoEyes(ctx, emo, time);
+    drawPetParticles(ctx);
+    drawInsightOrb(ctx);
+    drawTuringBubble(ctx);
 
     requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
+
+  // ════════════════════════════════════
+  // V2: BIAS ANNOTATIONS
+  // ════════════════════════════════════
+  var activeAnnotation = null;
+  var annotationTimeout = null;
+
+  var BIAS_ANNOTATIONS = {
+    'node-1919': {
+      bias: 'Aesthetic-Usability Effect',
+      text: 'You trust beautiful things more. Bauhaus taught you that clean equals trustworthy. Every dark pattern you fell for later used this lesson.',
+      delay: 3000
+    },
+    'node-1945a': {
+      bias: 'Availability Heuristic',
+      text: 'You think the web was inevitable because you can\'t imagine life without it. Bush\'s paper sat unread for decades. Most futures die in filing cabinets.',
+      delay: 2500
+    },
+    'node-1945b': {
+      bias: 'Gender Erasure',
+      text: 'The women who programmed ENIAC were classified as "sub-professional." They invented debugging, subroutines, and modern programming. Then they were written out of the story. You\'re inside the revision.',
+      delay: 3000
+    },
+    'node-1950': {
+      bias: 'Automation Bias (Origin)',
+      text: 'SAGE taught operators to trust the machine\'s judgment over their own. $61 billion to build the instinct that computers know better. That instinct never left.',
+      delay: 3500
+    },
+    'node-1960': {
+      bias: 'Anchoring Bias',
+      text: 'Licklider wrote "symbiosis" and you\'re still measuring AI against that word. The first frame for a concept shapes every conversation after. You\'re inside his anchor.',
+      delay: 3000
+    },
+    'node-1963': {
+      bias: 'Functional Fixedness',
+      text: 'First WYSIWYG. You draw on a screen and the computer understands geometry. This moment created every pixel you\'ve ever dragged. Before Sketchpad, nobody thought to try.',
+      delay: 3000
+    },
+    'node-1968': {
+      bias: 'IKEA Effect',
+      text: 'Engelbart made you work to see the future. The demo lasted 90 minutes. Everyone who survived it became a believer. Effort creates ownership of ideas, not just furniture.',
+      delay: 3500
+    },
+    'node-1973': {
+      bias: 'Mere Exposure Effect',
+      text: 'Xerox invented the future and fumbled it. Apple saw it once and stole the paradigm. Recognition over Recall (H6) was born in this room. You already knew what a folder was.',
+      delay: 3000
+    },
+    'node-1984': {
+      bias: 'Status Quo Bias',
+      text: 'That relief you just felt? Recognition over Recall. Your cognitive load dropped by an order of magnitude. The desktop metaphor worked because you already knew what a folder was. Nobody showed you anything else, so you never questioned it.',
+      delay: 4000
+    },
+    'node-1990': {
+      bias: 'Availability Cascade',
+      text: 'You clicked three links and each one made the next feel more natural. Browsing generates its own momentum. The web taught your brain that curiosity has no cost. But cost was just deferred.',
+      delay: 2500
+    },
+    'node-1995': {
+      bias: 'Hyperbolic Discounting',
+      text: 'Every step Amazon removed was a thought you stopped having. That package arriving tomorrow? You wanted it for 1.3 seconds. The want outlasted the click by exactly zero. Friction was the last guardian of deliberation.',
+      delay: 2500
+    },
+    'node-2004': {
+      bias: 'Variable Reinforcement',
+      text: 'You check your phone 96 times a day. Same reason a pigeon pecks a lever. Variable reward. Sometimes there\'s a pellet. The uncertainty is the product. Skinner identified the mechanism in 1957. Facebook deployed it to 2 billion humans.',
+      delay: 3000
+    },
+    'node-2007': {
+      bias: 'Classical Conditioning',
+      text: 'Phantom vibration syndrome. Classical conditioning (Pavlov, 1897) applied to a glass rectangle. Your nervous system integrated the device in under a year. The notification badge exploits the Zeigarnik Effect: that red dot is an open loop your brain cannot close.',
+      delay: 3000
+    },
+    'node-2016': {
+      bias: 'Zeigarnik Effect',
+      text: 'FOMO is the Zeigarnik Effect weaponized. Stories vanish in 24 hours. Incomplete social loops create persistent cognitive tension. The ring is an open loop. Your brain treats it like an unfinished sentence.',
+      delay: 2500
+    },
+    'node-2018': {
+      bias: 'Decision Fatigue',
+      text: 'The For You feed resolves Decision Fatigue by eliminating choice. You don\'t pick content. The algorithm picks. Agency traded for comfort. You opened TikTok to kill 5 minutes. It was 47 minutes ago.',
+      delay: 2000
+    },
+    'node-2020': {
+      bias: 'Spatial Anchoring Collapse',
+      text: 'Your living room became your office, school, bar, and doctor\'s waiting room. The screen became the only window. Essential labor split along interface access: those who Zoom and those who deliver.',
+      delay: 3000
+    },
+    'node-2022': {
+      bias: 'Illusion of Explanatory Depth',
+      text: 'You feel understanding because the AI explained clearly. But receiving an explanation and generating understanding are different cognitive acts. Delegation creep: each successful handoff lowers your threshold for the next. The tasks you do yourself quietly shrink.',
+      delay: 3500
+    },
+    'node-2023': {
+      bias: 'Embodied Cognition',
+      text: 'When your hand reaches into a digital space and feels resistance, your brain can\'t tell the difference. Haptic feedback turns pixels into objects. The line between sensing and simulating dissolves.',
+      delay: 3000
+    },
+    'node-2024': {
+      bias: 'Einstellung Effect',
+      text: 'When the cursor disappeared, you adapted in under 2 seconds. Removing a familiar tool forced immediate cognitive restructuring. If a chip reads your intention before you form words, who authored the action?',
+      delay: 4000
+    },
+    'node-2025': {
+      bias: 'Cognitive Dissonance',
+      text: 'You\'re holding contradictory beliefs right now: AI is essential and AI energy use is unsustainable. That\'s textbook Cognitive Dissonance. The discomfort you feel IS the data. The Ostrich Effect says you\'ll look away now.',
+      delay: 3000
+    }
+  };
+
+  function showBiasAnnotation(nodeId) {
+    if (!activeLens || (activeLens !== 'behavioral' && activeLens !== 'heuristic')) return;
+    if (activeAnnotation === nodeId) return;
+
+    var data = BIAS_ANNOTATIONS[nodeId];
+    if (!data) return;
+
+    // Clear existing
+    clearTimeout(annotationTimeout);
+    var existing = document.getElementById('biasAnnotation');
+    if (existing) {
+      existing.classList.remove('visible');
+      setTimeout(function() { if (existing.parentNode) existing.remove(); }, 300);
+    }
+
+    annotationTimeout = setTimeout(function() {
+      activeAnnotation = nodeId;
+
+      var card = document.createElement('div');
+      card.id = 'biasAnnotation';
+      card.className = 'bias-card';
+      card.innerHTML = '<button class="bias-card-close" aria-label="Dismiss">&times;</button>' +
+                       '<div class="bias-card-tag">' + data.bias + '</div>' +
+                       '<div class="bias-card-text">' + data.text + '</div>' +
+                       '<div class="bias-card-source">\u2014 the octopus</div>';
+      document.body.appendChild(card);
+
+      // Close button
+      card.querySelector('.bias-card-close').addEventListener('click', function() {
+        card.classList.remove('visible');
+        setTimeout(function() { if (card.parentNode) card.remove(); activeAnnotation = null; }, 400);
+      });
+
+      // Trigger entrance
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          card.classList.add('visible');
+        });
+      });
+
+      // Auto-dismiss after 14 seconds
+      setTimeout(function() {
+        if (card.parentNode) {
+          card.classList.remove('visible');
+          setTimeout(function() { if (card.parentNode) card.remove(); activeAnnotation = null; }, 600);
+        }
+      }, 14000);
+    }, data.delay);
+  }
+
+  // V2.5: Reactive annotations — fire AFTER paradigm shifts
+  var REACTIVE_ANNOTATIONS = {
+    'gui': { tag: 'WHAT JUST HAPPENED', text: 'That flood of color? Recognition over Recall just activated. Your cognitive load dropped by an order of magnitude. The relief you felt was real.', delay: 2000 },
+    'mobile': { tag: 'WHAT JUST HAPPENED', text: 'The constraint you just felt IS the lesson. Your thumb is now the design constraint. Every button migrated to the bottom third of the screen.', delay: 1500 },
+    'social': { tag: 'WHAT JUST HAPPENED', text: 'You just lost 2 seconds of autonomy. The algorithm accelerated your scroll. It does this 96 times a day. The attention hijack is the product.', delay: 4500 },
+    'merge': { tag: 'WHAT JUST HAPPENED', text: 'The interface just started anticipating you. The cursor leads, not follows. You are no longer the only author of your interactions.', delay: 3000 }
+  };
+
+  function showReactiveAnnotation(paradigm) {
+    if (!activeLens || (activeLens !== 'behavioral' && activeLens !== 'heuristic')) return;
+    var data = REACTIVE_ANNOTATIONS[paradigm];
+    if (!data) return;
+    // Don't overlap with existing bias cards
+    var existing = document.getElementById('biasAnnotation');
+    if (existing) return;
+
+    setTimeout(function() {
+      // Re-check lens is still active
+      if (!activeLens || (activeLens !== 'behavioral' && activeLens !== 'heuristic')) return;
+      var card = document.createElement('div');
+      card.id = 'biasAnnotation';
+      card.className = 'bias-card';
+      card.innerHTML = '<button class="bias-card-close" aria-label="Dismiss">&times;</button>' +
+                       '<div class="bias-card-tag" style="color:var(--lens-social)">' + data.tag + '</div>' +
+                       '<div class="bias-card-text">' + data.text + '</div>' +
+                       '<div class="bias-card-source">\u2014 the octopus</div>';
+      document.body.appendChild(card);
+      card.querySelector('.bias-card-close').addEventListener('click', function() {
+        card.classList.remove('visible');
+        setTimeout(function() { if (card.parentNode) card.remove(); }, 400);
+      });
+      requestAnimationFrame(function() { requestAnimationFrame(function() { card.classList.add('visible'); }); });
+      setTimeout(function() {
+        if (card.parentNode) {
+          card.classList.remove('visible');
+          setTimeout(function() { if (card.parentNode) card.remove(); }, 600);
+        }
+      }, 8000);
+    }, data.delay);
+  }
+
+  // ════════════════════════════════════
+  // V2: PARADIGM SHIFT CHOREOGRAPHY
+  // ════════════════════════════════════
+  function triggerParadigmShift(fromP, toP) {
+    // V2.5: Queue reactive annotation after shift
+    showReactiveAnnotation(toP);
+
+    if (toP === 'gui') {
+      // GUI: bright color flood — the relief of color
+      paradigmFlash.style.background = '#d8d8d8';
+      paradigmFlash.classList.add('active');
+      paradigmFlash.style.opacity = '0.8';
+      setTimeout(function() {
+        paradigmFlash.style.opacity = '';
+        paradigmFlash.classList.remove('active');
+        paradigmFlash.style.background = '';
+      }, 400);
+    } else if (toP === 'web') {
+      // Web: blue link propagation wave
+      var wave = document.createElement('div');
+      wave.className = 'paradigm-link-wave';
+      document.body.appendChild(wave);
+      setTimeout(function() { if (wave.parentNode) wave.remove(); }, 1300);
+    } else if (toP === 'mobile') {
+      // Mobile: viewport snap with spring
+      document.body.classList.add('viewport-snapping');
+      setTimeout(function() { document.body.classList.remove('viewport-snapping'); }, 800);
+    } else if (toP === 'social') {
+      // Social: feed timer + scroll hijack
+      triggerFeedMode();
+      triggerScrollHijack();
+    } else if (toP === 'merge') {
+      // Merge: AI shimmer
+      document.body.classList.add('ai-shimmer');
+      setTimeout(function() { document.body.classList.remove('ai-shimmer'); }, 2500);
+    } else {
+      // Default: subtle flash
+      paradigmFlash.classList.add('active');
+      setTimeout(function() { paradigmFlash.classList.remove('active'); }, 200);
+    }
+  }
+
+  function triggerFeedMode() {
+    if (document.getElementById('feedTimer')) return;
+    var timer = document.createElement('div');
+    timer.id = 'feedTimer';
+    timer.className = 'feed-timer';
+    timer.innerHTML = '<span class="feed-timer-val">0:00</span><span class="feed-timer-label">time in this section</span>';
+    document.body.appendChild(timer);
+
+    var startTime = Date.now();
+    feedTimerInterval = setInterval(function() {
+      if (currentParadigm !== 'social') {
+        clearInterval(feedTimerInterval);
+        feedTimerInterval = null;
+        timer.classList.add('fading');
+        setTimeout(function() { if (timer.parentNode) timer.remove(); }, 600);
+        return;
+      }
+      var elapsed = Math.floor((Date.now() - startTime) / 1000);
+      var mins = Math.floor(elapsed / 60);
+      var secs = elapsed % 60;
+      timer.querySelector('.feed-timer-val').textContent =
+        mins + ':' + (secs < 10 ? '0' : '') + secs;
+    }, 1000);
+  }
+
+  // V2.5: Social scroll hijack — 2 seconds of involuntary acceleration
+  var scrollHijackActive = false;
+  function triggerScrollHijack() {
+    if (reducedMotion || scrollHijackActive) return;
+    scrollHijackActive = true;
+    var startScroll = window.pageYOffset;
+    var totalPx = 380;
+    var duration = 2000;
+    var startTime = null;
+
+    function hijackStep(timestamp) {
+      if (!startTime) startTime = timestamp;
+      var elapsed = timestamp - startTime;
+      var t = Math.min(elapsed / duration, 1);
+      // Ease-in-out: slow start, fast middle, slow end
+      var eased = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      window.scrollTo(0, startScroll + totalPx * eased);
+      if (t < 1) {
+        requestAnimationFrame(hijackStep);
+      } else {
+        scrollHijackActive = false;
+        // Show the notice
+        var notice = document.createElement('div');
+        notice.className = 'scroll-hijack-notice';
+        notice.textContent = '\u2193 2 seconds gone';
+        document.body.appendChild(notice);
+        setTimeout(function() { if (notice.parentNode) notice.remove(); }, 3000);
+      }
+    }
+    requestAnimationFrame(hijackStep);
+  }
 
   // ════════════════════════════════════
   // SCROLL TRACKING
@@ -1706,21 +4183,31 @@ main { position: relative; z-index: 5; }
   var riverNav = document.getElementById('riverNav');
   var paradigmFlash = document.getElementById('paradigmFlash');
   var lastParadigm = '';
-
-  var bodyStages = {
-    dot: document.getElementById('bodyDot'),
-    seated: document.getElementById('bodySeated'),
-    connected: document.getElementById('bodyConnected'),
-    mobile: document.getElementById('bodyMobile'),
-    merged: document.getElementById('bodyMerged')
-  };
-  var bodyLabel = document.getElementById('bodyLabel');
-  var bodyLabels = ['You', 'User', 'Node', 'Carrier', 'Signal'];
+  var feedTimerInterval = null;
+  var scrollVelocity = 0;
+  var lastScrollTop = 0;
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   function updateScroll() {
     var scrollTop = window.scrollY;
     var docHeight = document.documentElement.scrollHeight - window.innerHeight;
     scrollProgress = Math.max(0, Math.min(1, scrollTop / docHeight));
+    octoBody.lastScrollTime = Date.now();
+    cacheVisibleNodes();
+    // Octo note: throttled scroll note (every 3s)
+    if (typeof logOctoNote === 'function' && (!octoBody._lastScrollNote || Date.now() - octoBody._lastScrollNote > 3000)) {
+      logOctoNote('scrolling…'); octoBody._lastScrollNote = Date.now();
+    }
+
+    // Behavior profile: scroll depth + speed
+    if (scrollProgress > behaviorProfile.scrollDepth) behaviorProfile.scrollDepth = scrollProgress;
+    var instantSpeed = Math.abs(scrollTop - lastScrollTop);
+    behaviorProfile.avgScrollSpeed = behaviorProfile.avgScrollSpeed * 0.95 + instantSpeed * 0.05;
+    // Turing test: log scroll direction
+    if (typeof logTuringAction === 'function' && instantSpeed > 30) {
+      logTuringAction('scroll_dir', scrollTop > lastScrollTop ? 'down' : 'up');
+    }
+    lastScrollTop = scrollTop;
 
     // Progress bar
     progressBar.style.width = (scrollProgress * 100) + '%';
@@ -1735,28 +4222,6 @@ main { position: relative; z-index: 5; }
       lensSwitcher.classList.remove('visible');
       if (riverNav) riverNav.classList.remove('visible');
     }
-
-    // Digital body evolution
-    var stage = scrollProgress < 0.15 ? 'dot'
-              : scrollProgress < 0.35 ? 'seated'
-              : scrollProgress < 0.55 ? 'connected'
-              : scrollProgress < 0.75 ? 'mobile'
-              : 'merged';
-
-    Object.keys(bodyStages).forEach(function(key) {
-      if (bodyStages[key]) {
-        if (key === stage) {
-          bodyStages[key].classList.remove('hidden');
-          bodyStages[key].classList.add('visible');
-        } else {
-          bodyStages[key].classList.remove('visible');
-          bodyStages[key].classList.add('hidden');
-        }
-      }
-    });
-
-    var labelIdx = stage === 'dot' ? 0 : stage === 'seated' ? 1 : stage === 'connected' ? 2 : stage === 'mobile' ? 3 : 4;
-    bodyLabel.textContent = bodyLabels[labelIdx];
 
     // Paradigm detection
     var paradigm = 'terminal';
@@ -1780,23 +4245,48 @@ main { position: relative; z-index: 5; }
     });
 
     if (paradigm !== lastParadigm) {
-      // Flash effect on paradigm shift
-      if (lastParadigm && lastParadigm !== paradigm) {
-        paradigmFlash.classList.add('active');
-        setTimeout(function() { paradigmFlash.classList.remove('active'); }, 200);
+      var fromP = lastParadigm;
+      var toP = paradigm;
+
+      // Paradigm-specific transition choreography
+      if (fromP && fromP !== toP) {
+        triggerParadigmShift(fromP, toP);
       }
 
-      // Remove old paradigm classes
+      // Remove old paradigm classes, add new
       document.body.classList.remove('paradigm-terminal', 'paradigm-gui', 'paradigm-web', 'paradigm-mobile', 'paradigm-social', 'paradigm-merge');
       document.body.classList.add('paradigm-' + paradigm);
+
+      // BCI cursor management
+      if (paradigm === 'merge' && scrollProgress > 0.82) {
+        document.body.classList.add('bci-active');
+      } else {
+        document.body.classList.remove('bci-active');
+      }
+
+      // Clean up feed timer when leaving social
+      if (fromP === 'social' && feedTimerInterval) {
+        clearInterval(feedTimerInterval);
+        feedTimerInterval = null;
+        var ft = document.getElementById('feedTimer');
+        if (ft) {
+          ft.classList.add('fading');
+          setTimeout(function() { if (ft.parentNode) ft.remove(); }, 600);
+        }
+      }
+
       currentParadigm = paradigm;
       lastParadigm = paradigm;
     }
 
+    // Track scroll velocity for river
+    scrollVelocity = Math.abs(scrollTop - lastScrollTop);
+    lastScrollTop = scrollTop;
+
     // River navigator active dot
     if (riverNav) {
       var allNodes = document.querySelectorAll('.timeline-node');
-      var navDots = riverNav.querySelectorAll('.river-nav-dot');
+      var navDots = riverNav.querySelectorAll('.river-nav-item');
       var closestIdx = -1;
       var closestDist = Infinity;
       allNodes.forEach(function(nd, i) {
@@ -1824,6 +4314,80 @@ main { position: relative; z-index: 5; }
   updateScroll();
 
   // ════════════════════════════════════
+  // V2.5: TELETYPE EFFECT (Terminal Era)
+  // ════════════════════════════════════
+  function startTeletype(node) {
+    if (node.getAttribute('data-typed') === 'true') return;
+    if (reducedMotion) { node.setAttribute('data-typed', 'true'); return; }
+    var hook = node.querySelector('.node-hook');
+    if (!hook || !hook.textContent.trim()) return;
+
+    node.setAttribute('data-typed', 'true');
+    var fullText = hook.textContent;
+    hook.setAttribute('data-fulltext', fullText);
+    hook.textContent = '';
+    node.classList.add('teletype-active');
+
+    var cursor = document.createElement('span');
+    cursor.className = 'teletype-cursor';
+    hook.appendChild(cursor);
+
+    var i = 0;
+    function typeChar() {
+      if (i < fullText.length) {
+        hook.insertBefore(document.createTextNode(fullText.charAt(i)), cursor);
+        i++;
+        setTimeout(typeChar, 22 + Math.random() * 16);
+      } else {
+        node.classList.remove('teletype-active');
+        if (cursor.parentNode) cursor.remove();
+      }
+    }
+    setTimeout(typeChar, 300);
+  }
+
+  // ════════════════════════════════════
+  // V2.5: AI AUTO-COMPLETE (Merge Era)
+  // ════════════════════════════════════
+  function startAutoComplete(node) {
+    if (node.getAttribute('data-typed') === 'true') return;
+    if (reducedMotion) { node.setAttribute('data-typed', 'true'); return; }
+    var hook = node.querySelector('.node-hook');
+    if (!hook || !hook.textContent.trim()) return;
+
+    node.setAttribute('data-typed', 'true');
+    var fullText = hook.textContent;
+    var words = fullText.split(' ');
+    hook.textContent = '';
+    node.classList.add('autocomplete-active');
+
+    var cursor = document.createElement('span');
+    cursor.className = 'autocomplete-cursor';
+    hook.appendChild(cursor);
+
+    var wi = 0;
+    function typeChunk() {
+      if (wi < words.length) {
+        var chunkSize = 1 + Math.floor(Math.random() * 2);
+        var chunk = words.slice(wi, wi + chunkSize).join(' ');
+        wi += chunkSize;
+        var span = document.createElement('span');
+        span.className = 'autocomplete-word';
+        span.textContent = (wi > chunkSize ? ' ' : '') + chunk;
+        hook.insertBefore(span, cursor);
+        setTimeout(typeChunk, 50 + Math.random() * 100);
+      } else {
+        node.classList.remove('autocomplete-active');
+        if (cursor.parentNode) cursor.remove();
+        // Unwrap spans to clean text
+        var spans = hook.querySelectorAll('.autocomplete-word');
+        spans.forEach(function(s) { s.replaceWith(s.textContent); });
+      }
+    }
+    setTimeout(typeChunk, 400);
+  }
+
+  // ════════════════════════════════════
   // NODE REVEAL (Intersection Observer)
   // ════════════════════════════════════
   try {
@@ -1831,12 +4395,49 @@ main { position: relative; z-index: 5; }
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
           entry.target.classList.add('visible');
+          // Log note when a node becomes visible
+          var yearEl = entry.target.querySelector('.node-year');
+          if (yearEl && typeof logOctoNote === 'function') logOctoNote('saw ' + yearEl.textContent.trim());
+          if (typeof logTuringAction === 'function') logTuringAction('node_visible', entry.target.id);
+
+          // V2.5: Teletype for terminal-era nodes
+          if (entry.target.closest('[data-paradigm="terminal"]')) {
+            startTeletype(entry.target);
+          }
+          // V2.5: Auto-complete for merge-era nodes
+          if (entry.target.closest('[data-paradigm="merge"]')) {
+            startAutoComplete(entry.target);
+          }
+
+          // V2: Trigger bias annotations
+          var nid = entry.target.id;
+          if (nid) {
+            showBiasAnnotation(nid);
+          }
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
 
     document.querySelectorAll('.timeline-node').forEach(function(node) {
       nodeObserver.observe(node);
+    });
+
+    // Dwell time observer for behavior profile
+    var dwellObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        var nid = entry.target.id;
+        if (!nid) return;
+        if (entry.isIntersecting && entry.intersectionRatio > 0.25) {
+          startDwell(nid);
+          if (!behaviorProfile.nodeClicks[nid]) behaviorProfile.nodeClicks[nid] = 0;
+          behaviorProfile.nodeClicks[nid]++;
+        } else {
+          endDwell(nid);
+        }
+      });
+    }, { threshold: [0, 0.25] });
+    document.querySelectorAll('.timeline-node').forEach(function(node) {
+      dwellObserver.observe(node);
     });
   } catch(e) {
     document.querySelectorAll('.timeline-node').forEach(function(node) {
@@ -1845,8 +4446,84 @@ main { position: relative; z-index: 5; }
   }
 
   // ════════════════════════════════════
-  // LENS SWITCHING
+  // LENS SWITCHING + UNIVERSAL STRIP
   // ════════════════════════════════════
+  var lensNames = {
+    behavioral: 'Behavior', market: 'Market', social: 'Social',
+    planetary: 'Planet', heuristic: 'Heuristic', power: 'Winners & Losers'
+  };
+
+  function buildLensStrip(lens) {
+    var strip = document.getElementById('lensUniversalStrip');
+    var items = document.getElementById('lensStripItems');
+    var title = document.getElementById('lensStripTitle');
+    var count = document.getElementById('lensStripCount');
+    if (!strip || !items) return;
+
+    items.innerHTML = '';
+    title.textContent = lensNames[lens] || lens;
+    title.style.color = 'var(--lens-' + lens + ')';
+
+    var entries = [];
+
+    // Gather all matching lens panels across all nodes
+    document.querySelectorAll('.lens-panel[data-lens="' + lens + '"]').forEach(function(panel) {
+      var node = panel.closest('.timeline-node');
+      if (!node) return;
+      var yearEl = node.querySelector('.node-year');
+      var year = yearEl ? yearEl.textContent.trim() : '???';
+      var labelEl = panel.querySelector('.lens-label');
+      var text = panel.textContent.replace(labelEl ? labelEl.textContent : '', '').trim();
+      entries.push({ year: year, text: text, node: node, type: 'lens', lens: lens });
+    });
+
+    // For behavioral/heuristic, also include bias annotations
+    if ((lens === 'behavioral' || lens === 'heuristic') && typeof BIAS_ANNOTATIONS !== 'undefined') {
+      Object.keys(BIAS_ANNOTATIONS).forEach(function(nodeId) {
+        var ann = BIAS_ANNOTATIONS[nodeId];
+        var node = document.getElementById(nodeId);
+        if (!node) return;
+        var yearEl = node.querySelector('.node-year');
+        var year = yearEl ? yearEl.textContent.trim() : '???';
+        entries.push({ year: year, text: ann.bias + ': ' + ann.text.substring(0, 120), node: node, type: 'bias', nodeId: nodeId });
+      });
+    }
+
+    count.textContent = entries.length + ' event' + (entries.length !== 1 ? 's' : '');
+
+    entries.forEach(function(entry) {
+      var item = document.createElement('div');
+      item.className = 'lens-strip-item';
+      item.style.borderLeftColor = 'var(--lens-' + lens + ')';
+      item.innerHTML = '<span class="lens-strip-item-year">' + entry.year + '</span>' +
+                       '<span class="lens-strip-item-text">' + entry.text + '</span>';
+      item.addEventListener('click', function() {
+        entry.node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        entry.node.classList.add('thread-target');
+        setTimeout(function() { entry.node.classList.remove('thread-target'); }, 1500);
+        if (entry.type === 'bias' && typeof showBiasAnnotation === 'function') {
+          setTimeout(function() { showBiasAnnotation(entry.nodeId); }, 600);
+        }
+      });
+      items.appendChild(item);
+    });
+
+    strip.classList.add('visible');
+  }
+
+  function hideLensStrip() {
+    var strip = document.getElementById('lensUniversalStrip');
+    if (strip) strip.classList.remove('visible');
+  }
+
+  // Close button for strip
+  var stripClose = document.getElementById('lensStripClose');
+  if (stripClose) {
+    stripClose.addEventListener('click', function() {
+      hideLensStrip();
+    });
+  }
+
   var lensButtons = document.querySelectorAll('.lens-btn');
   lensButtons.forEach(function(btn) {
     btn.addEventListener('click', function() {
@@ -1858,13 +4535,20 @@ main { position: relative; z-index: 5; }
         activeLens = null;
         document.querySelectorAll('.node-lenses').forEach(function(nl) { nl.classList.remove('active'); });
         document.querySelectorAll('.lens-panel').forEach(function(lp) { lp.classList.remove('visible'); });
+        hideLensStrip();
       } else {
         // Activate this lens
         lensButtons.forEach(function(b) { b.classList.remove('active'); });
         btn.classList.add('active');
         activeLens = lens;
+        if (typeof logOctoNote === 'function') logOctoNote('lens: ' + lens);
+        if (typeof logTuringAction === 'function') logTuringAction('lens', lens);
 
-        // Show matching lens panels
+        // Track lens usage for behavior profile
+        if (!behaviorProfile.lensClicks[lens]) behaviorProfile.lensClicks[lens] = 0;
+        behaviorProfile.lensClicks[lens]++;
+
+        // Show matching lens panels on individual nodes
         document.querySelectorAll('.node-lenses').forEach(function(nl) { nl.classList.add('active'); });
         document.querySelectorAll('.lens-panel').forEach(function(lp) {
           if (lp.getAttribute('data-lens') === lens) {
@@ -1873,6 +4557,9 @@ main { position: relative; z-index: 5; }
             lp.classList.remove('visible');
           }
         });
+
+        // Build universal filter strip
+        buildLensStrip(lens);
       }
     });
   });
@@ -1907,7 +4594,7 @@ main { position: relative; z-index: 5; }
   // RIVER NAVIGATOR CLICKS
   // ════════════════════════════════════
   if (riverNav) {
-    riverNav.querySelectorAll('.river-nav-dot').forEach(function(dot) {
+    riverNav.querySelectorAll('.river-nav-item').forEach(function(dot) {
       dot.addEventListener('click', function(e) {
         e.preventDefault();
         var nodeId = 'node-' + this.dataset.node;
@@ -1925,6 +4612,44 @@ main { position: relative; z-index: 5; }
       surfaceBtn.addEventListener('click', function(e) {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+
+    // ── Fisheye proximity scaling for nav items ──
+    var navItems = riverNav.querySelectorAll('.river-nav-item');
+    var navContainer = document.getElementById('riverNav');
+    var navScaleRAF = 0;
+    var FISHEYE_RADIUS = 90; // px distance for full effect
+    var FISHEYE_MAX = 1.65;  // max scale multiplier
+
+    function updateNavFisheye(mouseY) {
+      for (var i = 0; i < navItems.length; i++) {
+        var rect = navItems[i].getBoundingClientRect();
+        var itemCenterY = rect.top + rect.height * 0.5;
+        var dist = Math.abs(mouseY - itemCenterY);
+        var t = Math.max(0, 1 - dist / FISHEYE_RADIUS);
+        // Smooth ease-out curve for natural dock feel
+        var scale = 1 + (FISHEYE_MAX - 1) * t * t * (3 - 2 * t);
+        navItems[i].style.setProperty('--nav-scale', scale.toFixed(3));
+      }
+    }
+
+    function resetNavFisheye() {
+      for (var i = 0; i < navItems.length; i++) {
+        navItems[i].style.setProperty('--nav-scale', '1');
+      }
+    }
+
+    if (navContainer) {
+      navContainer.addEventListener('mousemove', function(e) {
+        if (navScaleRAF) cancelAnimationFrame(navScaleRAF);
+        navScaleRAF = requestAnimationFrame(function() {
+          updateNavFisheye(e.clientY);
+        });
+      });
+      navContainer.addEventListener('mouseleave', function() {
+        if (navScaleRAF) cancelAnimationFrame(navScaleRAF);
+        resetNavFisheye();
       });
     }
   }
@@ -1952,6 +4677,19 @@ main { position: relative; z-index: 5; }
     requestAnimationFrame(updateWatts);
   }
 
+  // 2. Datacenter energy cost flash on clicks
+  document.addEventListener('click', function(e) {
+    if (currentParadigm === 'merge' && scrollProgress > 0.9) {
+      var flash = document.createElement('div');
+      flash.className = 'energy-flash';
+      flash.textContent = '+0.3 Wh';
+      flash.style.left = e.clientX + 'px';
+      flash.style.top = e.clientY + 'px';
+      document.body.appendChild(flash);
+      setTimeout(function() { if (flash.parentNode) flash.remove(); }, 1600);
+    }
+  });
+
   // 3. Amazon Friction Loop
   var frictionDemo = document.getElementById('frictionDemo');
   if (frictionDemo) {
@@ -1962,6 +4700,495 @@ main { position: relative; z-index: 5; }
       currentStage = (currentStage + 1) % stages.length;
       stages[currentStage].classList.add('active');
     }, 2200);
+  }
+
+  // ════════════════════════════════════
+  // V2.5: CONSTELLATION MODE
+  // ════════════════════════════════════
+
+  var ERA_COLORS = {
+    foundations: '#2a6a8a',
+    interface:  '#4a7a5a',
+    network:    '#5a6a9a',
+    pocket:     '#7a5a8a',
+    merge:      '#6a8aaa'
+  };
+
+  var CONSTELLATION_NODES = [
+    { id: 'node-1919', x: 0.04, y: 0.45, era: 'foundations', label: 'Bauhaus', year: '1919' },
+    { id: 'node-1945a', x: 0.09, y: 0.35, era: 'foundations', label: 'Memex', year: '1945' },
+    { id: 'node-1945b', x: 0.09, y: 0.62, era: 'foundations', label: 'ENIAC', year: '1945' },
+    { id: 'node-1950', x: 0.14, y: 0.50, era: 'foundations', label: 'SAGE', year: '1950s' },
+    { id: 'node-1960', x: 0.19, y: 0.38, era: 'foundations', label: 'Symbiosis', year: '1960' },
+    { id: 'node-1963', x: 0.25, y: 0.55, era: 'interface', label: 'Sketchpad', year: '1963' },
+    { id: 'node-1968', x: 0.30, y: 0.40, era: 'interface', label: 'Engelbart', year: '1968' },
+    { id: 'node-1973', x: 0.35, y: 0.58, era: 'interface', label: 'Xerox Alto', year: '1973' },
+    { id: 'node-1984', x: 0.40, y: 0.42, era: 'interface', label: 'Macintosh', year: '1984' },
+    { id: 'node-1990', x: 0.46, y: 0.35, era: 'network', label: 'WWW', year: '1990' },
+    { id: 'node-1995', x: 0.51, y: 0.50, era: 'network', label: 'Amazon', year: '1995' },
+    { id: 'node-2004', x: 0.56, y: 0.38, era: 'network', label: 'Facebook', year: '2004' },
+    { id: 'node-2007', x: 0.62, y: 0.55, era: 'pocket', label: 'iPhone', year: '2007' },
+    { id: 'node-2016', x: 0.67, y: 0.42, era: 'pocket', label: 'Stories/AR', year: '2016' },
+    { id: 'node-2018', x: 0.72, y: 0.35, era: 'pocket', label: 'TikTok', year: '2018' },
+    { id: 'node-2020', x: 0.77, y: 0.50, era: 'merge', label: 'Pandemic', year: '2020' },
+    { id: 'node-2022', x: 0.82, y: 0.38, era: 'merge', label: 'ChatGPT', year: '2022' },
+    { id: 'node-2023', x: 0.86, y: 0.58, era: 'merge', label: 'Sensory', year: '2023' },
+    { id: 'node-2024', x: 0.91, y: 0.42, era: 'merge', label: 'Neuralink', year: '2024' },
+    { id: 'node-2025', x: 0.95, y: 0.52, era: 'merge', label: 'Datacenters', year: '2025' }
+  ];
+
+  var BIAS_THREADS = {
+    'Variable Reinforcement': {
+      color: '#d4a543',
+      nodes: ['node-1995', 'node-2004', 'node-2016', 'node-2018'],
+      summary: 'From 1-Click to Like to For You: the slot machine refined'
+    },
+    'Friction \u2192 Agency': {
+      color: '#4caf50',
+      nodes: ['node-1984', 'node-1995', 'node-2007', 'node-2022', 'node-2024'],
+      summary: 'Each removed step was a thought you stopped having'
+    },
+    'Recognition over Recall': {
+      color: '#4a7fba',
+      nodes: ['node-1963', 'node-1973', 'node-1984', 'node-2022'],
+      summary: 'From light pen to prompt: showing replaces remembering'
+    },
+    'Attention Arms Race': {
+      color: '#c4554d',
+      nodes: ['node-2004', 'node-2016', 'node-2018', 'node-2022'],
+      summary: 'Content lifespan: months to days to seconds to generated'
+    },
+    'Who Disappears': {
+      color: '#b0b0b0',
+      nodes: ['node-1945b', 'node-1950', 'node-1995', 'node-2020', 'node-2025'],
+      summary: 'Every interface advancement made someone invisible'
+    }
+  };
+
+  // Build node lookup
+  var conNodeMap = {};
+  CONSTELLATION_NODES.forEach(function(n) { conNodeMap[n.id] = n; });
+
+  // Get thread memberships per node
+  function getNodeThreads(nodeId) {
+    var threads = [];
+    Object.keys(BIAS_THREADS).forEach(function(name) {
+      if (BIAS_THREADS[name].nodes.indexOf(nodeId) !== -1) {
+        threads.push({ name: name, color: BIAS_THREADS[name].color });
+      }
+    });
+    return threads;
+  }
+
+  // Constellation state
+  var constellationOpen = false;
+  var activeThreads = {};
+  var constellationScrollPos = 0;
+
+  var conOverlay = document.getElementById('constellation');
+  var conCanvas = document.getElementById('constellationCanvas');
+  var conNodesEl = document.getElementById('constellationNodes');
+  var conDetail = document.getElementById('constellationDetail');
+  var conThreadsEl = document.getElementById('constellationThreads');
+  var conCtx = conCanvas ? conCanvas.getContext('2d') : null;
+
+  function openConstellation() {
+    if (typeof logOctoNote === 'function') logOctoNote('mapping…');
+    if (constellationOpen) return;
+    constellationOpen = true;
+    constellationScrollPos = window.pageYOffset;
+    conOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    buildConstellationUI();
+    resizeConstellationCanvas();
+    drawConstellation();
+  }
+
+  function closeConstellation() {
+    if (!constellationOpen) return;
+    constellationOpen = false;
+    conOverlay.classList.remove('active');
+    conDetail.classList.remove('visible');
+    document.body.style.overflow = '';
+    window.scrollTo(0, constellationScrollPos);
+  }
+
+  // Build thread pills and node dots
+  function buildConstellationUI() {
+    // Thread pills
+    conThreadsEl.innerHTML = '';
+    Object.keys(BIAS_THREADS).forEach(function(name) {
+      var thread = BIAS_THREADS[name];
+      var pill = document.createElement('button');
+      pill.className = 'thread-pill';
+      pill.textContent = name;
+      pill.style.borderColor = thread.color;
+      pill.style.color = thread.color;
+      if (activeThreads[name]) pill.classList.add('active');
+      pill.addEventListener('click', function() {
+        activeThreads[name] = !activeThreads[name];
+        pill.classList.toggle('active');
+        updateConstellationHighlights();
+        drawConstellation();
+      });
+      conThreadsEl.appendChild(pill);
+    });
+
+    // Node dots
+    conNodesEl.innerHTML = '';
+    CONSTELLATION_NODES.forEach(function(n) {
+      var el = document.createElement('div');
+      el.className = 'constellation-node';
+      el.setAttribute('data-node', n.id);
+      var color = ERA_COLORS[n.era] || '#5a7a9a';
+      el.innerHTML = '<div class="c-dot" style="border-color:' + color + ';color:' + color + '"></div>' +
+                     '<span class="c-label">' + n.label + '</span>' +
+                     '<span class="c-year">' + n.year + '</span>';
+      el.addEventListener('click', function() { showConstellationDetail(n); });
+      el.addEventListener('mouseenter', function() { highlightConnected(n.id); });
+      el.addEventListener('mouseleave', function() { clearHighlights(); });
+      conNodesEl.appendChild(el);
+    });
+    positionConstellationNodes();
+  }
+
+  function positionConstellationNodes() {
+    var body = conOverlay.querySelector('.constellation-body');
+    if (!body) return;
+    var W = body.offsetWidth;
+    var H = body.offsetHeight;
+    var padX = 60, padY = 40;
+
+    CONSTELLATION_NODES.forEach(function(n) {
+      var el = conNodesEl.querySelector('[data-node="' + n.id + '"]');
+      if (el) {
+        el.style.left = (padX + n.x * (W - padX * 2)) + 'px';
+        el.style.top = (padY + n.y * (H - padY * 2)) + 'px';
+      }
+    });
+  }
+
+  function resizeConstellationCanvas() {
+    var body = conOverlay.querySelector('.constellation-body');
+    if (!body || !conCanvas) return;
+    conCanvas.width = body.offsetWidth * (window.devicePixelRatio || 1);
+    conCanvas.height = body.offsetHeight * (window.devicePixelRatio || 1);
+    conCanvas.style.width = body.offsetWidth + 'px';
+    conCanvas.style.height = body.offsetHeight + 'px';
+    if (conCtx) conCtx.setTransform(window.devicePixelRatio || 1, 0, 0, window.devicePixelRatio || 1, 0, 0);
+    positionConstellationNodes();
+  }
+
+  function drawConstellation() {
+    if (!conCtx || !conCanvas) return;
+    var body = conOverlay.querySelector('.constellation-body');
+    var W = body.offsetWidth;
+    var H = body.offsetHeight;
+    var padX = 60, padY = 40;
+
+    conCtx.clearRect(0, 0, W, H);
+
+    // Draw active thread lines
+    var anyActive = Object.keys(activeThreads).some(function(k) { return activeThreads[k]; });
+
+    Object.keys(BIAS_THREADS).forEach(function(name) {
+      var thread = BIAS_THREADS[name];
+      if (anyActive && !activeThreads[name]) return;
+      if (!anyActive) return; // Only draw when threads are toggled
+
+      var nodes = thread.nodes.map(function(id) { return conNodeMap[id]; }).filter(Boolean);
+      if (nodes.length < 2) return;
+
+      conCtx.save();
+      conCtx.strokeStyle = thread.color;
+      conCtx.lineWidth = activeThreads[name] ? 2 : 0.8;
+      conCtx.globalAlpha = activeThreads[name] ? 0.7 : 0.2;
+      conCtx.setLineDash(activeThreads[name] ? [] : [4, 4]);
+
+      conCtx.beginPath();
+      for (var i = 0; i < nodes.length; i++) {
+        var px = padX + nodes[i].x * (W - padX * 2);
+        var py = padY + nodes[i].y * (H - padY * 2);
+        if (i === 0) {
+          conCtx.moveTo(px, py);
+        } else {
+          // Quadratic curve for organic feel
+          var prev = nodes[i - 1];
+          var prevX = padX + prev.x * (W - padX * 2);
+          var prevY = padY + prev.y * (H - padY * 2);
+          var cpX = (prevX + px) / 2;
+          var cpY = Math.min(prevY, py) - 20 - Math.random() * 10;
+          conCtx.quadraticCurveTo(cpX, cpY, px, py);
+        }
+      }
+      conCtx.stroke();
+
+      // Thread label at midpoint
+      if (activeThreads[name] && nodes.length >= 2) {
+        var midIdx = Math.floor(nodes.length / 2);
+        var midNode = nodes[midIdx];
+        var mx = padX + midNode.x * (W - padX * 2);
+        var my = padY + midNode.y * (H - padY * 2) - 25;
+        conCtx.globalAlpha = 0.5;
+        conCtx.fillStyle = thread.color;
+        conCtx.font = '9px "JetBrains Mono", monospace';
+        conCtx.textAlign = 'center';
+        conCtx.fillText(name.toUpperCase(), mx, my);
+      }
+
+      conCtx.restore();
+    });
+  }
+
+  function highlightConnected(nodeId) {
+    var threads = getNodeThreads(nodeId);
+    var connectedIds = {};
+    connectedIds[nodeId] = true;
+    threads.forEach(function(t) {
+      BIAS_THREADS[t.name].nodes.forEach(function(id) { connectedIds[id] = true; });
+    });
+
+    conNodesEl.querySelectorAll('.constellation-node').forEach(function(el) {
+      var nid = el.getAttribute('data-node');
+      if (connectedIds[nid]) {
+        el.classList.add('highlighted');
+        el.classList.remove('dimmed');
+      } else {
+        el.classList.remove('highlighted');
+        el.classList.add('dimmed');
+      }
+    });
+  }
+
+  function clearHighlights() {
+    conNodesEl.querySelectorAll('.constellation-node').forEach(function(el) {
+      el.classList.remove('highlighted', 'dimmed');
+    });
+  }
+
+  function updateConstellationHighlights() {
+    var anyActive = Object.keys(activeThreads).some(function(k) { return activeThreads[k]; });
+    if (!anyActive) {
+      clearHighlights();
+      return;
+    }
+
+    var activeNodeIds = {};
+    Object.keys(activeThreads).forEach(function(name) {
+      if (activeThreads[name]) {
+        BIAS_THREADS[name].nodes.forEach(function(id) { activeNodeIds[id] = true; });
+      }
+    });
+
+    conNodesEl.querySelectorAll('.constellation-node').forEach(function(el) {
+      var nid = el.getAttribute('data-node');
+      if (activeNodeIds[nid]) {
+        el.classList.add('highlighted');
+        el.classList.remove('dimmed');
+      } else {
+        el.classList.remove('highlighted');
+        el.classList.add('dimmed');
+      }
+    });
+  }
+
+  function showConstellationDetail(n) {
+    // Pull title and hook text from the actual DOM node
+    var domNode = document.getElementById(n.id);
+    var title = n.label;
+    var hookText = '';
+    if (domNode) {
+      var titleEl = domNode.querySelector('.node-title');
+      if (titleEl) title = titleEl.textContent;
+      var hookEl = domNode.querySelector('.node-hook');
+      if (hookEl) hookText = hookEl.getAttribute('data-fulltext') || hookEl.textContent;
+    }
+
+    var threads = getNodeThreads(n.id);
+    var threadsHTML = threads.map(function(t) {
+      return '<div class="constellation-detail-thread" style="border-color:' + t.color + ';color:' + t.color + '">' + t.name + '</div>';
+    }).join('');
+
+    conDetail.innerHTML =
+      '<button class="constellation-close" onclick="document.getElementById(\'constellationDetail\').classList.remove(\'visible\')" style="position:absolute;top:1rem;right:1rem">&times;</button>' +
+      '<div class="constellation-detail-year">' + n.year + ' \u00B7 ' + n.era + '</div>' +
+      '<div class="constellation-detail-title">' + title + '</div>' +
+      '<div class="constellation-detail-hook">' + hookText + '</div>' +
+      (threads.length ? '<div style="font-family:\'JetBrains Mono\',monospace;font-size:0.55rem;color:var(--text-dim);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem">BIAS THREADS</div>' +
+      '<div class="constellation-detail-threads">' + threadsHTML + '</div>' : '');
+
+    conDetail.classList.add('visible');
+  }
+
+  // Event bindings
+  document.getElementById('constellationClose').addEventListener('click', closeConstellation);
+  document.getElementById('constellationTrigger').addEventListener('click', openConstellation);
+
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+    if (e.key === 'c') {
+      if (constellationOpen) closeConstellation(); else openConstellation();
+    }
+    if (e.key === ',') {
+      var sp = document.getElementById('settingsPanel');
+      if (sp) sp.classList.toggle('visible');
+    }
+    if (e.key === '?') {
+      var kh = document.getElementById('keyboardHelp');
+      if (kh) kh.classList.toggle('visible');
+    }
+    if (e.key === 'p') {
+      openBehaviorPanel();
+    }
+    if (e.key === 'Escape') {
+      if (constellationOpen) closeConstellation();
+      closeBehaviorPanel();
+      var sp2 = document.getElementById('settingsPanel');
+      if (sp2) sp2.classList.remove('visible');
+      var kh2 = document.getElementById('keyboardHelp');
+      if (kh2) kh2.classList.remove('visible');
+    }
+  });
+
+  // Click outside detail to close it
+  conOverlay.querySelector('.constellation-body').addEventListener('click', function(e) {
+    if (!e.target.closest('.constellation-node') && !e.target.closest('.constellation-detail')) {
+      conDetail.classList.remove('visible');
+    }
+  });
+
+  // Resize handler
+  window.addEventListener('resize', function() {
+    if (constellationOpen) {
+      resizeConstellationCanvas();
+      drawConstellation();
+    }
+  });
+
+  // ═══ OCTOPUS INTRO TOOLTIP ═══
+  if (!localStorage.getItem('octoIntroDismissed')) {
+    setTimeout(function() {
+      var intro = document.getElementById('octoIntro');
+      if (intro) {
+        // Position near canvas octopus
+        var ox = octoBody ? Math.max(80, octoBody.x + 60) : 80;
+        var oy = octoBody ? Math.max(60, octoBody.y - 40) : window.innerHeight * 0.25;
+        intro.style.left = ox + 'px';
+        intro.style.top = oy + 'px';
+        intro.classList.add('visible');
+      }
+    }, 2500);
+  }
+  var octoIntroDismiss = document.getElementById('octoIntroDismiss');
+  if (octoIntroDismiss) {
+    octoIntroDismiss.addEventListener('click', function() {
+      var intro = document.getElementById('octoIntro');
+      if (intro) intro.classList.remove('visible');
+      localStorage.setItem('octoIntroDismissed', 'true');
+    });
+  }
+
+  // ═══ PREFERENCES SYSTEM ═══
+  var PREFS_KEY = 'hci-timeline-prefs';
+  var defaultPrefs = { lensBar: 'top', river: 'on' };
+
+  function loadPrefs() {
+    try {
+      var stored = localStorage.getItem(PREFS_KEY);
+      if (stored) {
+        var parsed = JSON.parse(stored);
+        return { lensBar: parsed.lensBar || 'top', river: parsed.river || 'on' };
+      }
+    } catch(e) {}
+    return { lensBar: defaultPrefs.lensBar, river: defaultPrefs.river };
+  }
+
+  function savePrefs(prefs) {
+    try { localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); } catch(e) {}
+  }
+
+  function applyPrefs(prefs) {
+    var body = document.body;
+    // Lens bar
+    body.classList.toggle('layout-lens-bottom', prefs.lensBar === 'bottom');
+    // River
+    body.classList.remove('layout-river-dim', 'layout-river-off');
+    if (prefs.river === 'dim') body.classList.add('layout-river-dim');
+    if (prefs.river === 'off') body.classList.add('layout-river-off');
+    // Sync selects
+    var s2 = document.getElementById('prefLensBar');
+    var s3 = document.getElementById('prefRiver');
+    if (s2) s2.value = prefs.lensBar;
+    if (s3) s3.value = prefs.river;
+  }
+
+  var userPrefs = loadPrefs();
+  applyPrefs(userPrefs);
+
+  // Settings panel toggle
+  var settingsToggle = document.getElementById('settingsToggle');
+  var settingsPanel = document.getElementById('settingsPanel');
+  var settingsClose = document.getElementById('settingsClose');
+  if (settingsToggle && settingsPanel) {
+    settingsToggle.addEventListener('click', function() { settingsPanel.classList.toggle('visible'); });
+  }
+  if (settingsClose && settingsPanel) {
+    settingsClose.addEventListener('click', function() { settingsPanel.classList.remove('visible'); });
+  }
+
+  // Preference change handlers
+  function onPrefChange() {
+    var s2 = document.getElementById('prefLensBar');
+    var s3 = document.getElementById('prefRiver');
+    userPrefs = { lensBar: s2 ? s2.value : 'top', river: s3 ? s3.value : 'on' };
+    applyPrefs(userPrefs);
+    savePrefs(userPrefs);
+  }
+  ['prefLensBar', 'prefRiver'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('change', onPrefChange);
+  });
+
+  // Reset button
+  var prefReset = document.getElementById('prefReset');
+  if (prefReset) {
+    prefReset.addEventListener('click', function() {
+      userPrefs = { lensBar: defaultPrefs.lensBar, river: defaultPrefs.river };
+      applyPrefs(userPrefs);
+      savePrefs(userPrefs);
+    });
+  }
+
+  // ═══ BEHAVIOR PANEL EVENTS ═══
+  var bpClose = document.getElementById('behaviorPanelClose');
+  if (bpClose) bpClose.addEventListener('click', closeBehaviorPanel);
+  var bpReset = document.getElementById('behaviorReset');
+  if (bpReset) {
+    bpReset.addEventListener('click', function() {
+      localStorage.removeItem(PROFILE_KEY);
+      behaviorProfile = loadBehaviorProfile();
+      behaviorProfile.sessions = 1;
+      closeBehaviorPanel();
+    });
+  }
+
+  // ═══ LENS HINT PULSE ═══
+  // After octopus intro is dismissed, pulse the lens bar once to guide attention
+  var octoIntroDismissBtn = document.getElementById('octoIntroDismiss');
+  if (octoIntroDismissBtn) {
+    var origHandler = octoIntroDismissBtn.onclick;
+    octoIntroDismissBtn.addEventListener('click', function() {
+      if (!localStorage.getItem('hci-lensHintShown')) {
+        localStorage.setItem('hci-lensHintShown', 'true');
+        var ls = document.getElementById('lensSwitcher');
+        if (ls) {
+          ls.classList.add('lens-hint-pulse');
+          setTimeout(function() { ls.classList.remove('lens-hint-pulse'); }, 3200);
+        }
+      }
+    });
   }
 
 })();
